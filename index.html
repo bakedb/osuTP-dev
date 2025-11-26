@@ -89,6 +89,39 @@
       --shadow-inner: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 0 rgba(255, 255, 255, 0.8);
     }
     
+    /* osu! Argon theme variables */
+    [data-theme="argon"] {
+      --bg: #0a0a0a;
+      --bg-elev: #1a1a1a;
+      --card: #242424;
+      --text: #ffffff;
+      --muted: #a0a0a0;
+      --accent: #00f1ff; /* cyan accent */
+      --accent-2: #00d4ff;
+      --accent-3: #00b8e6;
+      --accent-4: #0099cc;
+      --ok: #00ff88;
+      --bad: #ff4444;
+      --argon-glow: 0 0 20px rgba(0, 241, 255, 0.3);
+      --argon-border: rgba(0, 241, 255, 0.2);
+    }
+    
+    /* osu! Triangles theme variables */
+    [data-theme="triangles"] {
+      --bg: #1a1a2e;
+      --bg-elev: #16213e;
+      --card: #0f3460;
+      --text: #e8e8e8;
+      --muted: #a8a8a8;
+      --accent: #e94560; /* pink-red accent */
+      --accent-2: #ff6b6b;
+      --accent-3: #ff8787;
+      --accent-4: #ffa8a8;
+      --ok: #4caf50;
+      --bad: #f44336;
+      --triangle-pattern: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(233, 69, 96, 0.1) 10px, rgba(233, 69, 96, 0.1) 20px);
+    }
+    
     /* Tab-specific color variations */
     [data-theme="frutiger-aero"] body.tab-home {
       --accent: #00b4d8; /* pure blue */
@@ -232,6 +265,10 @@
     /* Frutiger Aero background styles */
     [data-theme="frutiger-aero"] html, [data-theme="frutiger-aero"] body {
       background: linear-gradient(135deg, #e8f4ff 0%, #caf0f8 25%, #90e0ef 50%, #00b4d8 75%, #0077b6 100%);
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: 0 0;
+      min-height: 100vh;
       font-family: 'Segoe UI', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     }
     
@@ -260,6 +297,10 @@
     /* Windows 10/11 background styles */
     [data-theme="windows-10"] html, [data-theme="windows-10"] body {
       background: linear-gradient(135deg, #f3f3f3 0%, #ffffff 50%, #e8e8e8 100%);
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: 0 0;
+      min-height: 100vh;
       font-family: 'Segoe UI', 'Microsoft Sans Serif', Tahoma, Arial, sans-serif;
     }
     
@@ -299,6 +340,53 @@
           rgba(255, 255, 255, 0.1) 2px,
           rgba(255, 255, 255, 0.1) 4px
         );
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* osu! Argon background styles */
+    [data-theme="argon"] html, [data-theme="argon"] body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: 0 0;
+      min-height: 100vh;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+    
+    [data-theme="argon"] body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(0, 241, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(0, 184, 230, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* osu! Triangles background styles */
+    [data-theme="triangles"] html, [data-theme="triangles"] body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: 0 0;
+      min-height: 100vh;
+      font-family: 'Noto Sans', 'Segoe UI', system-ui, sans-serif;
+    }
+    
+    [data-theme="triangles"] body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--triangle-pattern);
       pointer-events: none;
       z-index: -1;
     }
@@ -383,6 +471,26 @@
       pointer-events: none;
       z-index: 1;
     }
+    
+    /* osu! Argon nav styles */
+    [data-theme="argon"] .nav {
+      background: rgba(26, 26, 26, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--argon-border);
+      border-bottom: 1px solid var(--argon-border);
+      border-radius: 0 0 16px 16px;
+      box-shadow: var(--argon-glow);
+    }
+    
+    /* osu! Triangles nav styles */
+    [data-theme="triangles"] .nav {
+      background: var(--bg-elev);
+      border: 1px solid rgba(233, 69, 96, 0.3);
+      border-bottom: 1px solid rgba(233, 69, 96, 0.5);
+      border-radius: 0;
+      box-shadow: 0 4px 12px rgba(233, 69, 96, 0.2);
+    }
     .brand {
       display: flex;
       align-items: center;
@@ -454,6 +562,19 @@
         );
       border-radius: 6px;
       pointer-events: none;
+    }
+    /* osu! Argon logo styles */
+    [data-theme="argon"] .brand .logo {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 2px solid var(--argon-border);
+      box-shadow: var(--argon-glow);
+    }
+    
+    /* osu! Triangles logo styles */
+    [data-theme="triangles"] .brand .logo {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 2px solid rgba(233, 69, 96, 0.3);
+      box-shadow: 0 0 20px rgba(233, 69, 96, 0.4);
     }
     .brand .name {
       color: var(--text);
@@ -585,6 +706,64 @@
       color: #ffffff;
       box-shadow: var(--shadow-inner);
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* osu! Argon tab styles */
+    [data-theme="argon"] .tab-btn {
+      background: rgba(36, 36, 36, 0.8);
+      border: 1px solid var(--argon-border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+    }
+    
+    [data-theme="argon"] .tab-btn:hover { 
+      background: rgba(0, 241, 255, 0.1);
+      color: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 241, 255, 0.2);
+    }
+    
+    [data-theme="argon"] .tab-btn.active { 
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #000000;
+      border-color: var(--accent);
+      box-shadow: 
+        0 4px 16px rgba(0, 241, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    /* osu! Triangles tab styles */
+    [data-theme="triangles"] .tab-btn {
+      background: rgba(15, 52, 96, 0.8);
+      border: 1px solid rgba(233, 69, 96, 0.3);
+      border-radius: 8px;
+      color: var(--muted);
+      font-weight: 600;
+      font-family: 'Noto Sans', sans-serif;
+      transition: all 0.2s ease;
+    }
+    
+    [data-theme="triangles"] .tab-btn:hover { 
+      background: rgba(233, 69, 96, 0.1);
+      color: var(--accent);
+      border-color: rgba(233, 69, 96, 0.5);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(233, 69, 96, 0.2);
+    }
+    
+    [data-theme="triangles"] .tab-btn.active { 
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 
+        0 4px 16px rgba(233, 69, 96, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 
     .userbox {
@@ -1456,8 +1635,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 36px;
-      height: 36px;
+      position: relative;
     }
     
     .theme-toggle:hover {
@@ -1465,58 +1643,354 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     
-    [data-theme="frutiger-aero"] .theme-toggle {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    /* Theme dropdown menu */
+    .theme-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 8px;
+      background: var(--bg-elev);
+      border: 1px solid var(--card);
       border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      min-width: 200px;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+    }
+    
+    .theme-dropdown.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    
+    .theme-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      width: 100%;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .theme-dropdown-item:hover {
+      background: var(--card);
+      color: var(--text);
+    }
+    
+    .theme-dropdown-item.active {
+      background: var(--accent);
+      color: #ffffff;
+    }
+    
+    .theme-dropdown-item .theme-icon {
+      font-size: 18px;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .theme-dropdown-item .theme-name {
+      flex: 1;
+    }
+    
+    /* Theme submenu styles */
+    .theme-submenu {
+      position: relative;
+    }
+    
+    .submenu-toggle {
+      position: relative;
+    }
+    
+    .submenu-arrow {
+      font-size: 12px;
+      transition: transform 0.2s ease;
+      margin-left: auto;
+    }
+    
+    .submenu-toggle:hover .submenu-arrow {
+      transform: translateX(2px);
+    }
+    
+    .theme-submenu.open .submenu-arrow {
+      transform: rotate(90deg);
+    }
+    
+    .theme-submenu-content {
+      position: absolute;
+      top: 0;
+      right: 100%;
+      margin-right: 8px;
+      min-width: 200px;
+      background: var(--bg-elev);
+      border: 1px solid var(--card);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      z-index: 1002;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(0);
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+    
+    .theme-submenu.open .theme-submenu-content {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    
+    .theme-submenu-content .theme-dropdown-item {
+      border-radius: 0;
+    }
+    
+    .theme-submenu-content .theme-dropdown-item:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .theme-submenu-content .theme-dropdown-item:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+    
+    /* Theme dropdown theme-specific styles */
+    [data-theme="frutiger-aero"] .theme-dropdown {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 
+        0 16px 48px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    [data-theme="frutiger-aero"] .theme-dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.3);
+      color: var(--text);
+    }
+    
+    [data-theme="frutiger-aero"] .theme-dropdown-item.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #000000;
       box-shadow: 
         0 4px 12px rgba(0, 180, 216, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
     }
     
-    [data-theme="frutiger-aero"] .theme-toggle:hover {
-      transform: translateY(-2px);
+    [data-theme="frutiger-aero"] .theme-submenu-content .theme-dropdown-item.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #000000;
       box-shadow: 
-        0 6px 20px rgba(0, 180, 216, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        0 4px 12px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
     
-    /* Windows 9x theme toggle styles */
-    [data-theme="windows-9x"] .theme-toggle {
+    [data-theme="windows-9x"] .theme-dropdown {
       background: var(--bg-elev);
       border: 2px solid var(--border-dark);
       border-radius: 0;
-      color: var(--text);
-      font-size: 16px;
       box-shadow: 
         inset -1px -1px 0 var(--border-light),
         inset 1px 1px 0 var(--border-light);
     }
-    [data-theme="windows-9x"] .theme-toggle:hover {
-      background: var(--accent);
-      color: #ffffff;
-      transform: none;
+    
+    [data-theme="windows-9x"] .theme-dropdown-item {
+      border: 1px solid var(--border-dark);
+      border-radius: 0;
     }
     
-    /* Windows 7/Vista theme toggle styles */
-    [data-theme="windows-7"] .theme-toggle {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      border-radius: 4px;
-      color: #ffffff;
-      font-size: 16px;
-      box-shadow: 
-        0 2px 8px rgba(0, 90, 158, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.6),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    [data-theme="windows-9x"] .theme-dropdown-item:hover {
+      background: var(--accent);
+      color: var(--text);
     }
-    [data-theme="windows-7"] .theme-toggle:hover {
-      background: linear-gradient(135deg, var(--accent-2), var(--accent));
-      transform: translateY(-1px);
+    
+    [data-theme="windows-9x"] .theme-dropdown-item.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    [data-theme="windows-10"] .theme-dropdown {
+      background: var(--aero-gradient);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    
+    [data-theme="windows-10"] .theme-dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--text);
+    }
+    
+    [data-theme="windows-10"] .theme-dropdown-item.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #ffffff;
       box-shadow: 
         0 4px 12px rgba(0, 90, 158, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.7),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    [data-theme="macosx"] .theme-dropdown {
+      background: var(--brushed-metal);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      box-shadow: var(--shadow-outer);
+    }
+    
+    [data-theme="macosx"] .theme-dropdown-item:hover {
+      background: var(--lickable-gradient);
+      color: var(--text);
+    }
+    
+    [data-theme="macosx"] .theme-dropdown-item.active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: var(--shadow-inner);
+    }
+    
+    [data-theme="argon"] .theme-dropdown {
+      background: rgba(26, 26, 26, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--argon-border);
+      border-radius: 12px;
+      box-shadow: var(--argon-glow);
+    }
+    
+    [data-theme="argon"] .theme-dropdown-item:hover {
+      background: rgba(0, 241, 255, 0.1);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+    
+    [data-theme="argon"] .theme-dropdown-item.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #000000;
+      border-color: var(--accent);
+      box-shadow: 
+        0 4px 16px rgba(0, 241, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    [data-theme="argon"] .theme-submenu-content .theme-dropdown-item.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #000000;
+      border-color: var(--accent);
+      box-shadow: 
+        0 4px 16px rgba(0, 241, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    [data-theme="triangles"] .theme-dropdown {
+      background: rgba(15, 52, 96, 0.9);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(233, 69, 96, 0.3);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.3);
+    }
+    
+    [data-theme="triangles"] .theme-dropdown-item:hover {
+      background: rgba(233, 69, 96, 0.1);
+      color: var(--text);
+      border-color: rgba(233, 69, 96, 0.5);
+    }
+    
+    [data-theme="triangles"] .theme-dropdown-item.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #000000;
+      border-color: var(--accent);
+      box-shadow: 
+        0 4px 16px rgba(233, 69, 96, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    [data-theme="triangles"] .theme-submenu-content .theme-dropdown-item.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #000000;
+      border-color: var(--accent);
+      box-shadow: 
+        0 4px 16px rgba(233, 69, 96, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Theme submenu theme-specific styles */
+    [data-theme="frutiger-aero"] .theme-submenu-content {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 
+        0 16px 48px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    [data-theme="windows-9x"] .theme-submenu-content {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    [data-theme="windows-9x"] .theme-submenu-content .theme-dropdown-item {
+      border: 1px solid var(--border-dark);
+      border-radius: 0;
+    }
+    
+    [data-theme="windows-10"] .theme-submenu-content {
+      background: var(--aero-gradient);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    
+    [data-theme="macosx"] .theme-submenu-content {
+      background: var(--brushed-metal);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      box-shadow: var(--shadow-outer);
+    }
+    
+    [data-theme="argon"] .theme-submenu-content {
+      background: rgba(26, 26, 26, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--argon-border);
+      border-radius: 12px;
+      box-shadow: var(--argon-glow);
+    }
+    
+    [data-theme="triangles"] .theme-submenu-content {
+      background: rgba(15, 52, 96, 0.9);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(233, 69, 96, 0.3);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.3);
     }
 
     /* Mods toggle button */
@@ -1987,6 +2461,192 @@
       background: var(--bg-elev);
       border: 2px solid var(--border-dark);
     }
+
+    /* Footer styles - removed conflicting html, body rule */
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .footer {
+      background: var(--bg-elev);
+      border-top: 1px solid #2a2a44;
+      margin-top: auto;
+      padding: 40px 0 20px;
+      transition: all 0.3s ease;
+    }
+
+    /* Frutiger Aero footer styles */
+    [data-theme="frutiger-aero"] .footer {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--glass-border);
+      box-shadow: 
+        0 -8px 32px rgba(0, 180, 216, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    /* Windows 9x footer styles */
+    [data-theme="windows-9x"] .footer {
+      background: var(--bg-elev);
+      border-top: 2px solid var(--border-dark);
+      border-bottom: 2px solid var(--border-dark);
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+
+    /* Windows 10/11 footer styles */
+    [data-theme="windows-10"] .footer {
+      background: var(--aero-gradient);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 
+        0 -8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+
+    /* macOS X footer styles */
+    [data-theme="macosx"] .footer {
+      background: var(--brushed-metal);
+      border-top: 1px solid rgba(0, 0, 0, 0.4);
+      box-shadow: var(--shadow-outer);
+      position: relative;
+    }
+
+    [data-theme="macosx"] .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.1) 2px,
+          rgba(255, 255, 255, 0.1) 4px
+        );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .footer-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-section h4 {
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    [data-theme="frutiger-aero"] .footer-section h4 {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .footer-section p {
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .footer-muted {
+      color: var(--muted) !important;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .footer-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-links li {
+      margin-bottom: 8px;
+    }
+
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+      position: relative;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    [data-theme="frutiger-aero"] .footer-links a:hover {
+      color: var(--accent-2);
+      transform: translateY(-2px);
+    }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 40px auto 0;
+      padding: 20px 20px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    [data-theme="frutiger-aero"] .footer-bottom {
+      border-top: 1px solid var(--glass-border);
+    }
+
+    [data-theme="windows-9x"] .footer-bottom {
+      border-top: 2px solid var(--border-dark);
+    }
+
+    [data-theme="windows-10"] .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    [data-theme="macosx"] .footer-bottom {
+      border-top: 1px solid rgba(0, 0, 0, 0.3);
+    }
+
+    .footer-bottom p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    [data-theme="frutiger-aero"] .footer-bottom p {
+      background: linear-gradient(135deg, var(--accent-3), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -2014,9 +2674,50 @@
       <button id="modsToggle" class="mods-toggle" title="Toggle osu! mods">
         <span class="mods-icon">🎯</span>
       </button>
-      <button id="themeToggle" class="theme-toggle" title="Toggle theme">
-        <span class="theme-icon">🌊</span>
-      </button>
+      <div class="theme-toggle-wrapper">
+        <button id="themeToggle" class="theme-toggle" title="Change theme">
+          <span class="theme-icon">🌊</span>
+        </button>
+        <div id="themeDropdown" class="theme-dropdown">
+          <button class="theme-dropdown-item" data-theme="frutiger-aero">
+            <span class="theme-icon">🌊</span>
+            <span class="theme-name">Frutiger Aero</span>
+          </button>
+          <button class="theme-dropdown-item" data-theme="windows-9x">
+            <span class="theme-icon">🖥️</span>
+            <span class="theme-name">Windows 9x</span>
+          </button>
+          <button class="theme-dropdown-item" data-theme="windows-10">
+            <span class="theme-icon">🪟</span>
+            <span class="theme-name">Windows 10</span>
+          </button>
+          <button class="theme-dropdown-item" data-theme="macosx">
+            <span class="theme-icon">🍎</span>
+            <span class="theme-name">macOS X</span>
+          </button>
+          <div class="theme-submenu">
+            <button class="theme-dropdown-item submenu-toggle" id="moreThemesBtn">
+              <span class="theme-icon">⋯</span>
+              <span class="theme-name">More...</span>
+              <span class="submenu-arrow">▶</span>
+            </button>
+            <div class="theme-submenu-content" id="moreThemesSubmenu">
+              <button class="theme-dropdown-item" data-theme="argon">
+                <span class="theme-icon">💎</span>
+                <span class="theme-name">osu! Argon</span>
+              </button>
+              <button class="theme-dropdown-item" data-theme="triangles">
+                <span class="theme-icon">🔺</span>
+                <span class="theme-name">osu! Triangles</span>
+              </button>
+            </div>
+          </div>
+          <button class="theme-dropdown-item" data-theme="">
+            <span class="theme-icon">🌙</span>
+            <span class="theme-name">Original</span>
+          </button>
+        </div>
+      </div>
       <button class="register-btn" id="registerBtn">Register</button>
       <button class="signin-btn" id="signInBtn">Sign in</button>
       <button class="signout-btn" id="signOutBtn" style="display: none;">Sign out</button>
@@ -2033,6 +2734,11 @@
       <div class="legacy-versions-list">
         <p class="legacy-description">Access previous versions of the osu! Tournament Portal:</p>
         <div class="legacy-version-grid">
+          <a href="/osuTP/legacy/v0.6.html" class="legacy-version-card">
+            <div class="legacy-version-number">v0.6</div>
+            <div class="legacy-version-date">26 November 2025</div>
+            <div class="legacy-version-desc">Registration code system, new registration code reader admin tool, and improved error handling</div>
+          </a>
           <a href="/osuTP/legacy/v0.5.html" class="legacy-version-card">
             <div class="legacy-version-number">v0.5</div>
             <div class="legacy-version-date">26 November 2025</div>
@@ -2448,7 +3154,7 @@
     <div class="footer-content">
       <div class="footer-section">
         <h4>osu! Tournament Portal</h4>
-        <p>Version 0.6 (Release)</p>
+        <p>Version 0.7.0 (Development)</p>
         <p class="footer-muted"> 2025 osu!TP. All rights reserved.</p>
       </div>
       <div class="footer-section">
@@ -2458,6 +3164,13 @@
           <li><a href="#beatmaps" data-tab-jump="beatmaps">Beatmap List</a></li>
           <li><a href="https://github.com/bakedb/osuTP" target="_blank">GitHub Repository</a></li>
           <li><a href="https://osu.ppy.sh" target="_blank">osu! Official Site</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Production</h4>
+        <p class="footer-muted">Switch to stable version:</p>
+        <ul class="footer-links">
+          <li><a href="https://bakedb.github.io/osuTP/" target="_blank">Release Version</a></li>
         </ul>
       </div>
     </div>
@@ -2715,7 +3428,6 @@
     const usernameEl = document.getElementById('username');
     const passwordEl = document.getElementById('password');
     const sessionDurationEl = document.getElementById('sessionDuration');
-    const themeToggleBtn = document.getElementById('themeToggle');
     const logoEl = document.querySelector('.logo');
     const easterEggModalBackdrop = document.getElementById('easterEggModalBackdrop');
     const closeEasterEggBtn = document.getElementById('closeEasterEgg');
@@ -2728,65 +3440,111 @@
     /* ------------------------------
        Theme management
        ------------------------------ */
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const themeDropdown = document.getElementById('themeDropdown');
+    const themeDropdownItems = document.querySelectorAll('.theme-dropdown-item');
+    const moreThemesBtn = document.getElementById('moreThemesBtn');
+    const themeSubmenu = document.querySelector('.theme-submenu');
+    
     function loadTheme() {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'frutiger-aero') {
-        document.documentElement.setAttribute('data-theme', 'frutiger-aero');
-        themeToggleBtn.querySelector('.theme-icon').textContent = '🌙';
-      } else if (savedTheme === 'windows-9x') {
-        document.documentElement.setAttribute('data-theme', 'windows-9x');
-        themeToggleBtn.querySelector('.theme-icon').textContent = '🖥️';
-      } else if (savedTheme === 'windows-10') {
-        document.documentElement.setAttribute('data-theme', 'windows-10');
-        themeToggleBtn.querySelector('.theme-icon').textContent = '🪟';
-      } else if (savedTheme === 'macosx') {
-        document.documentElement.setAttribute('data-theme', 'macosx');
-        themeToggleBtn.querySelector('.theme-icon').textContent = '🍎';
-      } else {
-        themeToggleBtn.querySelector('.theme-icon').textContent = '🌊';
-      }
+      const savedTheme = localStorage.getItem('theme') || 'frutiger-aero';
+      setTheme(savedTheme);
     }
     
-    function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      let newTheme;
+    function setTheme(themeName) {
+      // Remove active class from all dropdown items
+      themeDropdownItems.forEach(item => item.classList.remove('active'));
       
-      if (currentTheme === 'frutiger-aero') {
-        newTheme = 'windows-9x';
-      } else if (currentTheme === 'windows-9x') {
-        newTheme = 'windows-10';
-      } else if (currentTheme === 'windows-10') {
-        newTheme = 'macosx';
-      } else if (currentTheme === 'macosx') {
-        newTheme = '';
-      } else {
-        newTheme = 'frutiger-aero';
-      }
-      
-      if (newTheme === 'frutiger-aero') {
+      if (themeName === 'frutiger-aero') {
         document.documentElement.setAttribute('data-theme', 'frutiger-aero');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🌊';
         localStorage.setItem('theme', 'frutiger-aero');
-        themeToggleBtn.querySelector('.theme-icon').textContent = '🌙';
-      } else if (newTheme === 'windows-9x') {
+        document.querySelector('[data-theme="frutiger-aero"]').classList.add('active');
+      } else if (themeName === 'windows-9x') {
         document.documentElement.setAttribute('data-theme', 'windows-9x');
-        localStorage.setItem('theme', 'windows-9x');
         themeToggleBtn.querySelector('.theme-icon').textContent = '🖥️';
-      } else if (newTheme === 'windows-10') {
+        localStorage.setItem('theme', 'windows-9x');
+        document.querySelector('[data-theme="windows-9x"]').classList.add('active');
+      } else if (themeName === 'windows-10') {
         document.documentElement.setAttribute('data-theme', 'windows-10');
-        localStorage.setItem('theme', 'windows-10');
         themeToggleBtn.querySelector('.theme-icon').textContent = '🪟';
-      } else if (newTheme === 'macosx') {
+        localStorage.setItem('theme', 'windows-10');
+        document.querySelector('[data-theme="windows-10"]').classList.add('active');
+      } else if (themeName === 'macosx') {
         document.documentElement.setAttribute('data-theme', 'macosx');
-        localStorage.setItem('theme', 'macosx');
         themeToggleBtn.querySelector('.theme-icon').textContent = '🍎';
+        localStorage.setItem('theme', 'macosx');
+        document.querySelector('[data-theme="macosx"]').classList.add('active');
+      } else if (themeName === 'argon') {
+        document.documentElement.setAttribute('data-theme', 'argon');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '💎';
+        localStorage.setItem('theme', 'argon');
+        document.querySelector('[data-theme="argon"]').classList.add('active');
+      } else if (themeName === 'triangles') {
+        document.documentElement.setAttribute('data-theme', 'triangles');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🔺';
+        localStorage.setItem('theme', 'triangles');
+        document.querySelector('[data-theme="triangles"]').classList.add('active');
       } else {
         document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'default');
-        themeToggleBtn.querySelector('.theme-icon').textContent = '🌊';
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🌙';
+        localStorage.setItem('theme', 'original');
+        document.querySelector('[data-theme=""]').classList.add('active');
       }
     }
     
-    themeToggleBtn.addEventListener('click', toggleTheme);
+    function toggleThemeDropdown() {
+      themeDropdown.classList.toggle('active');
+      // Close submenu when closing main dropdown
+      if (!themeDropdown.classList.contains('active')) {
+        themeSubmenu.classList.remove('open');
+      }
+    }
+    
+    function closeThemeDropdown(e) {
+      if (!themeToggleBtn.contains(e.target) && !themeDropdown.contains(e.target)) {
+        themeDropdown.classList.remove('active');
+        themeSubmenu.classList.remove('open');
+      }
+    }
+    
+    function toggleSubmenu(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      themeSubmenu.classList.toggle('open');
+    }
+    
+    // Theme dropdown event listeners
+    themeToggleBtn.addEventListener('click', toggleThemeDropdown);
+    
+    themeDropdownItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        if (item.classList.contains('submenu-toggle')) {
+          toggleSubmenu(e);
+        } else {
+          e.preventDefault();
+          const theme = item.getAttribute('data-theme');
+          setTheme(theme);
+          themeDropdown.classList.remove('active');
+          themeSubmenu.classList.remove('open');
+        }
+      });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', closeThemeDropdown);
+
+    /* ------------------------------
+       TODO: Future Improvements
+       ------------------------------ */
+    // TODO: Add theme transition animations
+    // TODO: Implement theme preview on hover
+    // TODO: Add custom theme creator
+    // TODO: Implement theme export/import functionality
+    // TODO: Add dark/light mode variants for each theme
+    // TODO: Optimize theme switching performance
+    // TODO: Add theme-specific sound effects
+    // TODO: Implement theme randomization option
 
     /* ------------------------------
        Mods management
@@ -4233,5 +4991,4 @@
     });
   </script>
 </body>
-
 </html>
