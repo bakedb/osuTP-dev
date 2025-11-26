@@ -1,0 +1,4236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>osu! Tournament Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --bg-elev: #171720;
+      --card: #1e1e2a;
+      --text: #e7e7ef;
+      --muted: #b7b7c9;
+      --accent: #ff66aa; /* osu! pink-ish */
+      --accent-2: #7a2beb; /* secondary vibe */
+      --ok: #2ecc71;
+      --bad: #ff4d4f;
+    }
+    
+    /* Frutiger Aero theme variables */
+    [data-theme="frutiger-aero"] {
+      --bg: #e8f4ff;
+      --bg-elev: #ffffff;
+      --card: #ffffff;
+      --text: #2c3e50;
+      --muted: #7f8c8d;
+      --accent: #00b4d8; /* bright blue */
+      --accent-2: #0077b6; /* deeper blue */
+      --accent-3: #90e0ef; /* light blue */
+      --accent-4: #caf0f8; /* very light blue */
+      --ok: #06ffa5;
+      --bad: #ff006e;
+      --glass: rgba(255, 255, 255, 0.25);
+      --glass-border: rgba(255, 255, 255, 0.18);
+    }
+    
+    /* Windows 9x theme variables */
+    [data-theme="windows-9x"] {
+      --bg: #008080;
+      --bg-elev: #c0c0c0;
+      --card: #c0c0c0;
+      --text: #000000;
+      --muted: #808080;
+      --accent: #000080;
+      --accent-2: #800080;
+      --accent-3: #008000;
+      --accent-4: #800000;
+      --ok: #008000;
+      --bad: #800000;
+      --border-light: #ffffff;
+      --border-dark: #000000;
+      --border-dim: #808080;
+    }
+    
+    /* Windows 10/11 theme variables */
+    [data-theme="windows-10"] {
+      --bg: #f3f3f3;
+      --bg-elev: #ffffff;
+      --card: #ffffff;
+      --text: #000000;
+      --muted: #616161;
+      --accent: #0078d4;
+      --accent-2: #106ebe;
+      --accent-3: #005a9e;
+      --accent-4: #404040;
+      --ok: #107c10;
+      --bad: #d13438;
+      --glass: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.9);
+      --aero-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+    }
+    
+    /* macOS X theme variables */
+    [data-theme="macosx"] {
+      --bg: #e6e6e6;
+      --bg-elev: #f7f7f7;
+      --card: #ffffff;
+      --text: #000000;
+      --muted: #424242;
+      --accent: #0066cc;
+      --accent-2: #0052a3;
+      --accent-3: #003d7a;
+      --accent-4: #002654;
+      --ok: #2e7d32;
+      --bad: #d32f2f;
+      --brushed-metal: linear-gradient(180deg, #d4d4d4 0%, #e8e8e8 20%, #f0f0f0 40%, #e8e8e8 60%, #d4d4d4 100%);
+      --lickable-gradient: linear-gradient(180deg, #ffffff 0%, #f0f0f0 50%, #e0e0e0 100%);
+      --shadow-outer: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      --shadow-inner: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 0 rgba(255, 255, 255, 0.8);
+    }
+    
+    /* Tab-specific color variations */
+    [data-theme="frutiger-aero"] body.tab-home {
+      --accent: #00b4d8; /* pure blue */
+      --accent-2: #0077b6;
+      --accent-3: #90e0ef;
+      --accent-4: #caf0f8;
+    }
+    
+    [data-theme="frutiger-aero"] body.tab-brackets {
+      --accent: #00a89c; /* blue-green mix */
+      --accent-2: #006b63;
+      --accent-3: #7dd3c0;
+      --accent-4: #b2e2d2;
+    }
+    
+    [data-theme="frutiger-aero"] body.tab-live {
+      --accent: #009d8a; /* more green */
+      --accent-2: #005f56;
+      --accent-3: #6fc7b5;
+      --accent-4: #a8d8cc;
+    }
+    
+    [data-theme="frutiger-aero"] body.tab-rules {
+      --accent: #009278; /* even more green */
+      --accent-2: #005349;
+      --accent-3: #61cba9;
+      --accent-4: #9dcec6;
+    }
+    
+    [data-theme="frutiger-aero"] body.tab-beatmaps {
+      --accent: #008766; /* very green-blue */
+      --accent-2: #00473c;
+      --accent-3: #54cf9d;
+      --accent-4: #92c4c0;
+    }
+    
+    [data-theme="frutiger-aero"] body.tab-tools {
+      --accent: #007c54; /* equal blue-green mix */
+      --accent-2: #003b2f;
+      --accent-3: #47d391;
+      --accent-4: #89bab8;
+    }
+    
+    /* Windows 10/11 tab-specific colors */
+    [data-theme="windows-10"] body.tab-home {
+      --accent: #0078d4; /* Windows blue */
+      --accent-2: #106ebe;
+      --accent-3: #005a9e;
+      --accent-4: #404040;
+    }
+    
+    [data-theme="windows-10"] body.tab-brackets {
+      --accent: #107c10; /* Windows green */
+      --accent-2: #0e6e0e;
+      --accent-3: #5cb85c;
+      --accent-4: #a3d5a3;
+    }
+    
+    [data-theme="windows-10"] body.tab-live {
+      --accent: #d13438; /* Windows red */
+      --accent-2: #ff8c00;
+      --accent-3: #ffa500;
+      --accent-4: #ffcc80;
+    }
+    
+    [data-theme="windows-10"] body.tab-rules {
+      --accent: #5c2d91; /* Windows purple */
+      --accent-2: #8a4db8;
+      --accent-3: #b373db;
+      --accent-4: #d4b3e6;
+    }
+    
+    [data-theme="windows-10"] body.tab-beatmaps {
+      --accent: #106ebe; /* Windows light blue */
+      --accent-2: #004578;
+      --accent-3: #66b3ff;
+      --accent-4: #b3d9ff;
+    }
+    
+    [data-theme="windows-10"] body.tab-tools {
+      --accent: #ff8c00; /* Windows orange */
+      --accent-2: #d13438;
+      --accent-3: #ffa500;
+      --accent-4: #ffcc80;
+    }
+    
+    /* macOS X tab-specific colors */
+    [data-theme="macosx"] body.tab-home {
+      --accent: #0066cc; /* macOS blue */
+      --accent-2: #0052a3;
+      --accent-3: #003d7a;
+      --accent-4: #002654;
+    }
+    
+    [data-theme="macosx"] body.tab-brackets {
+      --accent: #2e7d32; /* macOS green */
+      --accent-2: #228b22;
+      --accent-3: #32cd32;
+      --accent-4: #90ee90;
+    }
+    
+    [data-theme="macosx"] body.tab-live {
+      --accent: #d32f2f; /* macOS red */
+      --accent-2: #ff0000;
+      --accent-3: #cd5c5c;
+      --accent-4: #f08080;
+    }
+    
+    [data-theme="macosx"] body.tab-rules {
+      --accent: #5c2d91; /* macOS purple */
+      --accent-2: #8a4db8;
+      --accent-3: #b373db;
+      --accent-4: #d4b3e6;
+    }
+    
+    [data-theme="macosx"] body.tab-beatmaps {
+      --accent: #0052a3; /* macOS light blue */
+      --accent-2: #003d7a;
+      --accent-3: #66b3ff;
+      --accent-4: #b3d9ff;
+    }
+    
+    [data-theme="macosx"] body.tab-tools {
+      --accent: #ff8c00; /* macOS orange */
+      --accent-2: #d32f2f;
+      --accent-3: #ffa500;
+      --accent-4: #ffcc80;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      min-height: 100vh;
+      position: relative;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    
+    /* Frutiger Aero background styles */
+    [data-theme="frutiger-aero"] html, [data-theme="frutiger-aero"] body {
+      background: linear-gradient(135deg, #e8f4ff 0%, #caf0f8 25%, #90e0ef 50%, #00b4d8 75%, #0077b6 100%);
+      font-family: 'Segoe UI', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+    
+    [data-theme="frutiger-aero"] body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(144, 224, 239, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 180, 216, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(202, 240, 248, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* Windows 9x background styles */
+    [data-theme="windows-9x"] html, [data-theme="windows-9x"] body {
+      background: var(--bg);
+      font-family: 'MS Sans Serif', 'Microsoft Sans Serif', 'Segoe UI', Tahoma, Arial, sans-serif;
+      font-size: 11px;
+    }
+    
+    /* Windows 10/11 background styles */
+    [data-theme="windows-10"] html, [data-theme="windows-10"] body {
+      background: linear-gradient(135deg, #f3f3f3 0%, #ffffff 50%, #e8e8e8 100%);
+      font-family: 'Segoe UI', 'Microsoft Sans Serif', Tahoma, Arial, sans-serif;
+    }
+    
+    [data-theme="windows-10"] body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 30% 70%, rgba(0, 120, 215, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(16, 124, 16, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* macOS X background styles */
+    [data-theme="macosx"] html, [data-theme="macosx"] body {
+      background: var(--brushed-metal);
+      font-family: 'Lucida Grande', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 13px;
+    }
+    
+    [data-theme="macosx"] body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.1) 2px,
+          rgba(255, 255, 255, 0.1) 4px
+        );
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Top nav */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: linear-gradient(90deg, var(--bg-elev), var(--card));
+      border-bottom: 1px solid #26263a;
+      transition: all 0.3s ease;
+    }
+    
+    /* Frutiger Aero nav styles */
+    [data-theme="frutiger-aero"] .nav {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    /* Windows 9x nav styles */
+    [data-theme="windows-9x"] .nav {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-bottom: 2px solid var(--border-dim);
+      border-radius: 0;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    /* Windows 10/11 nav styles */
+    [data-theme="windows-10"] .nav {
+      background: var(--aero-gradient);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 0 0 8px 8px;
+      box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    /* macOS X nav styles */
+    [data-theme="macosx"] .nav {
+      background: var(--brushed-metal);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+      border-radius: 0;
+      box-shadow: var(--shadow-outer);
+      position: relative;
+    }
+    
+    [data-theme="macosx"] .nav::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.1) 2px,
+          rgba(255, 255, 255, 0.1) 4px
+        );
+      pointer-events: none;
+      z-index: 1;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .brand .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, var(--accent) 40%, #b30460 100%);
+      box-shadow: 0 0 12px rgba(255, 102, 170, 0.6);
+      transition: all 0.3s ease;
+    }
+    
+    [data-theme="frutiger-aero"] .brand .logo {
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, var(--accent-3) 40%, var(--accent) 100%);
+      box-shadow: 
+        0 0 20px rgba(0, 180, 216, 0.8),
+        0 4px 12px rgba(0, 180, 216, 0.4),
+        inset 0 -2px 4px rgba(0, 119, 182, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+    
+    /* Windows 9x logo styles */
+    [data-theme="windows-9x"] .brand .logo {
+      background: var(--accent);
+      border: 2px solid var(--border-dark);
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    /* Windows 10/11 logo styles */
+    [data-theme="windows-10"] .brand .logo {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 
+        0 2px 8px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* macOS X logo styles */
+    [data-theme="macosx"] .brand .logo {
+      background: var(--brushed-metal);
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      border-radius: 6px;
+      box-shadow: var(--shadow-outer);
+      position: relative;
+    }
+    
+    [data-theme="macosx"] .brand .logo::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.2) 2px,
+          rgba(255, 255, 255, 0.2) 4px
+        );
+      border-radius: 6px;
+      pointer-events: none;
+    }
+    .brand .name {
+      color: var(--text);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+    }
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-weight: 600;
+    }
+    .tab-btn:hover { color: var(--text); background: #23233a; }
+    .tab-btn.active { color: #fff; background: var(--accent); }
+    
+    /* Frutiger Aero tab styles */
+    [data-theme="frutiger-aero"] .tab-btn {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      box-shadow: 
+        0 4px 12px rgba(0, 180, 216, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    [data-theme="frutiger-aero"] .tab-btn:hover { 
+      color: var(--accent-2); 
+      background: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+    [data-theme="frutiger-aero"] .tab-btn.active { 
+      color: #ffffff; 
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 
+        0 8px 24px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 2px 4px rgba(0, 119, 182, 0.3);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Windows 9x tab styles */
+    [data-theme="windows-9x"] .tab-btn {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      color: var(--text);
+      font-weight: 400;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    [data-theme="windows-9x"] .tab-btn:hover { 
+      background: var(--accent);
+      color: #ffffff;
+    }
+    [data-theme="windows-9x"] .tab-btn.active { 
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    /* Windows 10/11 tab styles */
+    [data-theme="windows-10"] .tab-btn {
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      color: var(--text);
+      font-weight: 500;
+      box-shadow: 
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+    [data-theme="windows-10"] .tab-btn:hover { 
+      background: var(--aero-gradient);
+      color: var(--accent-2);
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    [data-theme="windows-10"] .tab-btn.active { 
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #ffffff;
+      box-shadow: 
+        0 4px 12px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* macOS X tab styles */
+    [data-theme="macosx"] .tab-btn {
+      background: var(--lickable-gradient);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 12px;
+      box-shadow: var(--shadow-outer);
+      position: relative;
+    }
+    
+    [data-theme="macosx"] .tab-btn:hover { 
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 50%, #e5e5e5 100%);
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 
+        0 3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
+    
+    [data-theme="macosx"] .tab-btn.active { 
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: var(--shadow-inner);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .userbox {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .signin-btn, .signout-btn, .register-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.1s ease;
+    }
+    .signin-btn:hover, .signout-btn:hover, .register-btn:hover { transform: translateY(-1px); }
+    
+    /* Frutiger Aero button styles */
+    [data-theme="frutiger-aero"] .signin-btn, [data-theme="frutiger-aero"] .signout-btn, [data-theme="frutiger-aero"] .register-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-radius: 12px;
+      padding: 8px 12px;
+      box-shadow: 
+        0 4px 12px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    [data-theme="frutiger-aero"] .signin-btn:hover, [data-theme="frutiger-aero"] .signout-btn:hover, [data-theme="frutiger-aero"] .register-btn:hover { 
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Windows 9x button styles */
+    [data-theme="windows-9x"] .signin-btn, [data-theme="windows-9x"] .signout-btn, [data-theme="windows-9x"] .register-btn {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      color: var(--text);
+      font-weight: 400;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    [data-theme="windows-9x"] .signin-btn:hover, [data-theme="windows-9x"] .signout-btn:hover, [data-theme="windows-9x"] .register-btn:hover { 
+      background: var(--accent);
+      color: #ffffff;
+      transform: none;
+    }
+    
+    /* Windows 7/Vista button styles */
+    [data-theme="windows-7"] .signin-btn, [data-theme="windows-7"] .signout-btn, [data-theme="windows-7"] .register-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 
+        0 2px 8px rgba(0, 90, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="windows-7"] .signin-btn:hover, [data-theme="windows-7"] .signout-btn:hover, [data-theme="windows-7"] .register-btn:hover { 
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 12px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    /* Windows 10/11 button styles */
+    [data-theme="windows-10"] .signin-btn, [data-theme="windows-10"] .signout-btn, [data-theme="windows-10"] .register-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 
+        0 2px 8px rgba(0, 90, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="windows-10"] .signin-btn:hover, [data-theme="windows-10"] .signout-btn:hover, [data-theme="windows-10"] .register-btn:hover { 
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 12px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* macOS X button styles */
+    [data-theme="macosx"] .signin-btn, [data-theme="macosx"] .signout-btn, [data-theme="macosx"] .register-btn {
+      background: var(--lickable-gradient);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 12px;
+      box-shadow: var(--shadow-outer);
+      position: relative;
+    }
+    
+    [data-theme="macosx"] .signin-btn:hover, [data-theme="macosx"] .signout-btn:hover, [data-theme="macosx"] .register-btn:hover { 
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 50%, #e5e5e5 100%);
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 
+        0 3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
+    
+    [data-theme="macosx"] .signin-btn:active, [data-theme="macosx"] .signout-btn:active, [data-theme="macosx"] .register-btn:active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: var(--shadow-inner);
+      transform: translateY(0);
+    }
+
+    /* Page container */
+    .container {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 20px 40px;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, rgba(255,102,170,0.25), rgba(122,43,235,0.18));
+      border: 1px solid #2a2a44;
+      border-radius: 16px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    
+    /* Frutiger Aero hero styles */
+    [data-theme="frutiger-aero"] .hero {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 32px;
+      gap: 24px;
+      box-shadow: 
+        0 16px 48px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    [data-theme="frutiger-aero"] .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(144, 224, 239, 0.1) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    .hero h1 { margin: 0 0 8px; font-size: 2rem; }
+    .hero p { margin: 0; color: var(--muted); }
+    .hero .cta {
+      display: inline-block;
+      margin-top: 12px;
+      background: var(--accent-2);
+      color: #fff;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    [data-theme="frutiger-aero"] .hero .cta {
+      background: linear-gradient(135deg, var(--accent-3), var(--accent));
+      padding: 12px 18px;
+      border-radius: 16px;
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    [data-theme="frutiger-aero"] .hero .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 28px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Windows 9x hero styles */
+    [data-theme="windows-9x"] .hero {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      padding: 16px;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    [data-theme="windows-9x"] .hero .cta {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      color: var(--text);
+      font-weight: 400;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    [data-theme="windows-9x"] .hero .cta:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: none;
+    }
+    
+    /* Windows 7/Vista hero styles */
+    [data-theme="windows-7"] .hero {
+      background: var(--aero-gradient);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+    }
+    [data-theme="windows-7"] .hero .cta {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 
+        0 2px 8px rgba(0, 90, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="windows-7"] .hero .cta:hover {
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 12px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Windows 10/11 hero styles */
+    [data-theme="windows-10"] .hero {
+      background: var(--aero-gradient);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+    }
+    [data-theme="windows-10"] .hero .cta {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 
+        0 2px 8px rgba(0, 90, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="windows-10"] .hero .cta:hover {
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 12px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* macOS X hero styles */
+    [data-theme="macosx"] .hero {
+      background: var(--brushed-metal);
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow-outer);
+      position: relative;
+    }
+    
+    [data-theme="macosx"] .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.1) 2px,
+          rgba(255, 255, 255, 0.1) 4px
+        );
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    [data-theme="macosx"] .hero .cta {
+      background: var(--lickable-gradient);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 12px;
+      box-shadow: var(--shadow-outer);
+      position: relative;
+      z-index: 2;
+    }
+    
+    [data-theme="macosx"] .hero .cta:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 50%, #e5e5e5 100%);
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 
+        0 3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
+    
+    [data-theme="macosx"] .hero .cta:active {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: var(--shadow-inner);
+      transform: translateY(0);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid #2a2a44;
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    /* Frutiger Aero card styles */
+    [data-theme="frutiger-aero"] .card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 180, 216, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    [data-theme="frutiger-aero"] .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    }
+    
+    /* Windows 9x card styles */
+    [data-theme="windows-9x"] .card {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      padding: 12px;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    /* Windows 7/Vista card styles */
+    [data-theme="windows-7"] .card {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    [data-theme="windows-7"] .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    }
+    .card h3 { margin: 0 0 10px; font-size: 1.1rem; }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    /* Beatmap list */
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .input, .select {
+      background: #14141c;
+      color: var(--text);
+      border: 1px solid #2a2a44;
+      border-radius: 8px;
+      padding: 8px 10px;
+      transition: all 0.3s ease;
+    }
+    
+    /* Frutiger Aero input styles */
+    [data-theme="frutiger-aero"] .input, [data-theme="frutiger-aero"] .select {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 180, 216, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    [data-theme="frutiger-aero"] .input:focus, [data-theme="frutiger-aero"] .select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 180, 216, 0.1),
+        0 0 0 3px rgba(0, 180, 216, 0.2),
+        0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    /* Windows 9x input styles */
+    [data-theme="windows-9x"] .input, [data-theme="windows-9x"] .select {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      color: var(--text);
+      font-size: 11px;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    [data-theme="windows-9x"] .input:focus, [data-theme="windows-9x"] .select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    /* Windows 7/Vista input styles */
+    [data-theme="windows-7"] .input, [data-theme="windows-7"] .select {
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 4px;
+      color: var(--text);
+      font-size: 13px;
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4),
+        0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="windows-7"] .input:focus, [data-theme="windows-7"] .select:focus {
+      outline: none;
+      border-color: var(--accent-2);
+      box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.5),
+        0 0 0 2px rgba(0, 120, 215, 0.2);
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #2a2a44;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    /* Frutiger Aero table styles */
+    [data-theme="frutiger-aero"] .table {
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      box-shadow: 
+        0 8px 32px rgba(0, 180, 216, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    [data-theme="frutiger-aero"] .table th, [data-theme="frutiger-aero"] .table td {
+      border-bottom: 1px solid var(--glass-border);
+    }
+    
+    [data-theme="frutiger-aero"] .table thead {
+      background: linear-gradient(135deg, var(--accent-3), var(--accent));
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 119, 182, 0.3);
+    }
+    
+    /* Windows 9x table styles */
+    [data-theme="windows-9x"] .table {
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      background: var(--bg-elev);
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    [data-theme="windows-9x"] .table th, [data-theme="windows-9x"] .table td {
+      border-bottom: 1px solid var(--border-dim);
+    }
+    [data-theme="windows-9x"] .table thead {
+      background: var(--accent);
+      color: #ffffff;
+    }
+    
+    /* Windows 7/Vista table styles */
+    [data-theme="windows-7"] .table {
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.6);
+    }
+    [data-theme="windows-7"] .table th, [data-theme="windows-7"] .table td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="windows-7"] .table thead {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    .table th, .table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #2a2a44;
+    }
+    .table thead {
+      background: #181826;
+      color: var(--muted);
+    }
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #fff;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    /* Frutiger Aero pill styles */
+    [data-theme="frutiger-aero"] .pill {
+      padding: 4px 10px;
+      border-radius: 20px;
+      box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .pill.normal { background: #4FC3F7; }   /* light blue */
+    .pill.hard { background: #81C784; }     /* green */
+    .pill.insane { background: #FBC02D; }   /* yellow */
+    .pill.expert { background: #E57373; }   /* red */
+    .pill.expertplus { background: #7281FE; }  /* purple */
+    .pill.expertplusplus { background: #000000; color: #FFFF00; }  /* black with yellow text */
+    
+    [data-theme="frutiger-aero"] .pill.normal { background: linear-gradient(135deg, #4FC3F7, #29B6F6); }
+    [data-theme="frutiger-aero"] .pill.hard { background: linear-gradient(135deg, #81C784, #66BB6A); }
+    [data-theme="frutiger-aero"] .pill.insane { background: linear-gradient(135deg, #FBC02D, #F9A825); }
+    [data-theme="frutiger-aero"] .pill.expert { background: linear-gradient(135deg, #E57373, #EF5350); }
+    [data-theme="frutiger-aero"] .pill.expertplus { background: linear-gradient(135deg, #7281FE, #5C6BC0); }
+    [data-theme="frutiger-aero"] .pill.expertplusplus { background: linear-gradient(135deg, #424242, #212121); color: #FFFF00; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+    
+    /* Windows 9x pill styles */
+    [data-theme="windows-9x"] .pill {
+      padding: 2px 6px;
+      border-radius: 0;
+      font-size: 11px;
+      font-weight: 400;
+      border: 1px solid var(--border-dark);
+    }
+    
+    /* Windows 7/Vista pill styles */
+    [data-theme="windows-7"] .pill {
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    [data-theme="windows-7"] .pill.normal { background: linear-gradient(135deg, #4FC3F7, #29B6F6); }
+    [data-theme="windows-7"] .pill.hard { background: linear-gradient(135deg, #81C784, #66BB6A); }
+    [data-theme="windows-7"] .pill.insane { background: linear-gradient(135deg, #FBC02D, #F9A825); }
+    [data-theme="windows-7"] .pill.expert { background: linear-gradient(135deg, #E57373, #EF5350); }
+    [data-theme="windows-7"] .pill.expertplus { background: linear-gradient(135deg, #7281FE, #5C6BC0); }
+    [data-theme="windows-7"] .pill.expertplusplus { background: linear-gradient(135deg, #424242, #212121); color: #FFFF00; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+
+    /* Rules */
+    .rules li {
+      margin-bottom: 8px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 14, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card);
+      border: 1px solid #2a2a44;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    }
+    .modal h3 { margin: 0 0 10px; }
+    .modal .row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .modal .error { color: var(--bad); font-weight: 700; min-height: 20px; }
+    .modal .actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .btn {
+      border: none;
+      background: var(--bg-elev);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn.primary { background: var(--accent); color: #fff; }
+
+    /* Tournament styles */
+    .bracket-round {
+      margin-bottom: 24px;
+    }
+    .bracket-round h4 {
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+    .matches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .match {
+      background: #1a1a24;
+      border: 1px solid #2a2a44;
+      border-radius: 8px;
+      padding: 16px;
+      position: relative;
+    }
+    .match.live {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(255, 102, 170, 0.3);
+    }
+    .match.completed {
+      opacity: 0.8;
+    }
+    .players {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .player {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background: #14141c;
+      border-radius: 6px;
+    }
+    .player.winner {
+      background: rgba(255, 102, 170, 0.1);
+      border: 1px solid var(--accent);
+    }
+    .player .name {
+      font-weight: 600;
+    }
+    .player .team {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .player .score {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .vs {
+      text-align: center;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .match .status {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .live-matches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 16px;
+    }
+    .live-match {
+      background: linear-gradient(135deg, rgba(255,102,170,0.1), rgba(122,43,235,0.05));
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+    }
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .live-indicator {
+      background: #ff4444;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .round {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .current-map {
+      margin-top: 12px;
+      padding: 8px;
+      background: #14141c;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .recent-results {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .result {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: #1a1a24;
+      border: 1px solid #2a2a44;
+      border-radius: 6px;
+    }
+    .result .score {
+      font-weight: 600;
+    }
+    .result .time {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* Tools section styles */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    
+    .row label {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    textarea.input {
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    /* Theme toggle button */
+    .theme-toggle {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+    }
+    
+    .theme-toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    [data-theme="frutiger-aero"] .theme-toggle {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-radius: 12px;
+      box-shadow: 
+        0 4px 12px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    [data-theme="frutiger-aero"] .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Windows 9x theme toggle styles */
+    [data-theme="windows-9x"] .theme-toggle {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      color: var(--text);
+      font-size: 16px;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    [data-theme="windows-9x"] .theme-toggle:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: none;
+    }
+    
+    /* Windows 7/Vista theme toggle styles */
+    [data-theme="windows-7"] .theme-toggle {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 4px;
+      color: #ffffff;
+      font-size: 16px;
+      box-shadow: 
+        0 2px 8px rgba(0, 90, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="windows-7"] .theme-toggle:hover {
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 12px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    /* Mods toggle button */
+    .mods-toggle {
+      background: var(--accent-2);
+      color: #fff;
+      border: none;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+    }
+    
+    .mods-toggle:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    [data-theme="frutiger-aero"] .mods-toggle {
+      background: linear-gradient(135deg, var(--accent-3), var(--accent-2));
+      border-radius: 12px;
+      box-shadow: 
+        0 4px 12px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    [data-theme="frutiger-aero"] .mods-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Windows 9x mods toggle styles */
+    [data-theme="windows-9x"] .mods-toggle {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      color: var(--text);
+      font-size: 16px;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    [data-theme="windows-9x"] .mods-toggle:hover {
+      background: var(--accent-2);
+      color: #ffffff;
+      transform: none;
+    }
+    
+    /* Windows 7/Vista mods toggle styles */
+    [data-theme="windows-7"] .mods-toggle {
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 4px;
+      color: #ffffff;
+      font-size: 16px;
+      box-shadow: 
+        0 2px 8px rgba(0, 90, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    }
+    [data-theme="windows-7"] .mods-toggle:hover {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 12px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    /* Mods drawer */
+    .mods-drawer {
+      position: fixed;
+      top: 0;
+      left: -300px;
+      width: 300px;
+      height: 100vh;
+      background: var(--card);
+      border-right: 1px solid #2a2a44;
+      transition: left 0.3s ease;
+      z-index: 2000;
+      overflow-y: auto;
+      box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .mods-drawer.open {
+      left: 0;
+    }
+    
+    /* Frutiger Aero mods drawer styles */
+    [data-theme="frutiger-aero"] .mods-drawer {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid var(--glass-border);
+      box-shadow: 
+        8px 0 32px rgba(0, 180, 216, 0.2),
+        inset -1px 0 0 rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Windows 9x mods drawer styles */
+    [data-theme="windows-9x"] .mods-drawer {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-left: none;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    /* Windows 10/11 mods drawer styles */
+    [data-theme="windows-10"] .mods-drawer {
+      background: var(--aero-gradient);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 
+        4px 0 16px rgba(0, 0, 0, 0.1),
+        inset -1px 0 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    /* macOS X mods drawer styles */
+    [data-theme="macosx"] .mods-drawer {
+      background: var(--brushed-metal);
+      border-right: 1px solid rgba(0, 0, 0, 0.4);
+      box-shadow: var(--shadow-outer);
+    }
+    
+    .mods-drawer-header {
+      padding: 20px;
+      border-bottom: 1px solid #2a2a44;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    [data-theme="frutiger-aero"] .mods-drawer-header {
+      border-bottom: 1px solid var(--glass-border);
+    }
+    
+    [data-theme="windows-9x"] .mods-drawer-header {
+      border-bottom: 2px solid var(--border-dark);
+    }
+    
+    [data-theme="windows-10"] .mods-drawer-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    
+    [data-theme="macosx"] .mods-drawer-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+    }
+    
+    .mods-drawer-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+    }
+    
+    .mods-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    .mods-close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+    
+    .mods-content {
+      padding: 20px;
+    }
+    
+    .mod-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .mod-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    .mod-item.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    
+    [data-theme="frutiger-aero"] .mod-item {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+    }
+    
+    [data-theme="frutiger-aero"] .mod-item:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 180, 216, 0.2);
+    }
+    
+    [data-theme="frutiger-aero"] .mod-item.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    [data-theme="windows-9x"] .mod-item {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+    }
+    
+    [data-theme="windows-9x"] .mod-item:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: none;
+    }
+    
+    .mod-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .mod-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .mod-description {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    
+    .mod-toggle {
+      width: 44px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      position: relative;
+      transition: background 0.2s ease;
+    }
+    
+    .mod-toggle.active {
+      background: var(--accent);
+    }
+    
+    .mod-toggle-slider {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .mod-toggle.active .mod-toggle-slider {
+      transform: translateX(20px);
+    }
+
+    /* Mods overlay effects */
+    .mods-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1500;
+    }
+
+    /* Flashlight mod overlay */
+    .flashlight-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle 100px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        transparent 0%,
+        transparent 100px,
+        rgba(0, 0, 0, 0.9) 150px,
+        rgba(0, 0, 0, 0.95) 200px
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .flashlight-overlay.active {
+      opacity: 1;
+    }
+
+    /* Hard Rock mod styles */
+    .hard-rock-active {
+      transform: scale(0.85);
+      transform-origin: center;
+    }
+
+    /* Hidden mod styles */
+    .hidden-mod .card,
+    .hidden-mod .hero,
+    .hidden-mod .match,
+    .hidden-mod .result,
+    .hidden-mod .beatmap-item,
+    .hidden-mod h1,
+    .hidden-mod h2,
+    .hidden-mod h3,
+    .hidden-mod h4,
+    .hidden-mod p,
+    .hidden-mod li,
+    .hidden-mod span,
+    .hidden-mod td {
+      opacity: 0.1;
+      transition: opacity 0.3s ease;
+    }
+
+    .hidden-mod .card:hover,
+    .hidden-mod .hero:hover,
+    .hidden-mod .match:hover,
+    .hidden-mod .result:hover,
+    .hidden-mod .beatmap-item:hover,
+    .hidden-mod h1:hover,
+    .hidden-mod h2:hover,
+    .hidden-mod h3:hover,
+    .hidden-mod h4:hover,
+    .hidden-mod p:hover,
+    .hidden-mod li:hover,
+    .hidden-mod span:hover,
+    .hidden-mod td:hover {
+      opacity: 1;
+    }
+
+    /* Admin-only tab hiding with maximum specificity */
+    .tab-btn.admin-only {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    /* Legacy Versions Drawer Styles */
+    .legacy-versions-list {
+      padding: 20px;
+    }
+    
+    .legacy-description {
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    
+    .legacy-version-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .legacy-version-card {
+      display: block;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .legacy-version-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(255, 102, 170, 0.2);
+    }
+    
+    .legacy-version-number {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+    
+    .legacy-version-date {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    
+    .legacy-version-desc {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    
+    .legacy-note {
+      padding: 12px;
+      background: rgba(255, 102, 170, 0.1);
+      border: 1px solid rgba(255, 102, 170, 0.3);
+      border-radius: 6px;
+      font-size: 0.85rem;
+    }
+    
+    .legacy-note p {
+      margin: 0;
+    }
+    
+    /* Theme-specific legacy drawer styles */
+    [data-theme="frutiger-aero"] .legacy-version-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+    }
+    
+    [data-theme="frutiger-aero"] .legacy-version-card:hover {
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 180, 216, 0.2);
+    }
+    
+    [data-theme="frutiger-aero"] .legacy-note {
+      background: rgba(0, 180, 216, 0.1);
+      border-color: rgba(0, 180, 216, 0.3);
+    }
+    
+    [data-theme="windows-9x"] .legacy-version-card {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+    }
+    
+    [data-theme="windows-9x"] .legacy-version-card:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: none;
+    }
+    
+    [data-theme="windows-9x"] .legacy-version-number {
+      color: var(--accent);
+    }
+    
+    [data-theme="windows-9x"] .legacy-note {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+    }
+  </style>
+</head>
+<body>
+  <!-- Top nav -->
+  <nav class="nav">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="name">osu!TP</div>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Main tabs">
+      <button class="tab-btn active" data-tab="home" role="tab" aria-controls="home">Home</button>
+      <button class="tab-btn" data-tab="brackets" role="tab" aria-controls="brackets">Brackets</button>
+      <button class="tab-btn" data-tab="live" role="tab" aria-controls="live">Live Scores</button>
+      <button class="tab-btn" data-tab="rules" role="tab" aria-controls="rules">Rules</button>
+      <button class="tab-btn" data-tab="beatmaps" role="tab" aria-controls="beatmaps">Beatmap list</button>
+      <button class="tab-btn" data-tab="tools" role="tab" aria-controls="tools">Tools</button>
+    </div>
+
+    <div class="userbox">
+      <span id="userStatus">Guest</span>
+      <button id="legacyToggle" class="mods-toggle" title="Toggle legacy versions">
+        <span class="mods-icon">📚</span>
+      </button>
+      <button id="modsToggle" class="mods-toggle" title="Toggle osu! mods">
+        <span class="mods-icon">🎯</span>
+      </button>
+      <button id="themeToggle" class="theme-toggle" title="Toggle theme">
+        <span class="theme-icon">🌊</span>
+      </button>
+      <button class="register-btn" id="registerBtn">Register</button>
+      <button class="signin-btn" id="signInBtn">Sign in</button>
+      <button class="signout-btn" id="signOutBtn" style="display: none;">Sign out</button>
+    </div>
+  </nav>
+
+  <!-- Legacy Versions Drawer -->
+  <div id="legacyDrawer" class="mods-drawer">
+    <div class="mods-drawer-header">
+      <h3 class="mods-drawer-title">Legacy Versions</h3>
+      <button id="legacyCloseBtn" class="mods-close-btn">✕</button>
+    </div>
+    <div class="mods-drawer-content">
+      <div class="legacy-versions-list">
+        <p class="legacy-description">Access previous versions of the osu! Tournament Portal:</p>
+        <div class="legacy-version-grid">
+          <a href="/osuTP/legacy/v0.5.html" class="legacy-version-card">
+            <div class="legacy-version-number">v0.5</div>
+            <div class="legacy-version-date">26 November 2025</div>
+            <div class="legacy-version-desc">Added more themes, website mods, registration system, and Google Sheets account fetching</div>
+          </a>
+          <a href="/osuTP/legacy/v0.4.html" class="legacy-version-card">
+            <div class="legacy-version-number">v0.4</div>
+            <div class="legacy-version-date">25 November 2025</div>
+            <div class="legacy-version-desc">Added Frutiger Aero theme and an easter egg menu</div>
+          </a>
+          <a href="/osuTP/legacy/v0.3.html" class="legacy-version-card">
+            <div class="legacy-version-number">v0.3</div>
+            <div class="legacy-version-date">25 November 2025</div>
+            <div class="legacy-version-desc">Added tools for admins, account roles (admin and participant), persistent sign-in with variable expiry</div>
+          </a>
+          <a href="/osuTP/legacy/v0.2.html" class="legacy-version-card">
+            <div class="legacy-version-number">v0.2</div>
+            <div class="legacy-version-date">24 November 2025</div>
+            <div class="legacy-version-desc">Changed welcome page, more friendly to less experienced tournament-goers, expanded documentation</div>
+          </a>
+          <a href="/osuTP/legacy/v0.1.html" class="legacy-version-card">
+            <div class="legacy-version-number">v0.1</div>
+            <div class="legacy-version-date">23 November 2025</div>
+            <div class="legacy-version-desc">Rebranded to osu!TP, beatmaps no longer hardcoded, changed gamemodes to brackets</div>
+          </a>
+          <a href="/osuTP/legacy/v0.0.html" class="legacy-version-card">
+            <div class="legacy-version-number">v0.0</div>
+            <div class="legacy-version-date">Original Release</div>
+            <div class="legacy-version-desc">Basic functionality</div>
+          </a>
+        </div>
+        <div class="legacy-note">
+          <p><strong>Note:</strong> Legacy versions may have limited functionality and are provided for archival purposes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mods Drawer -->
+  <div id="modsDrawer" class="mods-drawer">
+    <div class="mods-drawer-header">
+      <h3 class="mods-drawer-title">osu! Mods</h3>
+      <button id="modsCloseBtn" class="mods-close-btn">✕</button>
+    </div>
+    <div class="mods-content">
+      <div class="mod-item" data-mod="fl">
+        <div class="mod-info">
+          <div class="mod-name">Flashlight (FL)</div>
+          <div class="mod-description">Circular visible area around cursor</div>
+        </div>
+        <div class="mod-toggle" id="flToggle">
+          <div class="mod-toggle-slider"></div>
+        </div>
+      </div>
+      <div class="mod-item" data-mod="hr">
+        <div class="mod-info">
+          <div class="mod-name">Hard Rock (HR)</div>
+          <div class="mod-description">Everything gets smaller</div>
+        </div>
+        <div class="mod-toggle" id="hrToggle">
+          <div class="mod-toggle-slider"></div>
+        </div>
+      </div>
+      <div class="mod-item" data-mod="hd">
+        <div class="mod-info">
+          <div class="mod-name">Hidden (HD)</div>
+          <div class="mod-description">Text only visible on hover</div>
+        </div>
+        <div class="mod-toggle" id="hdToggle">
+          <div class="mod-toggle-slider"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mods Overlay -->
+  <div class="mods-overlay">
+    <div class="flashlight-overlay" id="flashlightOverlay"></div>
+  </div>
+
+  <main class="container">
+    <!-- Home -->
+    <section id="home" role="tabpanel" aria-label="Home" style="display: block;">
+      <div class="hero">
+        <div>
+          <h1>Tournament System Guide</h1>
+          <p>Welcome to your osu! tournament portal. This system uses a bracket-based structure with qualifiers to determine player placement and progression through different difficulty levels.</p>
+          <a href="#beatmaps" class="cta" data-tab-jump="beatmaps">Explore beatmaps</a>
+        </div>
+        <div class="card">
+          <h3>Tournament Phases</h3>
+          <p class="muted">Progressive tournament structure:</p>
+          <ul>
+            <li><strong>Phase 1:</strong> Qualifiers - Determine initial placement</li>
+            <li><strong>Phase 2:</strong> Bracket Play - Head-to-head competition</li>
+            <li><strong>Phase 3:</strong> Finals - Championship matches</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;" class="grid-3">
+        <div class="card">
+          <h3>🎯 Qualification Process</h3>
+          <p><strong>Map Selection:</strong> Choose one map from each bracket</p>
+          <p><strong>Progression:</strong> Pass maps to advance to next bracket</p>
+          <p><strong>Assignment:</strong> Placed based on highest completed bracket</p>
+        </div>
+        <div class="card">
+          <h3>🏆 Difficulty Brackets</h3>
+          <p><strong>Normal:</strong> Entry-level for beginners</p>
+          <p><strong>Hard:</strong> Intermediate difficulty</p>
+          <p><strong>Insane:</strong> Advanced players</p>
+          <p><strong>Expert:</strong> High-level competition</p>
+          <p><strong>Expert+:</strong> Very high difficulty</p>
+          <p><strong>Expert++:</strong> Maximum challenge </p>
+        </div>
+        <div class="card">
+          <h3>⚡ Match Format</h3>
+          <p><strong>Best of 7:</strong> First to 4 map wins</p>
+          <p><strong>Map Pool:</strong> 7 maps per match</p>
+          <p><strong>Tiebreaker:</strong> Final map if 3-3</p>
+          <p><strong>Scoring:</strong> Accuracy (80%) + combo (20%) based</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;" class="card">
+        <h3>📊 Tournament Features</h3>
+        <div class="grid-3">
+          <div>
+            <h4>Live Updates</h4>
+            <p>Real-time score updates and match progress with automatic refresh every 30 seconds.</p>
+          </div>
+          <div>
+            <h4>Bracket Visualization</h4>
+            <p>Interactive tournament tree showing player progression and match results.</p>
+          </div>
+          <div>
+            <h4>Beatmap Explorer</h4>
+            <p>Search, filter, and sort all tournament beatmaps by difficulty and length.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;" class="card">
+        <h3>🎮 Getting Started</h3>
+        <div class="grid-2">
+          <div>
+            <h4>For Participants</h4>
+            <ul>
+              <li>Sign in to access participant features</li>
+              <li>Review qualification requirements</li>
+              <li>Check match schedules and brackets</li>
+              <li>Practice with tournament beatmaps</li>
+              <li>Ensure technical setup is ready</li>
+            </ul>
+          </div>
+          <div>
+            <h4>For Organizers</h4>
+            <ul>
+              <li>Use main.py to manage beatmaps</li>
+              <li>Update tournament-data.json for live scores</li>
+              <li>Monitor bracket assignments</li>
+              <li>Track player progression</li>
+              <li>Maintain match schedules</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;" class="card">
+        <h3>📈 Scoring System</h3>
+        <p><strong>Base Formula:</strong> ((0.8 × accuracy) × 100) + ((0.2 × √(combo/max_combo)) × 100)</p>
+        <p><strong>Mod Multipliers:</strong> EZ (0.50x), HR (1.12x), HD (1.05x), FL (1.10x)</p>
+        <p><strong>Dual Display:</strong> Original score + scaled score (1'000'000 max)</p>
+        <p class="muted">Use the score calculator in main.py to estimate match performance.</p>
+      </div>
+
+      <div style="margin-top: 18px;" class="card">
+        <h3>🔧 Technical Information</h3>
+        <div class="grid-2">
+          <div>
+            <h4>File Structure</h4>
+            <ul>
+              <li><strong>index.html:</strong> Main tournament website</li>
+              <li><strong>beatmaps.json:</strong> Beatmap database</li>
+              <li><strong>tournament-data.json:</strong> Live tournament data</li>
+              <li><strong>main.py:</strong> Management tools</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Data Flow</h4>
+            <ul>
+              <li>main.py updates JSON files</li>
+              <li>JSON files store all data</li>
+              <li>Website reads and displays data</li>
+              <li>Auto-refresh keeps everything current</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brackets -->
+    <section id="brackets" role="tabpanel" aria-label="Brackets" style="display: none;">
+      <div class="card">
+        <h3>Tournament Brackets</h3>
+        <div id="bracketContainer"></div>
+      </div>
+    </section>
+
+    <!-- Live Scores -->
+    <section id="live" role="tabpanel" aria-label="Live Scores" style="display: none;">
+      <div class="card">
+        <h3>Live Matches</h3>
+        <div id="liveMatchesContainer"></div>
+      </div>
+      <div style="margin-top: 16px;" class="card">
+        <h3>Recent Results</h3>
+        <div id="recentResultsContainer"></div>
+      </div>
+    </section>
+
+    <!-- Rules -->
+    <section id="rules" role="tabpanel" aria-label="Rules" style="display: none;">
+      <div class="card">
+        <h3>Tournament rules</h3>
+        <ul class="rules">
+          <li><strong>Eligibility:</strong> Registered participants only.</li>
+          <li><strong>Fair play:</strong> No cheating, no unauthorized mods, and no unapproved clients.</li>
+          <li><strong>Respect:</strong> Harassment or toxicity results in disqualification.</li>
+          <li><strong>Timing:</strong> Be on time; late arrivals may forfeit matches.</li>
+          <li><strong>Technical:</strong> Verify your input, audio, and overlays before matches.</li>
+          <li><strong>Skins:</strong> Inquire about approved skins before the tournament starts. You can get all approved skins <a href="https://www.mediafire.com/file/2ngfrg5r5v7tuwn/valid-osu-skins.zip/file">here.</a></li>
+          <li><strong>Mods:</strong> No Fail should be enabled during all matches. Other mods will be determined before the round begins.</li>
+        </ul>
+        <h3>Checklist</h3>
+        <ol class="rules">
+          <li><strong>Check ruleset (if first round)</strong> Check if the skin is valid, if the maps are unmodified and updated, and the correct client is being used.</li>
+          <li><strong>Check mods</strong> Enable No Fail and any other mods specified on the beatmap list.</li>
+          <li><strong>Verify scores</strong> Use the scoring algorithm below to determine the score of the play and compare against the other player.</li>
+        </ol>
+        <h3>Scoring</h3>
+        <p>((0.8 * [Acc to 4SF]) * 100) + ((0.2 * sqrt([combo] / [max combo])) * 100)</p>
+        <p>You can find a Python utility for scores and more related to osu!TP on the <a href="https://github.com/bakedb/osuTP">GitHub.</a> Download and run main.py. The Python file requires no additional dependencies, only a relatively new Python interpreter that supports Tkinter.</p>
+        <ul>
+          <li><strong>Easy (EZ)</strong> — 0.50×  
+            <br>Dramatically lowers difficulty (larger circles, lower AR/OD).
+          </li>
+          <li><strong>Hard Rock (HR)</strong> — 1.12×  
+            <br>Raises AR/OD, shrinks circles.
+          </li>
+          <li><strong>Hidden (HD)</strong> — 1.05×  
+            <br>Fading circles.
+          </li>
+          <li><strong>Flashlight (FL)</strong> — 1.10×  
+            <br>Restricted vision.
+          </li>
+        </ul>
+        <p><strong>Only one of these mods (EZ/HR/HD/FL) can be used at a time.</strong></p>
+
+      </div>
+    </section>
+
+    <!-- Tools -->
+    <section id="tools" role="tabpanel" aria-label="Tools" style="display: none;">
+      <div style="margin-top: 16px;" class="card">
+        <h3>Registration Code Decoder</h3>
+        <button class="btn" id="toggleCodeDecoderBtn">Show Registration Decoder</button>
+        <div id="codeDecoderContent" style="display: none; margin-top: 16px;">
+          <div class="row">
+            <label for="registrationCodeInput">Registration Code:</label>
+            <input id="registrationCodeInput" class="input" type="text" placeholder="Enter registration code (e.g., REG-XXXXX-1234)" />
+          </div>
+          <button class="btn primary" id="decodeCodeBtn">Decode Registration</button>
+          <div id="decodedRegistrationInfo" style="margin-top: 16px;"></div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 16px;" class="card">
+        <h3>Score Calculator</h3>
+        <button class="btn" id="toggleScoreCalculatorBtn">Show Score Calculator</button>
+        <div id="scoreCalculatorContent" style="display: none; margin-top: 16px;">
+          <div class="grid-2">
+            <div>
+              <div class="row">
+                <label for="toolAcc">Accuracy (to 4SF):</label>
+                <input id="toolAcc" class="input" type="number" step="0.01" placeholder="00.00" />
+              </div>
+              <div class="row">
+                <label for="toolCombo">Combo:</label>
+                <input id="toolCombo" class="input" type="number" placeholder="0" />
+              </div>
+              <div class="row">
+                <label for="toolMaxCombo">Max Combo:</label>
+                <input id="toolMaxCombo" class="input" type="number" placeholder="0" />
+              </div>
+              <div class="row">
+                <label for="toolMod">Mod:</label>
+                <select id="toolMod" class="select">
+                  <option value="None">None</option>
+                  <option value="EZ">Easy (EZ)</option>
+                  <option value="HR">Hard Rock (HR)</option>
+                  <option value="HD">Hidden (HD)</option>
+                  <option value="FL">Flashlight (FL)</option>
+                </select>
+              </div>
+              <button class="btn primary" id="calculateScoreBtn" style="margin-top: 12px;">Calculate Score</button>
+            </div>
+            <div>
+              <div class="card">
+                <h4>Result</h4>
+                <div id="scoreResult">Score: - | Scaled: -</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 16px;" class="card">
+        <h3>Song Formatter</h3>
+        <button class="btn" id="toggleSongFormatterBtn">Show Song Formatter</button>
+        <div id="songFormatterContent" style="display: none; margin-top: 16px;">
+          <div class="grid-2">
+            <div>
+              <div class="row">
+                <label for="toolTitle">Title:</label>
+                <input id="toolTitle" class="input" type="text" placeholder="Song title" />
+              </div>
+              <div class="row">
+                <label for="toolArtist">Artist:</label>
+                <input id="toolArtist" class="input" type="text" placeholder="Artist name" />
+              </div>
+              <div class="row">
+                <label for="toolBracket">Bracket:</label>
+                <select id="toolBracket" class="select">
+                  <option value="">Select bracket...</option>
+                  <option value="normal">normal</option>
+                  <option value="hard">hard</option>
+                  <option value="insane">insane</option>
+                  <option value="expert">expert</option>
+                  <option value="expert+">expert+</option>
+                  <option value="expert++">expert++</option>
+                </select>
+              </div>
+              <div class="row">
+                <label for="toolStars">Stars:</label>
+                <input id="toolStars" class="input" type="number" step="0.01" placeholder="Star rating" />
+              </div>
+              <div class="row">
+                <label for="toolLength">Length:</label>
+                <input id="toolLength" class="input" type="text" placeholder="e.g., 1:23" />
+              </div>
+              <div class="actions" style="margin-top: 12px;">
+                <button class="btn primary" id="formatSongBtn">Format</button>
+                <button class="btn" id="addToBeatmapsBtn">Add to beatmaps.json</button>
+              </div>
+            </div>
+            <div>
+              <div class="actions" style="margin-bottom: 12px;">
+                <button class="btn" id="loadJsonBtn">Load JSON</button>
+                <button class="btn" id="saveJsonBtn">Save As...</button>
+              </div>
+              <textarea id="toolOutput" class="input" style="height: 200px; font-family: monospace;" placeholder="Formatted output will appear here..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Beatmap list -->
+    <section id="beatmaps" role="tabpanel" aria-label="Beatmap list" style="display: none;">
+      <div class="card">
+        <h3>Beatmap explorer</h3>
+        <div class="filters">
+          <input id="search" class="input" type="text" placeholder="Search by title or artist" />
+          <select id="bracket" class="select">
+            <option value="">All brackets</option>
+            <option value="normal">normal</option>
+            <option value="hard">hard</option>
+            <option value="insane">insane</option>
+            <option value="expert">expert</option>
+            <option value="expert+">expert+</option>
+            <option value="expert++">expert++</option>
+          </select>
+          <select id="sortBy" class="select">
+            <option value="">Sort by</option>
+            <option value="title">Title</option>
+            <option value="artist">Artist</option>
+            <option value="bracket">Bracket</option>
+            <option value="difficulty">Difficulty</option>
+            <option value="length">Length</option>
+          </select>
+        </div>
+
+        <table class="table" aria-label="Beatmaps table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Artist</th>
+              <th>Bracket</th>
+              <th>Difficulty</th>
+              <th>Length</th>
+            </tr>
+          </thead>
+          <tbody id="beatmapTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>osu! Tournament Portal</h4>
+        <p>Version 0.6 (Release)</p>
+        <p class="footer-muted"> 2025 osu!TP. All rights reserved.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#rules" data-tab-jump="rules">Tournament Rules</a></li>
+          <li><a href="#beatmaps" data-tab-jump="beatmaps">Beatmap List</a></li>
+          <li><a href="https://github.com/bakedb/osuTP" target="_blank">GitHub Repository</a></li>
+          <li><a href="https://osu.ppy.sh" target="_blank">osu! Official Site</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Built with &lt;3 by BakedB</p>
+    </div>
+  </footer>
+
+  <!-- Easter Egg Modal -->
+  <div class="modal-backdrop" id="easterEggModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="easterEggTitle">
+      <h3 id="easterEggTitle"> You found the secret!</h3>
+      <p style="margin-bottom: 16px;">Congratulations on discovering the easter egg! Here are some useful links:</p>
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+        <a href="https://github.com/bakedb/osuTP" target="_blank" class="btn primary" style="text-align: center; text-decoration: none;">GitHub Repository</a>
+        <a href="https://osu.ppy.sh" target="_blank" class="btn primary" style="text-align: center; text-decoration: none;">osu!.ppy.sh</a>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn primary" style="text-align: center; text-decoration: none;">Secret Link!</a>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="closeEasterEgg">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign-in modal -->
+  <div class="modal-backdrop" id="signInModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signInTitle">
+      <h3 id="signInTitle">Sign in</h3>
+      <div class="row">
+        <label for="username">Username</label>
+        <input id="username" class="input" type="text" autocomplete="username" />
+      </div>
+      <div class="row">
+        <label for="password">Password</label>
+        <input id="password" class="input" type="password" autocomplete="current-password" />
+      </div>
+      <div class="row">
+        <label for="sessionDuration">Keep me logged in for...</label>
+        <select id="sessionDuration" class="select">
+          <option value="1">1 hour</option>
+          <option value="6">6 hours</option>
+          <option value="12">12 hours</option>
+          <option value="24">24 hours</option>
+        </select>
+      </div>
+      <div class="error" id="signInError"></div>
+      <div class="actions">
+        <button class="btn" id="cancelSignIn">Cancel</button>
+        <button class="btn primary" id="confirmSignIn">Sign in</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Registration modal -->
+  <div class="modal-backdrop" id="registerModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
+      <h3 id="registerTitle">Register for Tournament</h3>
+      <div class="row">
+        <label for="regUsername">Username *</label>
+        <input id="regUsername" class="input" type="text" autocomplete="username" />
+      </div>
+      <div class="row">
+        <label for="regEmail">Email *</label>
+        <input id="regEmail" class="input" type="email" autocomplete="email" />
+      </div>
+      <div class="row">
+        <label for="regOsuUsername">osu! Username *</label>
+        <input id="regOsuUsername" class="input" type="text" />
+      </div>
+      <div class="row">
+        <label for="regOsuId">osu! User ID *</label>
+        <input id="regOsuId" class="input" type="number" placeholder="Numeric ID" />
+        <div style="margin-top: 4px;">
+          <label style="font-weight: normal; color: var(--muted);">
+            <input type="checkbox" id="noOsuAccount" style="margin-right: 4px;">
+            I don't have an osu! account
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <label for="regCountry">Country *</label>
+        <input id="regCountry" class="input" type="text" placeholder="e.g., USA, Japan" />
+      </div>
+      <div class="row">
+        <label for="regPreferredBracket">Preferred Difficulty Bracket *</label>
+        <select id="regPreferredBracket" class="select">
+          <option value="">Select bracket...</option>
+          <option value="normal">Normal</option>
+          <option value="hard">Hard</option>
+          <option value="insane">Insane</option>
+          <option value="expert">Expert</option>
+          <option value="expert+">Expert+</option>
+          <option value="expert++">Expert++</option>
+          <option value="not-sure">Not sure (organizers will decide)</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="regExperience">Experience Level *</label>
+        <select id="regExperience" class="select">
+          <option value="">Select experience...</option>
+          <option value="beginner">Beginner (New to tournaments)</option>
+          <option value="intermediate">Intermediate (Some tournament experience)</option>
+          <option value="advanced">Advanced (Regular tournament player)</option>
+          <option value="expert">Expert (High-level tournament experience)</option>
+        </select>
+      </div>
+      <div class="row">
+        <label for="regComments">Additional Comments</label>
+        <textarea id="regComments" class="input" rows="3" placeholder="Any additional information or special requirements..."></textarea>
+      </div>
+      <div class="error" id="registerError"></div>
+      <div class="actions">
+        <button class="btn" id="cancelRegister">Cancel</button>
+        <button class="btn primary" id="confirmRegister">Register</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ------------------------------
+       Hardcoded accounts (SHA-256)
+       ------------------------------ */
+    // Utility: hex -> ArrayBuffer
+    function hexToBytes(hex) {
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+      }
+      return bytes.buffer;
+    }
+
+    // Utility: bytes -> hex
+    function bytesToHex(buffer) {
+      const bytes = new Uint8Array(buffer);
+      let hex = '';
+      for (let i = 0; i < bytes.length; i++) {
+        const h = bytes[i].toString(16).padStart(2, '0');
+        hex += h;
+      }
+      return hex;
+    }
+
+    // Hash with Web Crypto: SHA-256(password)
+    async function sha256(text) {
+      const enc = new TextEncoder().encode(text);
+      const digest = await crypto.subtle.digest('SHA-256', enc);
+      return bytesToHex(digest);
+    }
+
+    // Accounts: username -> { hash: sha256(password), role: user_role }
+    let ACCOUNTS = {};
+
+    // Load accounts from Google Sheets
+    async function loadAccountsFromGoogleSheets() {
+      try {
+        const googleSheetsId = '1gwlmCixsyiyhzVzaXNGJaHyZwC5bbrVST24f1akTQI4'; // Replace with your Google Sheets ID
+        const url = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/gviz/tq?tqx=out:json&gid=0`;
+        
+        console.log('Attempting to load from:', url);
+        
+        // Use CORS proxy if needed, or try direct fetch first
+        let response;
+        try {
+          response = await fetch(url);
+        } catch (corsError) {
+          console.log('Direct fetch failed, trying CORS proxy...');
+          // Try a CORS proxy as fallback
+          const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
+          response = await fetch(proxyUrl);
+        }
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const text = await response.text();
+        console.log('Full raw response length:', text.length);
+        console.log('Raw response (first 500 chars):', text.substring(0, 500));
+        console.log('Raw response (last 500 chars):', text.substring(text.length - 500));
+        
+        // Check if response contains data
+        if (text.includes('google.visualization.Query.setResponse')) {
+          // Parse the response
+          const jsonStart = text.indexOf('{');
+          const jsonEnd = text.lastIndexOf('}');
+          const jsonString = text.substring(jsonStart, jsonEnd + 1);
+          
+          const data = JSON.parse(jsonString);
+          
+          // Convert sheet data to ACCOUNTS object
+          ACCOUNTS = {};
+          if (data.table && data.table.rows) {
+            data.table.rows.forEach((row, index) => { // Process all rows
+              if (row.c && row.c.length >= 3) {
+                const username = row.c[0]?.v || '';
+                const passwordHash = row.c[1]?.v || '';
+                const role = row.c[2]?.v || '';
+                
+                if (username && passwordHash && role) {
+                  ACCOUNTS[username] = { hash: passwordHash, role: role };
+                }
+              }
+            });
+          } else {
+            console.log('No table data found in response');
+          }
+        } else {
+          console.log('Response does not contain expected Google Sheets data');
+          console.log('Full response:', text);
+        }
+      } catch (error) {
+        console.error('Failed to load accounts from Google Sheets:', error);
+        console.log('This usually means:');
+        console.log('1. The sheet is not published as "Web page"');
+        console.log('2. The sheet is not set to "Anyone with link can view"');
+        console.log('3. The sheet ID is incorrect');
+        console.log('4. CORS issues (try opening the sheet URL directly in browser)');
+        
+        // Fallback to hardcoded accounts if Google Sheets fails
+        ACCOUNTS = {
+          "admin": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
+          "participant": { hash: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", role: "Participant" },
+        };
+      }
+    }
+    
+    // Load accounts on page load (only once)
+    let accountsLoaded = false;
+    (async () => {
+      if (!accountsLoaded) {
+        accountsLoaded = true;
+        await loadAccountsFromGoogleSheets();
+      }
+    })();
+
+    /* ------------------------------
+       State & elements
+       ------------------------------ */
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = {
+      home: document.getElementById('home'),
+      brackets: document.getElementById('brackets'),
+      live: document.getElementById('live'),
+      rules: document.getElementById('rules'),
+      beatmaps: document.getElementById('beatmaps'),
+      tools: document.getElementById('tools')
+    };
+    const userStatusEl = document.getElementById('userStatus');
+    const signInBtn = document.getElementById('signInBtn');
+    const signOutBtn = document.getElementById('signOutBtn');
+    const modalBackdrop = document.getElementById('signInModalBackdrop');
+    const confirmSignInBtn = document.getElementById('confirmSignIn');
+    const cancelSignInBtn = document.getElementById('cancelSignIn');
+    const signInErrorEl = document.getElementById('signInError');
+    const usernameEl = document.getElementById('username');
+    const passwordEl = document.getElementById('password');
+    const sessionDurationEl = document.getElementById('sessionDuration');
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const logoEl = document.querySelector('.logo');
+    const easterEggModalBackdrop = document.getElementById('easterEggModalBackdrop');
+    const closeEasterEggBtn = document.getElementById('closeEasterEgg');
+
+    let currentUser = null;
+    let currentUserRole = null;
+    let sessionExpiry = null;
+    let logoClickCount = 0;
+    
+    /* ------------------------------
+       Theme management
+       ------------------------------ */
+    function loadTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'frutiger-aero') {
+        document.documentElement.setAttribute('data-theme', 'frutiger-aero');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🌙';
+      } else if (savedTheme === 'windows-9x') {
+        document.documentElement.setAttribute('data-theme', 'windows-9x');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🖥️';
+      } else if (savedTheme === 'windows-10') {
+        document.documentElement.setAttribute('data-theme', 'windows-10');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🪟';
+      } else if (savedTheme === 'macosx') {
+        document.documentElement.setAttribute('data-theme', 'macosx');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🍎';
+      } else {
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🌊';
+      }
+    }
+    
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      let newTheme;
+      
+      if (currentTheme === 'frutiger-aero') {
+        newTheme = 'windows-9x';
+      } else if (currentTheme === 'windows-9x') {
+        newTheme = 'windows-10';
+      } else if (currentTheme === 'windows-10') {
+        newTheme = 'macosx';
+      } else if (currentTheme === 'macosx') {
+        newTheme = '';
+      } else {
+        newTheme = 'frutiger-aero';
+      }
+      
+      if (newTheme === 'frutiger-aero') {
+        document.documentElement.setAttribute('data-theme', 'frutiger-aero');
+        localStorage.setItem('theme', 'frutiger-aero');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🌙';
+      } else if (newTheme === 'windows-9x') {
+        document.documentElement.setAttribute('data-theme', 'windows-9x');
+        localStorage.setItem('theme', 'windows-9x');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🖥️';
+      } else if (newTheme === 'windows-10') {
+        document.documentElement.setAttribute('data-theme', 'windows-10');
+        localStorage.setItem('theme', 'windows-10');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🪟';
+      } else if (newTheme === 'macosx') {
+        document.documentElement.setAttribute('data-theme', 'macosx');
+        localStorage.setItem('theme', 'macosx');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🍎';
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'default');
+        themeToggleBtn.querySelector('.theme-icon').textContent = '🌊';
+      }
+    }
+    
+    themeToggleBtn.addEventListener('click', toggleTheme);
+
+    /* ------------------------------
+       Mods management
+       ------------------------------ */
+    const modsToggleBtn = document.getElementById('modsToggle');
+    const modsDrawer = document.getElementById('modsDrawer');
+    const modsCloseBtn = document.getElementById('modsCloseBtn');
+    const flashlightOverlay = document.getElementById('flashlightOverlay');
+    const flToggle = document.getElementById('flToggle');
+    const hrToggle = document.getElementById('hrToggle');
+    const hdToggle = document.getElementById('hdToggle');
+    
+    // Legacy drawer elements
+    const legacyToggleBtn = document.getElementById('legacyToggle');
+    const legacyDrawer = document.getElementById('legacyDrawer');
+    const legacyCloseBtn = document.getElementById('legacyCloseBtn');
+    
+    let activeMods = {
+      fl: false,
+      hr: false,
+      hd: false
+    };
+    
+    let mouseX = 50;
+    let mouseY = 50;
+    
+    // Drawer controls
+    function openModsDrawer() {
+      modsDrawer.classList.add('open');
+    }
+    
+    function closeModsDrawer() {
+      modsDrawer.classList.remove('open');
+    }
+    
+    modsToggleBtn.addEventListener('click', openModsDrawer);
+    modsCloseBtn.addEventListener('click', closeModsDrawer);
+    
+    // Close drawer when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!modsDrawer.contains(e.target) && !modsToggleBtn.contains(e.target) && 
+          !legacyDrawer.contains(e.target) && !legacyToggleBtn.contains(e.target)) {
+        closeModsDrawer();
+        closeLegacyDrawer();
+      }
+    });
+    
+    // Legacy drawer controls
+    function openLegacyDrawer() {
+      legacyDrawer.classList.add('open');
+    }
+    
+    function closeLegacyDrawer() {
+      legacyDrawer.classList.remove('open');
+    }
+    
+    legacyToggleBtn.addEventListener('click', openLegacyDrawer);
+    legacyCloseBtn.addEventListener('click', closeLegacyDrawer);
+    
+    // Mod toggle functions
+    function toggleMod(modName) {
+      // Only allow one mod at a time (except they can be turned off individually)
+      if (!activeMods[modName]) {
+        // Turn off all other mods first
+        Object.keys(activeMods).forEach(mod => {
+          if (mod !== modName && activeMods[mod]) {
+            setModState(mod, false);
+          }
+        });
+      }
+      
+      setModState(modName, !activeMods[modName]);
+    }
+    
+    function setModState(modName, isActive) {
+      activeMods[modName] = isActive;
+      const modItem = document.querySelector(`[data-mod="${modName}"]`);
+      const toggleElement = document.getElementById(`${modName}Toggle`);
+      
+      if (isActive) {
+        modItem.classList.add('active');
+        toggleElement.classList.add('active');
+      } else {
+        modItem.classList.remove('active');
+        toggleElement.classList.remove('active');
+      }
+      
+      // Apply mod effects
+      switch(modName) {
+        case 'fl':
+          applyFlashlightMod(isActive);
+          break;
+        case 'hr':
+          applyHardRockMod(isActive);
+          break;
+        case 'hd':
+          applyHiddenMod(isActive);
+          break;
+      }
+    }
+    
+    // Flashlight mod implementation
+    function applyFlashlightMod(isActive) {
+      if (isActive) {
+        flashlightOverlay.classList.add('active');
+        document.addEventListener('mousemove', updateFlashlightPosition);
+        updateFlashlightPosition({ clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 });
+      } else {
+        flashlightOverlay.classList.remove('active');
+        document.removeEventListener('mousemove', updateFlashlightPosition);
+      }
+    }
+    
+    function updateFlashlightPosition(e) {
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      flashlightOverlay.style.setProperty('--mouse-x', `${x}%`);
+      flashlightOverlay.style.setProperty('--mouse-y', `${y}%`);
+    }
+    
+    // Hard Rock mod implementation
+    function applyHardRockMod(isActive) {
+      const container = document.querySelector('.container');
+      if (isActive) {
+        container.classList.add('hard-rock-active');
+      } else {
+        container.classList.remove('hard-rock-active');
+      }
+    }
+    
+    // Hidden mod implementation
+    function applyHiddenMod(isActive) {
+      const body = document.body;
+      if (isActive) {
+        body.classList.add('hidden-mod');
+      } else {
+        body.classList.remove('hidden-mod');
+      }
+    }
+    
+    // Mod toggle event listeners
+    flToggle.addEventListener('click', () => toggleMod('fl'));
+    hrToggle.addEventListener('click', () => toggleMod('hr'));
+    hdToggle.addEventListener('click', () => toggleMod('hd'));
+    
+    // Also make mod items clickable
+    document.querySelectorAll('.mod-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const modName = item.dataset.mod;
+        toggleMod(modName);
+      });
+    });
+
+    /* ------------------------------
+       Session management
+       ------------------------------ */
+    function saveSession(user, role, hours) {
+      const expiryTime = Date.now() + (hours * 60 * 60 * 1000);
+      const sessionData = {
+        user,
+        role,
+        expiry: expiryTime
+      };
+      localStorage.setItem('userSession', JSON.stringify(sessionData));
+      sessionExpiry = expiryTime;
+    }
+
+    function loadSession() {
+      const sessionData = localStorage.getItem('userSession');
+      if (!sessionData) return false;
+
+      try {
+        const session = JSON.parse(sessionData);
+        if (Date.now() > session.expiry) {
+          clearSession();
+          return false;
+        }
+
+        currentUser = session.user;
+        currentUserRole = session.role;
+        sessionExpiry = session.expiry;
+        updateUserUI();
+        return true;
+      } catch (error) {
+        clearSession();
+        return false;
+      }
+    }
+
+    function clearSession() {
+      localStorage.removeItem('userSession');
+      currentUser = null;
+      currentUserRole = null;
+      sessionExpiry = null;
+    }
+
+    function updateUserUI() {
+      if (currentUser && currentUserRole) {
+        userStatusEl.textContent = `Signed in as ${currentUser} (${currentUserRole})`;
+        signInBtn.style.display = 'none';
+        signOutBtn.style.display = 'inline-block';
+      } else {
+        userStatusEl.textContent = 'Guest';
+        signInBtn.style.display = 'inline-block';
+        signOutBtn.style.display = 'none';
+      }
+      
+      // Update tab visibility based on role
+      updateTabVisibility();
+    }
+
+    function updateTabVisibility() {
+      const bracketsTab = document.querySelector('[data-tab="brackets"]');
+      const liveTab = document.querySelector('[data-tab="live"]');
+      
+      // Debug: log current state
+      console.log('updateTabVisibility called. currentUserRole:', currentUserRole);
+      console.log('bracketsTab:', bracketsTab);
+      console.log('liveTab:', liveTab);
+      
+      // Show/hide tabs based on Admin role
+      const isAdmin = currentUserRole === 'Admin';
+      
+      if (bracketsTab) {
+        if (isAdmin) {
+          bracketsTab.classList.remove('admin-only');
+          bracketsTab.style.display = '';
+        } else {
+          bracketsTab.classList.add('admin-only');
+          bracketsTab.style.display = 'none';
+        }
+        console.log('bracketsTab display set to:', bracketsTab.style.display);
+      }
+      
+      if (liveTab) {
+        if (isAdmin) {
+          liveTab.classList.remove('admin-only');
+          liveTab.style.display = '';
+        } else {
+          liveTab.classList.add('admin-only');
+          liveTab.style.display = 'none';
+        }
+        console.log('liveTab display set to:', liveTab.style.display);
+      }
+      
+      // If current tab is hidden, switch to Home
+      const currentTab = document.querySelector('.tab-btn.active');
+      if (currentTab && currentTab.style.display === 'none') {
+        showTab('home');
+      }
+    }
+
+    function checkSessionExpiry() {
+      if (sessionExpiry && Date.now() > sessionExpiry) {
+        clearSession();
+        updateUserUI();
+        updateToolsVisibility();
+      }
+    }
+
+    /* ------------------------------
+       Tab navigation with role-based access
+       ------------------------------ */
+    function showTab(name) {
+      // Check if user has permission to access this tab
+      if (name === 'tools' && !['Admin', 'Participant'].includes(currentUserRole)) {
+        signInErrorEl.textContent = 'Admin or Participant access required to view Tools.';
+        openModal();
+        return;
+      }
+      
+      // Check if user has permission to access Brackets or Live Scores tabs
+      if ((name === 'brackets' || name === 'live') && currentUserRole !== 'Admin') {
+        signInErrorEl.textContent = 'Admin access required to view this tab.';
+        openModal();
+        return;
+      }
+      
+      // Remove all tab classes from body
+      document.body.classList.remove('tab-home', 'tab-brackets', 'tab-live', 'tab-rules', 'tab-beatmaps', 'tab-tools');
+      
+      // Add current tab class for theme variations
+      document.body.classList.add(`tab-${name}`);
+      
+      for (const t of tabs) t.classList.toggle('active', t.dataset.tab === name);
+      for (const key of Object.keys(panels)) {
+        panels[key].style.display = key === name ? 'block' : 'none';
+      }
+      
+      // Update tools visibility based on role
+      if (name === 'tools') {
+        updateToolsVisibility();
+      }
+      
+      // Update hash for deep linking
+      location.hash = name;
+    }
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => showTab(btn.dataset.tab));
+    });
+
+    // Allow hero CTA to jump to beatmaps
+    document.querySelectorAll('[data-tab-jump]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        showTab(a.dataset.tabJump);
+      });
+    });
+
+    // Initialize session on page load BEFORE setting up tabs
+    loadSession();
+    
+    // Initialize theme on page load
+    loadTheme();
+
+    // Initialize tab visibility based on current user role
+    updateTabVisibility();
+
+    // Initialize tab by hash
+    const initial = ['home', 'brackets', 'live', 'rules', 'beatmaps', 'tools'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
+    showTab(initial);
+
+    /* ------------------------------
+       Sign-in modal
+       ------------------------------ */
+    function openModal() {
+      modalBackdrop.style.display = 'flex';
+      modalBackdrop.setAttribute('aria-hidden', 'false');
+      signInErrorEl.textContent = '';
+      usernameEl.value = '';
+      passwordEl.value = '';
+      usernameEl.focus();
+    }
+    function closeModal() {
+      modalBackdrop.style.display = 'none';
+      modalBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    signInBtn.addEventListener('click', openModal);
+    cancelSignInBtn.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    async function handleSignIn() {
+      signInErrorEl.textContent = '';
+      const user = usernameEl.value.trim();
+      const pass = passwordEl.value;
+
+      if (!user || !pass) {
+        signInErrorEl.textContent = 'Please enter both username and password.';
+        return;
+      }
+
+      // Accounts are already loaded on page load
+
+      if (!ACCOUNTS[user]) {
+        signInErrorEl.textContent = 'Unknown username.';
+        return;
+      }
+
+      const inputHash = await sha256(pass);
+      if (inputHash !== ACCOUNTS[user].hash) {
+        signInErrorEl.textContent = 'Incorrect password.';
+        return;
+      }
+
+      currentUser = user;
+      currentUserRole = ACCOUNTS[user].role;
+      
+      // Save session with selected duration
+      const sessionHours = parseInt(sessionDurationEl.value);
+      saveSession(user, currentUserRole, sessionHours);
+      
+      updateUserUI();
+      closeModal();
+      
+      // If user was trying to access tools and now has permission, show it
+      if (location.hash === '#tools' && ['Admin', 'Participant'].includes(currentUserRole)) {
+        showTab('tools');
+      }
+    }
+
+    confirmSignInBtn.addEventListener('click', handleSignIn);
+    passwordEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSignIn();
+    });
+
+    signOutBtn.addEventListener('click', () => {
+      clearSession();
+      updateUserUI();
+      updateToolsVisibility();
+      updateTabVisibility();
+      
+      // Remove access denied message if it exists
+      const accessDenied = document.querySelector('#tools .access-denied');
+      if (accessDenied) {
+        accessDenied.remove();
+      }
+    });
+
+    /* ------------------------------
+       Registration modal
+       ------------------------------ */
+    // Registration modal elements
+    const registerBtn = document.getElementById('registerBtn');
+    const registerModalBackdrop = document.getElementById('registerModalBackdrop');
+    const cancelRegisterBtn = document.getElementById('cancelRegister');
+    const confirmRegisterBtn = document.getElementById('confirmRegister');
+    const registerErrorEl = document.getElementById('registerError');
+    
+    // Registration form elements
+    const regUsernameEl = document.getElementById('regUsername');
+    const regEmailEl = document.getElementById('regEmail');
+    const regOsuUsernameEl = document.getElementById('regOsuUsername');
+    const regOsuIdEl = document.getElementById('regOsuId');
+    const noOsuAccountEl = document.getElementById('noOsuAccount');
+    const regCountryEl = document.getElementById('regCountry');
+    const regPreferredBracketEl = document.getElementById('regPreferredBracket');
+    const regExperienceEl = document.getElementById('regExperience');
+    const regCommentsEl = document.getElementById('regComments');
+
+    function openRegisterModal() {
+      registerModalBackdrop.style.display = 'flex';
+      registerModalBackdrop.setAttribute('aria-hidden', 'false');
+      registerErrorEl.textContent = '';
+      // Clear form
+      regUsernameEl.value = '';
+      regEmailEl.value = '';
+      regOsuUsernameEl.value = '';
+      regOsuIdEl.value = '';
+      noOsuAccountEl.checked = false;
+      regCountryEl.value = '';
+      regPreferredBracketEl.value = '';
+      regExperienceEl.value = '';
+      regCommentsEl.value = '';
+      regUsernameEl.focus();
+    }
+
+    function closeRegisterModal() {
+      registerModalBackdrop.style.display = 'none';
+      registerModalBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    // Validate email format
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    }
+
+    // Generate registration code
+    function generateRegistrationCode(registrationData) {
+      // Create a compact representation of the data
+      const dataString = JSON.stringify(registrationData);
+      
+      // Simple encoding: base64 with a checksum
+      const encoded = btoa(dataString);
+      
+      // Add a simple checksum (first 4 chars of hash)
+      const checksum = dataString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0).toString(16).slice(-4).toUpperCase();
+      
+      // Create final code: REG-XXXXX-CHECKSUM
+      const code = `REG-${encoded.slice(0, 8)}${encoded.slice(-4)}-${checksum}`;
+      
+      return code;
+    }
+    
+    // Decode registration code
+    function decodeRegistrationCode(code) {
+      try {
+        // Validate code format
+        const match = code.match(/^REG-(.+)-([A-F0-9]{4})$/);
+        if (!match) {
+          throw new Error('Invalid code format');
+        }
+        
+        const encodedPart = match[1];
+        const providedChecksum = match[2];
+        
+        // Reconstruct the base64 string (we need to figure out the missing parts)
+        // For simplicity, we'll store the full encoded data in localStorage with the code as key
+        const storedData = localStorage.getItem(`reg_${code}`);
+        if (!storedData) {
+          throw new Error('Registration data not found');
+        }
+        
+        const registrationData = JSON.parse(storedData);
+        
+        // Verify checksum
+        const dataString = JSON.stringify(registrationData);
+        const calculatedChecksum = dataString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0).toString(16).slice(-4).toUpperCase();
+        
+        if (calculatedChecksum !== providedChecksum) {
+          throw new Error('Checksum verification failed');
+        }
+        
+        return registrationData;
+      } catch (error) {
+        console.error('Error decoding registration code:', error);
+        return null;
+      }
+    }
+    
+    // Store registration data with code as key
+    function storeRegistrationData(code, data) {
+      localStorage.setItem(`reg_${code}`, JSON.stringify(data));
+    }
+
+    // Submit registration data to Google Sheets
+    async function submitRegistrationToGoogleSheets(registrationData) {
+      const googleSheetsId = '1gwlmCixsyiyhzVzaXNGJaHyZwC5bbrVST24f1akTQI4';
+      const url = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/gviz/tq?tqx=out:json&gid=3`; // Tab 4 for registrations
+      
+      try {
+        // Create a new row with the registration data
+        const newRow = [
+          registrationData.username,
+          registrationData.email,
+          registrationData.osuUsername,
+          registrationData.osuId,
+          registrationData.country,
+          registrationData.preferredBracket,
+          registrationData.experience,
+          registrationData.comments,
+          new Date().toISOString() // Timestamp
+        ];
+        
+        // Note: Direct writing to Google Sheets requires server-side code or Google Apps Script
+        // For now, we'll store in localStorage as a fallback
+        const existingRegistrations = JSON.parse(localStorage.getItem('tournamentRegistrations') || '[]');
+        existingRegistrations.push(registrationData);
+        localStorage.setItem('tournamentRegistrations', JSON.stringify(existingRegistrations));
+        
+        console.log('Registration data saved locally:', registrationData);
+        return true;
+        
+        // In a real implementation, you would use Google Apps Script Web App URL:
+        // const scriptUrl = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+        // const response = await fetch(scriptUrl, {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify(registrationData)
+        // });
+        // return response.ok;
+        
+      } catch (error) {
+        console.error('Failed to submit registration to Google Sheets:', error);
+        return false;
+      }
+    }
+
+    async function handleRegistration() {
+      registerErrorEl.textContent = '';
+      
+      // Get form values
+      const username = regUsernameEl.value.trim();
+      const email = regEmailEl.value.trim();
+      const osuUsername = regOsuUsernameEl.value.trim();
+      const osuId = regOsuIdEl.value.trim();
+      const country = regCountryEl.value.trim();
+      const preferredBracket = regPreferredBracketEl.value;
+      const experience = regExperienceEl.value;
+      const comments = regCommentsEl.value.trim();
+      
+      // Validation
+      if (!username) {
+        registerErrorEl.textContent = 'Username is required.';
+        return;
+      }
+      
+      if (!email || !isValidEmail(email)) {
+        registerErrorEl.textContent = 'Valid email is required.';
+        return;
+      }
+      
+      if (!osuUsername && !noOsuAccountEl.checked) {
+        registerErrorEl.textContent = 'osu! username is required.';
+        return;
+      }
+      
+      if (!osuId || isNaN(osuId) || osuId <= 0) {
+        if (!noOsuAccountEl.checked) {
+          registerErrorEl.textContent = 'Valid osu! User ID is required.';
+          return;
+        }
+      }
+      
+      if (!country) {
+        registerErrorEl.textContent = 'Country is required.';
+        return;
+      }
+      
+      if (!preferredBracket) {
+        registerErrorEl.textContent = 'Please select a preferred difficulty bracket.';
+        return;
+      }
+      
+      if (!experience) {
+        registerErrorEl.textContent = 'Please select your experience level.';
+        return;
+      }
+      
+      // Create registration object
+      const registrationData = {
+        username,
+        email,
+        osuUsername: osuUsername || 'N/A',
+        osuId: noOsuAccountEl.checked ? 'N/A' : parseInt(osuId),
+        country,
+        preferredBracket,
+        experience,
+        comments,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Generate registration code
+      const registrationCode = generateRegistrationCode(registrationData);
+      
+      // Store the registration data
+      storeRegistrationData(registrationCode, registrationData);
+      
+      // Show success message with code
+      const successMessage = `Registration successful! Your registration code is:\n\n${registrationCode}\n\nPlease save this code and provide it to the tournament organizers. You can also take a screenshot for your records.`;
+      
+      // Create a more user-friendly success modal
+      const result = confirm(successMessage + '\n\nClick OK to close this window.');
+      
+      closeRegisterModal();
+      
+      // Also store a copy in general registrations for backup
+      const existingRegistrations = JSON.parse(localStorage.getItem('tournamentRegistrations') || '[]');
+      existingRegistrations.push({...registrationData, code: registrationCode});
+      localStorage.setItem('tournamentRegistrations', JSON.stringify(existingRegistrations));
+    }
+
+    // Registration event listeners
+    registerBtn.addEventListener('click', openRegisterModal);
+    cancelRegisterBtn.addEventListener('click', closeRegisterModal);
+    confirmRegisterBtn.addEventListener('click', handleRegistration);
+    registerModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === registerModalBackdrop) closeRegisterModal();
+    });
+
+    // Add Enter key support for registration form
+    [regUsernameEl, regEmailEl, regOsuUsernameEl, regOsuIdEl, regCountryEl, regPreferredBracketEl, regExperienceEl, regCommentsEl].forEach(el => {
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          handleRegistration();
+        }
+      });
+    });
+
+    // Handle checkbox toggle for "I don't have an osu! account"
+    noOsuAccountEl.addEventListener('change', (e) => {
+      const hasNoAccount = e.target.checked;
+      
+      // Toggle required status of osu! fields
+      regOsuUsernameEl.disabled = hasNoAccount;
+      regOsuIdEl.disabled = hasNoAccount;
+      
+      // Clear fields when checkbox is checked
+      if (hasNoAccount) {
+        regOsuUsernameEl.value = '';
+        regOsuIdEl.value = '';
+        regOsuUsernameEl.placeholder = 'Not applicable';
+        regOsuIdEl.placeholder = 'Not applicable';
+      } else {
+        regOsuUsernameEl.placeholder = '';
+        regOsuIdEl.placeholder = 'Numeric ID';
+      }
+      
+      // Update field labels visually
+      const osuUsernameLabel = regOsuUsernameEl.previousElementSibling;
+      const osuIdLabel = regOsuIdEl.previousElementSibling;
+      
+      if (osuUsernameLabel) {
+        osuUsernameLabel.textContent = hasNoAccount ? 'osu! Username' : 'osu! Username *';
+      }
+      if (osuIdLabel) {
+        osuIdLabel.textContent = hasNoAccount ? 'osu! User ID' : 'osu! User ID *';
+      }
+    });
+
+    /* ------------------------------
+       Tournament data loading
+       ------------------------------ */
+    let tournamentData = null;
+
+    // Load tournament data from Google Sheets
+    async function loadTournamentData() {
+      try {
+        // Try loading from Google Sheets first
+        await loadBracketsFromGoogleSheets();
+        await loadLiveScoresFromGoogleSheets();
+        updateTournamentDisplays();
+      } catch (error) {
+        console.error('Failed to load tournament data from Google Sheets:', error);
+        // Fallback to JSON file
+        try {
+          const response = await fetch('tournament-data.json');
+          tournamentData = await response.json();
+          updateTournamentDisplays();
+        } catch (jsonError) {
+          console.error('Failed to load tournament data from JSON:', jsonError);
+          // Use fallback data for demo
+          tournamentData = {
+            tournament: { name: "osu! Tournament 2025", status: "ongoing", currentRound: "semifinals" },
+            participants: [],
+            brackets: { semifinals: [], finals: [], thirdPlace: [] },
+            liveMatches: [],
+            recentResults: []
+          };
+          updateTournamentDisplays();
+        }
+      }
+    }
+
+    // Load brackets data from Google Sheets (Tab 2)
+    async function loadBracketsFromGoogleSheets() {
+      const googleSheetsId = '1gwlmCixsyiyhzVzaXNGJaHyZwC5bbrVST24f1akTQI4';
+      const url = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/gviz/tq?tqx=out:json&gid=1`; // Tab 2
+      
+      const response = await fetch(url);
+      const text = await response.text();
+      
+      if (text.includes('google.visualization.Query.setResponse')) {
+        const jsonStart = text.indexOf('{');
+        const jsonEnd = text.lastIndexOf('}');
+        const data = JSON.parse(text.substring(jsonStart, jsonEnd + 1));
+        
+        if (!tournamentData) tournamentData = { brackets: {} };
+        
+        if (data.table && data.table.rows) {
+          tournamentData.brackets = {};
+          
+          data.table.rows.forEach((row, index) => {
+            if (row.c && row.c.length >= 4) {
+              const round = row.c[0]?.v || '';
+              const player1 = row.c[1]?.v || '';
+              const player2 = row.c[2]?.v || '';
+              const status = row.c[3]?.v || '';
+              
+              if (round && player1 && player2) {
+                if (!tournamentData.brackets[round]) {
+                  tournamentData.brackets[round] = [];
+                }
+                
+                tournamentData.brackets[round].push({
+                  player1: { name: player1, id: player1.toLowerCase().replace(/\s+/g, ''), team: '' },
+                  player2: { name: player2, id: player2.toLowerCase().replace(/\s+/g, ''), team: '' },
+                  status: status || 'upcoming',
+                  winner: null,
+                  score: { player1: 0, player2: 0 }
+                });
+              }
+            }
+          });
+        }
+      }
+    }
+
+    // Load live scores data from Google Sheets (Tab 3)
+    async function loadLiveScoresFromGoogleSheets() {
+      const googleSheetsId = '1gwlmCixsyiyhzVzaXNGJaHyZwC5bbrVST24f1akTQI4';
+      const url = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/gviz/tq?tqx=out:json&gid=2`; // Tab 3
+      
+      const response = await fetch(url);
+      const text = await response.text();
+      
+      if (text.includes('google.visualization.Query.setResponse')) {
+        const jsonStart = text.indexOf('{');
+        const jsonEnd = text.lastIndexOf('}');
+        const data = JSON.parse(text.substring(jsonStart, jsonEnd + 1));
+        
+        if (!tournamentData) tournamentData = { liveMatches: [] };
+        
+        if (data.table && data.table.rows) {
+          tournamentData.liveMatches = [];
+          
+          data.table.rows.forEach((row, index) => {
+            if (row.c && row.c.length >= 5) {
+              const player1 = row.c[0]?.v || '';
+              const player2 = row.c[1]?.v || '';
+              const score1 = parseInt(row.c[2]?.v) || 0;
+              const score2 = parseInt(row.c[3]?.v) || 0;
+              const currentMap = parseInt(row.c[4]?.v) || 1;
+              
+              if (player1 && player2) {
+                tournamentData.liveMatches.push({
+                  player1: { name: player1, team: '' },
+                  player2: { name: player2, team: '' },
+                  score: { player1: score1, player2: score2 },
+                  currentMap: currentMap,
+                  maps: []
+                });
+              }
+            }
+          });
+        }
+      }
+    }
+
+    // Update all tournament displays
+    function updateTournamentDisplays() {
+      renderBrackets();
+      renderLiveMatches();
+      renderRecentResults();
+    }
+
+    // Render tournament brackets
+    function renderBrackets() {
+      const container = document.getElementById('bracketContainer');
+      if (!tournamentData || !tournamentData.brackets) {
+        container.innerHTML = '<p>No bracket data available</p>';
+        return;
+      }
+
+      let html = '';
+      
+      // Render each round
+      Object.keys(tournamentData.brackets).forEach(round => {
+        const matches = tournamentData.brackets[round];
+        if (matches.length === 0) return;
+
+        html += `<div class="bracket-round">
+          <h4>${round.charAt(0).toUpperCase() + round.slice(1)}</h4>
+          <div class="matches">`;
+
+        matches.forEach(match => {
+          const p1 = match.player1;
+          const p2 = match.player2;
+          const winner = match.winner;
+          const status = match.status;
+          
+          html += `<div class="match ${status}">
+            <div class="players">
+              <div class="player ${winner === p1.id ? 'winner' : ''}">
+                <span class="name">${p1.name}</span>
+                <span class="team">${p1.team}</span>
+                <span class="score">${match.score.player1}</span>
+              </div>
+              <div class="vs">VS</div>
+              <div class="player ${winner === p2.id ? 'winner' : ''}">
+                <span class="name">${p2.name}</span>
+                <span class="team">${p2.team}</span>
+                <span class="score">${match.score.player2}</span>
+              </div>
+            </div>
+            <div class="status">${status}</div>
+          </div>`;
+        });
+
+        html += `</div></div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Render live matches
+    function renderLiveMatches() {
+      const container = document.getElementById('liveMatchesContainer');
+      if (!tournamentData || !tournamentData.liveMatches || tournamentData.liveMatches.length === 0) {
+        container.innerHTML = '<p>No live matches currently</p>';
+        return;
+      }
+
+      let html = '<div class="live-matches">';
+      tournamentData.liveMatches.forEach(match => {
+        const p1 = match.player1;
+        const p2 = match.player2;
+        
+        html += `<div class="live-match">
+          <div class="match-header">
+            <span class="live-indicator">🔴 LIVE</span>
+            <span class="round">${match.currentMap}/7</span>
+          </div>
+          <div class="players">
+            <div class="player">
+              <span class="name">${p1.name}</span>
+              <span class="team">${p1.team}</span>
+              <span class="score">${match.score.player1}</span>
+            </div>
+            <div class="vs">VS</div>
+            <div class="player">
+              <span class="name">${p2.name}</span>
+              <span class="team">${p2.team}</span>
+              <span class="score">${match.score.player2}</span>
+            </div>
+          </div>
+          <div class="current-map">
+            <strong>Current:</strong> ${match.maps[match.currentMap - 1]?.title || 'Unknown'}
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+      
+      container.innerHTML = html;
+    }
+
+    // Render recent results
+    function renderRecentResults() {
+      const container = document.getElementById('recentResultsContainer');
+      if (!tournamentData || !tournamentData.recentResults || tournamentData.recentResults.length === 0) {
+        container.innerHTML = '<p>No recent results</p>';
+        return;
+      }
+
+      let html = '<div class="recent-results">';
+      tournamentData.recentResults.forEach(result => {
+        const date = new Date(result.timestamp).toLocaleString();
+        html += `<div class="result">
+          <div class="score">${result.winner} defeated ${result.loser} ${result.score}</div>
+          <div class="time">${date}</div>
+        </div>`;
+      });
+      html += '</div>';
+      
+      container.innerHTML = html;
+    }
+
+    // Auto-refresh tournament data every 30 seconds
+    function startTournamentUpdates() {
+      loadTournamentData();
+      setInterval(loadTournamentData, 30000); // Refresh every 30 seconds
+    }
+
+    // Start tournament updates when page loads
+    startTournamentUpdates();
+
+    /* ------------------------------
+       Beatmap data loading
+       ------------------------------ */
+    /*
+    JSON TEMPLATE FOR beatmaps.json:
+    [
+      {
+        "title": "Beatmap Title",
+        "artist": "Artist Name", 
+        "bracket": "normal|hard|insane|expert|expert+|expert++",
+        "diff": "Difficulty Name (X.XX★)",
+        "length": "M:SS"
+      }
+    ]
+    */
+
+    let BEATMAPS = [];
+
+    // Load beatmap data from JSON file
+    async function loadBeatmapData() {
+      try {
+        const response = await fetch('beatmaps.json');
+        BEATMAPS = await response.json();
+        renderTable(BEATMAPS);
+        applyFilters(); // Re-apply current filters
+      } catch (error) {
+        console.error('Failed to load beatmap data:', error);
+        // Fallback to empty array - user will see empty table
+        BEATMAPS = [];
+        renderTable(BEATMAPS);
+      }
+    }
+
+    // Auto-refresh beatmap data every 60 seconds
+    function startBeatmapUpdates() {
+      loadBeatmapData();
+      setInterval(loadBeatmapData, 60000); // Refresh every 60 seconds
+    }
+
+    // Start beatmap updates when page loads
+    startBeatmapUpdates();
+
+    const tableBody = document.getElementById('beatmapTable');
+    const searchEl = document.getElementById('search');
+    const bracketEl = document.getElementById('bracket');
+    const sortByEl = document.getElementById('sortBy');
+
+    function bracketPill(bracket) {
+      const m = bracket.toLowerCase();
+      const className = ['normal','hard','insane','expert','expert+','expert++'].includes(m) ? 
+        (m === 'expert+' ? 'expertplus' : m === 'expert++' ? 'expertplusplus' : m) : 'normal';
+      return `<span class="pill ${className}">${bracket}</span>`;
+    }
+
+    function renderTable(rows) {
+      tableBody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${r.title}</td>
+          <td>${r.artist}</td>
+          <td>${bracketPill(r.bracket)}</td>
+          <td>${r.diff}</td>
+          <td>${r.length}</td>
+        </tr>
+      `).join('');
+    }
+
+    function applyFilters() {
+      const q = searchEl.value.trim().toLowerCase();
+      const bracket = bracketEl.value;
+      const sortBy = sortByEl.value;
+
+      let filtered = BEATMAPS.filter(b => {
+        const matchesQ = !q || b.title.toLowerCase().includes(q) || b.artist.toLowerCase().includes(q);
+        const matchesBracket = !bracket || b.bracket === bracket;
+        return matchesQ && matchesBracket;
+      });
+
+      // Apply sorting
+      if (sortBy) {
+        filtered = [...filtered].sort((a, b) => {
+          switch (sortBy) {
+            case 'title':
+              return a.title.localeCompare(b.title);
+            case 'artist':
+              return a.artist.localeCompare(b.artist);
+            case 'bracket':
+              return a.bracket.localeCompare(b.bracket);
+            case 'difficulty':
+              // Extract star rating for numeric comparison
+              const aStars = parseFloat(a.diff.match(/\([0-9.]+★\)/)?.[1] || '0');
+              const bStars = parseFloat(b.diff.match(/\([0-9.]+★\)/)?.[1] || '0');
+              return aStars - bStars;
+            case 'length':
+              // Convert length to seconds for comparison
+              const aSeconds = a.length.split(':').reduce((acc, val) => acc * 60 + parseInt(val), 0);
+              const bSeconds = b.length.split(':').reduce((acc, val) => acc * 60 + parseInt(val), 0);
+              return aSeconds - bSeconds;
+            default:
+              return 0;
+          }
+        });
+      }
+
+      renderTable(filtered);
+    }
+
+    searchEl.addEventListener('input', applyFilters);
+    bracketEl.addEventListener('change', applyFilters);
+    sortByEl.addEventListener('change', applyFilters);
+
+    renderTable(BEATMAPS);
+
+    /* ------------------------------
+       Tools functionality
+       ------------------------------ */
+    
+    // Tool elements
+    const toolTitle = document.getElementById('toolTitle');
+    const toolArtist = document.getElementById('toolArtist');
+    const toolBracket = document.getElementById('toolBracket');
+    const toolStars = document.getElementById('toolStars');
+    const toolLength = document.getElementById('toolLength');
+    const toolOutput = document.getElementById('toolOutput');
+    const formatSongBtn = document.getElementById('formatSongBtn');
+    const addToBeatmapsBtn = document.getElementById('addToBeatmapsBtn');
+    const loadJsonBtn = document.getElementById('loadJsonBtn');
+    const saveJsonBtn = document.getElementById('saveJsonBtn');
+    
+    const toolAcc = document.getElementById('toolAcc');
+    const toolCombo = document.getElementById('toolCombo');
+    const toolMaxCombo = document.getElementById('toolMaxCombo');
+    const toolMod = document.getElementById('toolMod');
+    const calculateScoreBtn = document.getElementById('calculateScoreBtn');
+    const scoreResult = document.getElementById('scoreResult');
+
+    // Get difficulty name from star rating
+    function getDiffName(stars) {
+      if (0.0 <= stars <= 1.99) return "Easy";
+      else if (2.0 <= stars <= 2.69) return "Normal";
+      else if (2.7 <= stars <= 3.99) return "Hard";
+      else if (4.0 <= stars <= 5.29) return "Insane";
+      else if (5.3 <= stars <= 6.49) return "Expert";
+      else if (stars >= 6.5) return "Expert+";
+      else return "Unknown";
+    }
+
+    // Sort beatmaps by bracket
+    function sortBeatmapsByBracket(beatmaps) {
+      const bracketOrder = ["normal", "hard", "insane", "expert", "expert+", "expert++"];
+      
+      return beatmaps.sort((a, b) => {
+        const aIndex = bracketOrder.indexOf(a.bracket.toLowerCase());
+        const bIndex = bracketOrder.indexOf(b.bracket.toLowerCase());
+        const aSort = aIndex === -1 ? bracketOrder.length : aIndex;
+        const bSort = bIndex === -1 ? bracketOrder.length : bIndex;
+        return aSort - bSort;
+      });
+    }
+
+    // Format song data
+    function formatSong() {
+      const title = toolTitle.value.trim();
+      const artist = toolArtist.value.trim();
+      const bracket = toolBracket.value;
+      const length = toolLength.value.trim();
+      
+      if (!title || !artist || !bracket || !length) {
+        toolOutput.value = 'Error: Please fill in all fields';
+        return;
+      }
+      
+      if (bracket === "") {
+        toolOutput.value = 'Error: Please select a bracket';
+        return;
+      }
+      
+      const stars = parseFloat(toolStars.value);
+      if (isNaN(stars) || stars < 0) {
+        toolOutput.value = 'Error: Please enter a valid star rating';
+        return;
+      }
+      
+      const diffName = getDiffName(stars);
+      const diffFormatted = `${diffName} (${stars.toFixed(2)}★)`;
+      
+      const formatted = `{ title: "${title}", artist: "${artist}", bracket: "${bracket}", diff: "${diffFormatted}", length: "${length}" },`;
+      toolOutput.value = formatted;
+    }
+
+    // Add beatmap to beatmaps.json (simulated - in real implementation would require server-side)
+    async function addBeatmapToJson() {
+      const title = toolTitle.value.trim();
+      const artist = toolArtist.value.trim();
+      const bracket = toolBracket.value;
+      const length = toolLength.value.trim();
+      
+      if (!title || !artist || !bracket || !length) {
+        alert('Error: Please fill in all fields');
+        return;
+      }
+      
+      if (bracket === "") {
+        alert('Error: Please select a bracket');
+        return;
+      }
+      
+      const stars = parseFloat(toolStars.value);
+      if (isNaN(stars) || stars < 0) {
+        alert('Error: Please enter a valid star rating');
+        return;
+      }
+      
+      const diffName = getDiffName(stars);
+      const diffFormatted = `${diffName} (${stars.toFixed(2)}★)`;
+      
+      const newBeatmap = {
+        title,
+        artist,
+        bracket,
+        diff: diffFormatted,
+        length
+      };
+      
+      try {
+        // Load existing beatmaps
+        let beatmaps = [];
+        try {
+          const response = await fetch('beatmaps.json');
+          beatmaps = await response.json();
+        } catch (e) {
+          console.warn('beatmaps.json not found, creating new');
+        }
+        
+        // Add new beatmap
+        beatmaps.push(newBeatmap);
+        
+        // Sort and save (in real implementation would need server-side)
+        const sortedBeatmaps = sortBeatmapsByBracket(beatmaps);
+        toolOutput.value = JSON.stringify(sortedBeatmaps, null, 2);
+        
+        // Clear form
+        toolTitle.value = '';
+        toolArtist.value = '';
+        toolStars.value = '';
+        toolLength.value = '';
+        toolBracket.value = '';
+        
+        alert(`Added '${title}' to beatmaps.json (displayed in output area - would need server-side to actually save)`);
+        
+        // Refresh beatmap table if it exists
+        if (BEATMAPS.length >= 0) {
+          loadBeatmapData();
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Load JSON file (simulated - browser security restrictions)
+    function loadJsonFile() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          try {
+            const text = await file.text();
+            const beatmaps = JSON.parse(text);
+            const sortedBeatmaps = sortBeatmapsByBracket(beatmaps);
+            toolOutput.value = JSON.stringify(sortedBeatmaps, null, 2);
+            alert(`Loaded and sorted ${beatmaps.length} beatmaps`);
+          } catch (error) {
+            alert('Error loading JSON: ' + error.message);
+          }
+        }
+      };
+      input.click();
+    }
+
+    // Save JSON file
+    function saveJsonFile() {
+      const content = toolOutput.value.trim();
+      if (!content) {
+        alert('No content to save');
+        return;
+      }
+      
+      try {
+        JSON.parse(content); // Validate JSON
+        
+        const blob = new Blob([content], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'beatmaps.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        alert('Invalid JSON format: ' + error.message);
+      }
+    }
+
+    // Format scaled score with apostrophe separators
+    function formatScaledScore(score) {
+      const scaledScore = Math.floor(score);
+      return scaledScore.toLocaleString('en-US').replace(/,/g, "'");
+    }
+
+    // Calculate score
+    function calculateScore() {
+      try {
+        const acc = parseFloat(toolAcc.value);
+        const combo = parseInt(toolCombo.value);
+        const maxCombo = parseInt(toolMaxCombo.value);
+        
+        if (isNaN(acc) || isNaN(combo) || isNaN(maxCombo)) {
+          scoreResult.textContent = 'Error: Please enter valid numbers';
+          return;
+        }
+        
+        if (maxCombo === 0) {
+          scoreResult.textContent = 'Error: Max combo cannot be zero';
+          return;
+        }
+        
+        // Base formula
+        let score = ((0.8 * acc) * 100) + ((0.2 * Math.sqrt(combo / maxCombo)) * 100);
+        
+        // Apply mod multiplier
+        const mod = toolMod.value;
+        const multipliers = {
+          "None": 1.0,
+          "EZ": 0.50,
+          "HR": 1.12,
+          "HD": 1.05,
+          "FL": 1.10
+        };
+        score *= multipliers[mod] || 1.0;
+        
+        // Calculate scaled score (8020 = 1,000,000 ratio)
+        const scaledScore = (score / 8020.0) * 1000000;
+        const formattedScaled = formatScaledScore(scaledScore);
+        
+        scoreResult.textContent = `Score: ${score.toFixed(2)} | Scaled: ${formattedScaled}`;
+      } catch (error) {
+        scoreResult.textContent = `Error: ${error.message}`;
+      }
+    }
+
+    // Tool event listeners
+    formatSongBtn.addEventListener('click', formatSong);
+    addToBeatmapsBtn.addEventListener('click', addBeatmapToJson);
+    loadJsonBtn.addEventListener('click', loadJsonFile);
+    saveJsonBtn.addEventListener('click', saveJsonFile);
+    calculateScoreBtn.addEventListener('click', calculateScore);
+    
+    // Toggle song formatter visibility
+    const toggleSongFormatterBtn = document.getElementById('toggleSongFormatterBtn');
+    const songFormatterContent = document.getElementById('songFormatterContent');
+    
+    toggleSongFormatterBtn.addEventListener('click', () => {
+      const isVisible = songFormatterContent.style.display !== 'none';
+      songFormatterContent.style.display = isVisible ? 'none' : 'block';
+      toggleSongFormatterBtn.textContent = isVisible ? 'Show Song Formatter' : 'Hide Song Formatter';
+    });
+
+    // Toggle score calculator visibility
+    const toggleScoreCalculatorBtn = document.getElementById('toggleScoreCalculatorBtn');
+    const scoreCalculatorContent = document.getElementById('scoreCalculatorContent');
+    
+    toggleScoreCalculatorBtn.addEventListener('click', () => {
+      const isVisible = scoreCalculatorContent.style.display !== 'none';
+      scoreCalculatorContent.style.display = isVisible ? 'none' : 'block';
+      toggleScoreCalculatorBtn.textContent = isVisible ? 'Show Score Calculator' : 'Hide Score Calculator';
+    });
+
+    // Registration Code Decoder functionality
+    const toggleCodeDecoderBtn = document.getElementById('toggleCodeDecoderBtn');
+    const codeDecoderContent = document.getElementById('codeDecoderContent');
+    const registrationCodeInput = document.getElementById('registrationCodeInput');
+    const decodeCodeBtn = document.getElementById('decodeCodeBtn');
+    const decodedRegistrationInfo = document.getElementById('decodedRegistrationInfo');
+    
+    toggleCodeDecoderBtn.addEventListener('click', () => {
+      const isVisible = codeDecoderContent.style.display !== 'none';
+      codeDecoderContent.style.display = isVisible ? 'none' : 'block';
+      toggleCodeDecoderBtn.textContent = isVisible ? 'Show Registration Decoder' : 'Hide Registration Decoder';
+    });
+    
+    decodeCodeBtn.addEventListener('click', () => {
+      const code = registrationCodeInput.value.trim();
+      
+      if (!code) {
+        decodedRegistrationInfo.innerHTML = '<div class="error">Please enter a registration code.</div>';
+        return;
+      }
+      
+      const registrationData = decodeRegistrationCode(code);
+      
+      if (registrationData) {
+        // Format the registration data for display
+        const formattedDate = new Date(registrationData.timestamp).toLocaleString();
+        
+        const displayHTML = `
+          <div class="card" style="background: var(--card); border: 1px solid var(--accent); margin-top: 12px;">
+            <h4 style="color: var(--accent); margin: 0 0 12px 0;">✅ Registration Decoded Successfully</h4>
+            <div class="grid-2">
+              <div>
+                <p><strong>Username:</strong> ${registrationData.username}</p>
+                <p><strong>Email:</strong> ${registrationData.email}</p>
+                <p><strong>Country:</strong> ${registrationData.country}</p>
+                <p><strong>Preferred Bracket:</strong> ${registrationData.preferredBracket}</p>
+                <p><strong>Experience:</strong> ${registrationData.experience}</p>
+              </div>
+              <div>
+                <p><strong>osu! Username:</strong> ${registrationData.osuUsername}</p>
+                <p><strong>osu! User ID:</strong> ${registrationData.osuId}</p>
+                <p><strong>Registration Date:</strong> ${formattedDate}</p>
+                <p><strong>Comments:</strong> ${registrationData.comments || 'None'}</p>
+                <p><strong>Code:</strong> <code style="background: var(--bg-elev); padding: 2px 6px; border-radius: 4px;">${code}</code></p>
+              </div>
+            </div>
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+              <button class="btn" onclick="navigator.clipboard.writeText('${code}').then(() => alert('Code copied to clipboard!'))">Copy Code</button>
+              <button class="btn" onclick="window.print()">Print Registration</button>
+            </div>
+          </div>
+        `;
+        
+        decodedRegistrationInfo.innerHTML = displayHTML;
+      } else {
+        decodedRegistrationInfo.innerHTML = `
+          <div class="error" style="margin-top: 12px;">
+            <strong>❌ Invalid Registration Code</strong>
+            <p>Please check the code and try again. Valid codes start with "REG-" followed by encoded data and a checksum.</p>
+          </div>
+        `;
+      }
+    }); // Added missing closing brace here
+    
+    // Add Enter key support for code decoder
+    registrationCodeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        decodeCodeBtn.click();
+      }
+    });
+
+    // Add Enter key support for score calculator
+    [toolAcc, toolCombo, toolMaxCombo, toolMod].forEach(el => {
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') calculateScore();
+      });
+    });
+
+    // Initialize session on page load
+    loadSession();
+    
+    // Check session expiry periodically
+    setInterval(checkSessionExpiry, 60000); // Check every minute
+
+    /* ------------------------------
+       Easter Egg functionality
+       ------------------------------ */
+    function showEasterEgg() {
+      easterEggModalBackdrop.style.display = 'flex';
+      easterEggModalBackdrop.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeEasterEgg() {
+      easterEggModalBackdrop.style.display = 'none';
+      easterEggModalBackdrop.setAttribute('aria-hidden', 'true');
+      logoClickCount = 0; // Reset counter after showing easter egg
+    }
+
+    // Logo click handler for easter egg
+    logoEl.addEventListener('click', () => {
+      logoClickCount++;
+      
+      // Add a little visual feedback
+      logoEl.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        logoEl.style.transform = 'scale(1)';
+      }, 100);
+      
+      // Show easter egg after 5 clicks
+      if (logoClickCount >= 5) {
+        showEasterEgg();
+      }
+    });
+
+    closeEasterEggBtn.addEventListener('click', closeEasterEgg);
+    easterEggModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === easterEggModalBackdrop) closeEasterEgg();
+    });
+
+    // Ensure page starts at top on load/reload
+    window.addEventListener('beforeunload', () => {
+      window.scrollTo(0, 0);
+    });
+    
+    window.addEventListener('load', () => {
+      window.scrollTo(0, 0);
+      // Also handle browser scroll restoration
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+    });
+    
+    // Additional fallback for immediate scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      window.scrollTo(0, 0);
+    });
+  </script>
+</body>
+</html>

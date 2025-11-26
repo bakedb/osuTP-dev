@@ -1,0 +1,67 @@
+{
+  "tournament": {
+    "name": "osu! Tournament 2025",
+    "status": "ongoing",
+    "currentRound": "semifinals", 
+    "startDate": "2025-11-23",
+    "endDate": "2025-11-24"
+  },
+  "participants": [
+    {
+      "id": 1,
+      "name": "Player1",
+      "team": "Team Alpha",
+      "rank": 1,
+      "wins": 3,
+      "losses": 0
+    }
+  ],
+  "brackets": {
+    "semifinals": [
+      {
+        "matchId": "sf1",
+        "player1": {"id": 1, "name": "Player1", "team": "Team Alpha"},
+        "player2": {"id": 2, "name": "Player2", "team": "Team Beta"},
+        "winner": 1,
+        "score": {"player1": 4, "player2": 2},
+        "status": "completed",
+        "maps": [
+          {
+            "title": "FREEDOM DiVE",
+            "winner": 1,
+            "scores": {"player1": 850000, "player2": 720000}
+          }
+        ]
+      }
+    ],
+    "finals": [],
+    "thirdPlace": []
+  },
+  "liveMatches": [
+    {
+      "matchId": "live1",
+      "player1": {"id": 1, "name": "Player1", "team": "Team Alpha"},
+      "player2": {"id": 2, "name": "Player2", "team": "Team Beta"},
+      "currentMap": 3,
+      "score": {"player1": 2, "player2": 1},
+      "status": "live",
+      "maps": [
+        {
+          "title": "Map Name",
+          "status": "completed",
+          "winner": 1,
+          "scores": {"player1": 850000, "player2": 720000}
+        }
+      ]
+    }
+  ],
+  "recentResults": [
+    {
+      "matchId": "sf1",
+      "winner": "Player1",
+      "loser": "Player2",
+      "score": "4-2",
+      "timestamp": "2025-01-20T20:30:00Z"
+    }
+  ]
+}

@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>osu! Tournament Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #e8f4ff;
+      --bg-elev: #ffffff;
+      --card: #ffffff;
+      --text: #2c3e50;
+      --muted: #7f8c8d;
+      --accent: #00b4d8; /* bright blue */
+      --accent-2: #0077b6; /* deeper blue */
+      --accent-3: #90e0ef; /* light blue */
+      --accent-4: #caf0f8; /* very light blue */
+      --ok: #06ffa5;
+      --bad: #ff006e;
+      --glass: rgba(255, 255, 255, 0.25);
+      --glass-border: rgba(255, 255, 255, 0.18);
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #e8f4ff 0%, #caf0f8 25%, #90e0ef 50%, #00b4d8 75%, #0077b6 100%);
+      color: var(--text);
+      font-family: 'Segoe UI', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(144, 224, 239, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 180, 216, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(202, 240, 248, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Top nav */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+    .brand .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, var(--accent-3) 40%, var(--accent) 100%);
+      box-shadow: 
+        0 0 20px rgba(0, 180, 216, 0.8),
+        0 4px 12px rgba(0, 180, 216, 0.4),
+        inset 0 -2px 4px rgba(0, 119, 182, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+    }
+    .brand .name {
+      color: var(--text);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+    }
+    .tab-btn {
+      border: none;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      border: 1px solid var(--glass-border);
+      box-shadow: 
+        0 4px 12px rgba(0, 180, 216, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .tab-btn:hover { 
+      color: var(--accent-2); 
+      background: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+    .tab-btn.active { 
+      color: #ffffff; 
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 
+        0 8px 24px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 2px 4px rgba(0, 119, 182, 0.3);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .userbox {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .signin-btn, .signout-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      box-shadow: 
+        0 4px 12px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .signin-btn:hover, .signout-btn:hover { 
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    /* Page container */
+    .container {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 20px 40px;
+    }
+
+    /* Hero */
+    .hero {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+      box-shadow: 
+        0 16px 48px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(144, 224, 239, 0.1) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    .hero h1 { margin: 0 0 8px; font-size: 2rem; }
+    .hero p { margin: 0; color: var(--muted); }
+    .hero .cta {
+      display: inline-block;
+      margin-top: 12px;
+      background: linear-gradient(135deg, var(--accent-3), var(--accent));
+      color: #ffffff;
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .hero .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 28px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 
+        0 8px 32px rgba(0, 180, 216, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    }
+    .card h3 { margin: 0 0 10px; font-size: 1.1rem; }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    /* Beatmap list */
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .input, .select {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--text);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 180, 216, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    .input:focus, .select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 180, 216, 0.1),
+        0 0 0 3px rgba(0, 180, 216, 0.2),
+        0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      box-shadow: 
+        0 8px 32px rgba(0, 180, 216, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .table th, .table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .table thead {
+      background: linear-gradient(135deg, var(--accent-3), var(--accent));
+      color: #ffffff;
+      text-shadow: 0 1px 2px rgba(0, 119, 182, 0.3);
+    }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .pill.normal { background: linear-gradient(135deg, #4FC3F7, #29B6F6); }   /* light blue */
+    .pill.hard { background: linear-gradient(135deg, #81C784, #66BB6A); }     /* green */
+    .pill.insane { background: linear-gradient(135deg, #FBC02D, #F9A825); }   /* yellow */
+    .pill.expert { background: linear-gradient(135deg, #E57373, #EF5350); }   /* red */
+    .pill.expertplus { background: linear-gradient(135deg, #7281FE, #5C6BC0); }  /* purple */
+    .pill.expertplusplus { background: linear-gradient(135deg, #424242, #212121); color: #FFFF00; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }  /* black with yellow text */
+
+    /* Rules */
+    .rules li {
+      margin-bottom: 8px;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 14, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .modal {
+      width: 100%;
+      max-width: 440px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 
+        0 16px 48px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.3);
+    }
+    .modal h3 { margin: 0 0 10px; }
+    .modal .row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .modal .error { color: var(--bad); font-weight: 700; min-height: 20px; }
+    .modal .actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .btn {
+      border: none;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      border: 1px solid var(--glass-border);
+      box-shadow: 
+        0 4px 12px rgba(0, 180, 216, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        0 6px 16px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+    
+    .btn.primary { 
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #ffffff;
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn.primary:hover {
+      box-shadow: 
+        0 8px 24px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    /* Tournament styles */
+    .bracket-round {
+      margin-bottom: 24px;
+    }
+    .bracket-round h4 {
+      margin: 0 0 16px;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+    .matches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .match {
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      box-shadow: 
+        0 8px 24px rgba(0, 180, 216, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .match.live {
+      border-color: var(--accent);
+      box-shadow: 
+        0 12px 32px rgba(0, 180, 216, 0.3),
+        0 0 20px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      background: linear-gradient(135deg, var(--glass), rgba(0, 180, 216, 0.05));
+    }
+    .match.completed {
+      opacity: 0.8;
+    }
+    .players {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .player {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background: var(--glass);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    .player.winner {
+      background: linear-gradient(135deg, var(--glass), rgba(0, 180, 216, 0.1));
+      border: 1px solid var(--accent);
+      box-shadow: 
+        0 4px 12px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .player .name {
+      font-weight: 600;
+    }
+    .player .team {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .player .score {
+      font-weight: 600;
+    }
+    .vs {
+      text-align: center;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .match .status {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .live-matches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 16px;
+    }
+    .live-match {
+      background: linear-gradient(135deg, var(--glass), rgba(0, 180, 216, 0.1));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      padding: 24px;
+      position: relative;
+      box-shadow: 
+        0 16px 48px rgba(0, 180, 216, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .live-indicator {
+      background: linear-gradient(135deg, #ff006e, #ff4458);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      animation: pulse 2s infinite;
+      box-shadow: 
+        0 4px 12px rgba(255, 0, 110, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .round {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .current-map {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      font-size: 0.9rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    .recent-results {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .result {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: var(--glass);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    .result .score {
+      font-weight: 600;
+    }
+    .result .time {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* Tools section styles */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    
+    .row label {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    textarea.input {
+      resize: vertical;
+      min-height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top nav -->
+  <nav class="nav">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="name">osu!TP</div>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Main tabs">
+      <button class="tab-btn active" data-tab="home" role="tab" aria-controls="home">Home</button>
+      <button class="tab-btn" data-tab="brackets" role="tab" aria-controls="brackets">Brackets</button>
+      <button class="tab-btn" data-tab="live" role="tab" aria-controls="live">Live Scores</button>
+      <button class="tab-btn" data-tab="rules" role="tab" aria-controls="rules">Rules</button>
+      <button class="tab-btn" data-tab="beatmaps" role="tab" aria-controls="beatmaps">Beatmap list</button>
+      <button class="tab-btn" data-tab="tools" role="tab" aria-controls="tools">Tools</button>
+    </div>
+
+    <div class="userbox">
+      <span id="userStatus">Guest</span>
+      <button class="signin-btn" id="signInBtn">Sign in</button>
+      <button class="signout-btn" id="signOutBtn" style="display: none;">Sign out</button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Home -->
+    <section id="home" role="tabpanel" aria-label="Home" style="display: block;">
+      <div class="hero">
+        <div>
+          <h1>Tournament System Guide</h1>
+          <p>Welcome to your osu! tournament portal. This system uses a bracket-based structure with qualifiers to determine player placement and progression through different difficulty levels.</p>
+          <a href="#beatmaps" class="cta" data-tab-jump="beatmaps">Explore beatmaps</a>
+        </div>
+        <div class="card">
+          <h3>Tournament Phases</h3>
+          <p class="muted">Progressive tournament structure:</p>
+          <ul>
+            <li><strong>Phase 1:</strong> Qualifiers - Determine initial placement</li>
+            <li><strong>Phase 2:</strong> Bracket Play - Head-to-head competition</li>
+            <li><strong>Phase 3:</strong> Finals - Championship matches</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;" class="grid-3">
+        <div class="card">
+          <h3>🎯 Qualification Process</h3>
+          <p><strong>Map Selection:</strong> Choose one map from each bracket</p>
+          <p><strong>Progression:</strong> Pass maps to advance to next bracket</p>
+          <p><strong>Assignment:</strong> Placed based on highest completed bracket</p>
+        </div>
+        <div class="card">
+          <h3>🏆 Difficulty Brackets</h3>
+          <p><strong>Normal:</strong> Entry-level for beginners</p>
+          <p><strong>Hard:</strong> Intermediate difficulty</p>
+          <p><strong>Insane:</strong> Advanced players</p>
+          <p><strong>Expert:</strong> High-level competition</p>
+          <p><strong>Expert+:</strong> Very high difficulty</p>
+          <p><strong>Expert++:</strong> Maximum challenge </p>
+        </div>
+        <div class="card">
+          <h3>⚡ Match Format</h3>
+          <p><strong>Best of 7:</strong> First to 4 map wins</p>
+          <p><strong>Map Pool:</strong> 7 maps per match</p>
+          <p><strong>Tiebreaker:</strong> Final map if 3-3</p>
+          <p><strong>Scoring:</strong> Accuracy (80%) + combo (20%) based</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;" class="card">
+        <h3>📊 Tournament Features</h3>
+        <div class="grid-3">
+          <div>
+            <h4>Live Updates</h4>
+            <p>Real-time score updates and match progress with automatic refresh every 30 seconds.</p>
+          </div>
+          <div>
+            <h4>Bracket Visualization</h4>
+            <p>Interactive tournament tree showing player progression and match results.</p>
+          </div>
+          <div>
+            <h4>Beatmap Explorer</h4>
+            <p>Search, filter, and sort all tournament beatmaps by difficulty and length.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;" class="card">
+        <h3>🎮 Getting Started</h3>
+        <div class="grid-2">
+          <div>
+            <h4>For Participants</h4>
+            <ul>
+              <li>Sign in to access participant features</li>
+              <li>Review qualification requirements</li>
+              <li>Check match schedules and brackets</li>
+              <li>Practice with tournament beatmaps</li>
+              <li>Ensure technical setup is ready</li>
+            </ul>
+          </div>
+          <div>
+            <h4>For Organizers</h4>
+            <ul>
+              <li>Use main.py to manage beatmaps</li>
+              <li>Update tournament-data.json for live scores</li>
+              <li>Monitor bracket assignments</li>
+              <li>Track player progression</li>
+              <li>Maintain match schedules</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;" class="card">
+        <h3>📈 Scoring System</h3>
+        <p><strong>Base Formula:</strong> ((0.8 × accuracy) × 100) + ((0.2 × √(combo/max_combo)) × 100)</p>
+        <p><strong>Mod Multipliers:</strong> EZ (0.50x), HR (1.12x), HD (1.05x), FL (1.10x)</p>
+        <p><strong>Dual Display:</strong> Original score + scaled score (1'000'000 max)</p>
+        <p class="muted">Use the score calculator in main.py to estimate match performance.</p>
+      </div>
+
+      <div style="margin-top: 18px;" class="card">
+        <h3>🔧 Technical Information</h3>
+        <div class="grid-2">
+          <div>
+            <h4>File Structure</h4>
+            <ul>
+              <li><strong>index.html:</strong> Main tournament website</li>
+              <li><strong>beatmaps.json:</strong> Beatmap database</li>
+              <li><strong>tournament-data.json:</strong> Live tournament data</li>
+              <li><strong>main.py:</strong> Management tools</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Data Flow</h4>
+            <ul>
+              <li>main.py updates JSON files</li>
+              <li>JSON files store all data</li>
+              <li>Website reads and displays data</li>
+              <li>Auto-refresh keeps everything current</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brackets -->
+    <section id="brackets" role="tabpanel" aria-label="Brackets" style="display: none;">
+      <div class="card">
+        <h3>Tournament Brackets</h3>
+        <div id="bracketContainer"></div>
+      </div>
+    </section>
+
+    <!-- Live Scores -->
+    <section id="live" role="tabpanel" aria-label="Live Scores" style="display: none;">
+      <div class="card">
+        <h3>Live Matches</h3>
+        <div id="liveMatchesContainer"></div>
+      </div>
+      <div style="margin-top: 16px;" class="card">
+        <h3>Recent Results</h3>
+        <div id="recentResultsContainer"></div>
+      </div>
+    </section>
+
+    <!-- Rules -->
+    <section id="rules" role="tabpanel" aria-label="Rules" style="display: none;">
+      <div class="card">
+        <h3>Tournament rules</h3>
+        <ul class="rules">
+          <li><strong>Eligibility:</strong> Registered participants only.</li>
+          <li><strong>Fair play:</strong> No cheating, no unauthorized mods, and no unapproved clients.</li>
+          <li><strong>Respect:</strong> Harassment or toxicity results in disqualification.</li>
+          <li><strong>Timing:</strong> Be on time; late arrivals may forfeit matches.</li>
+          <li><strong>Technical:</strong> Verify your input, audio, and overlays before matches.</li>
+          <li><strong>Skins:</strong> Inquire about approved skins before the tournament starts. You can get all approved skins <a href="https://www.mediafire.com/file/2ngfrg5r5v7tuwn/valid-osu-skins.zip/file">here.</a></li>
+          <li><strong>Mods:</strong> No Fail should be enabled during all matches. Other mods will be determined before the round begins.</li>
+        </ul>
+        <h3>Checklist</h3>
+        <ol class="rules">
+          <li><strong>Check ruleset (if first round)</strong> Check if the skin is valid, if the maps are unmodified and updated, and the correct client is being used.</li>
+          <li><strong>Check mods</strong> Enable No Fail and any other mods specified on the beatmap list.</li>
+          <li><strong>Verify scores</strong> Use the scoring algorithm below to determine the score of the play and compare against the other player.</li>
+        </ol>
+        <h3>Scoring</h3>
+        <p>((0.8 * [Acc to 4SF]) * 100) + ((0.2 * sqrt([combo] / [max combo])) * 100)</p>
+        <p>You can find a Python utility for scores and more related to osu!TP on the <a href="https://github.com/bakedb/osu-tourney-page">GitHub.</a> Download and run main.py. The Python file requires no additional dependencies, only a relatively new Python interpreter that supports Tkinter.</p>
+        <ul>
+          <li><strong>Easy (EZ)</strong> — 0.50×  
+            <br>Dramatically lowers difficulty (larger circles, lower AR/OD).
+          </li>
+          <li><strong>Hard Rock (HR)</strong> — 1.12×  
+            <br>Raises AR/OD, shrinks circles.
+          </li>
+          <li><strong>Hidden (HD)</strong> — 1.05×  
+            <br>Fading circles.
+          </li>
+          <li><strong>Flashlight (FL)</strong> — 1.10×  
+            <br>Restricted vision.
+          </li>
+        </ul>
+        <p><strong>Only one of these mods (EZ/HR/HD/FL) can be used at a time.</strong></p>
+
+      </div>
+    </section>
+
+    <!-- Tools -->
+    <section id="tools" role="tabpanel" aria-label="Tools" style="display: none;">
+      <div style="margin-top: 16px;" class="card">
+        <h3>Score Calculator</h3>
+        <div id="scoreCalculatorContent" style="display: block; margin-top: 16px;">
+          <div class="grid-2">
+            <div>
+              <div class="row">
+                <label for="toolAcc">Accuracy (to 4SF):</label>
+                <input id="toolAcc" class="input" type="number" step="0.01" placeholder="00.00" />
+              </div>
+              <div class="row">
+                <label for="toolCombo">Combo:</label>
+                <input id="toolCombo" class="input" type="number" placeholder="0" />
+              </div>
+              <div class="row">
+                <label for="toolMaxCombo">Max Combo:</label>
+                <input id="toolMaxCombo" class="input" type="number" placeholder="0" />
+              </div>
+              <div class="row">
+                <label for="toolMod">Mod:</label>
+                <select id="toolMod" class="select">
+                  <option value="None">None</option>
+                  <option value="EZ">Easy (EZ)</option>
+                  <option value="HR">Hard Rock (HR)</option>
+                  <option value="HD">Hidden (HD)</option>
+                  <option value="FL">Flashlight (FL)</option>
+                </select>
+              </div>
+              <button class="btn primary" id="calculateScoreBtn" style="margin-top: 12px;">Calculate Score</button>
+            </div>
+            <div>
+              <div class="card" style="background: #14141c; border: 1px solid #2a2a44;">
+                <h4>Result</h4>
+                <div id="scoreResult">Score: - | Scaled: -</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 16px;" class="card">
+        <h3>Song Formatter</h3>
+        <button class="btn" id="toggleSongFormatterBtn">Show Song Formatter</button>
+        <div id="songFormatterContent" style="display: none; margin-top: 16px;">
+          <div class="grid-2">
+            <div>
+              <div class="row">
+                <label for="toolTitle">Title:</label>
+                <input id="toolTitle" class="input" type="text" placeholder="Song title" />
+              </div>
+              <div class="row">
+                <label for="toolArtist">Artist:</label>
+                <input id="toolArtist" class="input" type="text" placeholder="Artist name" />
+              </div>
+              <div class="row">
+                <label for="toolBracket">Bracket:</label>
+                <select id="toolBracket" class="select">
+                  <option value="">Select bracket...</option>
+                  <option value="normal">normal</option>
+                  <option value="hard">hard</option>
+                  <option value="insane">insane</option>
+                  <option value="expert">expert</option>
+                  <option value="expert+">expert+</option>
+                  <option value="expert++">expert++</option>
+                </select>
+              </div>
+              <div class="row">
+                <label for="toolStars">Stars:</label>
+                <input id="toolStars" class="input" type="number" step="0.01" placeholder="Star rating" />
+              </div>
+              <div class="row">
+                <label for="toolLength">Length:</label>
+                <input id="toolLength" class="input" type="text" placeholder="e.g., 1:23" />
+              </div>
+              <div class="actions" style="margin-top: 12px;">
+                <button class="btn primary" id="formatSongBtn">Format</button>
+                <button class="btn" id="addToBeatmapsBtn">Add to beatmaps.json</button>
+              </div>
+            </div>
+            <div>
+              <div class="actions" style="margin-bottom: 12px;">
+                <button class="btn" id="loadJsonBtn">Load JSON</button>
+                <button class="btn" id="saveJsonBtn">Save As...</button>
+              </div>
+              <textarea id="toolOutput" class="input" style="height: 200px; font-family: monospace;" placeholder="Formatted output will appear here..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Beatmap list -->
+    <section id="beatmaps" role="tabpanel" aria-label="Beatmap list" style="display: none;">
+      <div class="card">
+        <h3>Beatmap explorer</h3>
+        <div class="filters">
+          <input id="search" class="input" type="text" placeholder="Search by title or artist" />
+          <select id="bracket" class="select">
+            <option value="">All brackets</option>
+            <option value="normal">normal</option>
+            <option value="hard">hard</option>
+            <option value="insane">insane</option>
+            <option value="expert">expert</option>
+            <option value="expert+">expert+</option>
+            <option value="expert++">expert++</option>
+          </select>
+          <select id="sortBy" class="select">
+            <option value="">Sort by</option>
+            <option value="title">Title</option>
+            <option value="artist">Artist</option>
+            <option value="bracket">Bracket</option>
+            <option value="difficulty">Difficulty</option>
+            <option value="length">Length</option>
+          </select>
+        </div>
+
+        <table class="table" aria-label="Beatmaps table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Artist</th>
+              <th>Bracket</th>
+              <th>Difficulty</th>
+              <th>Length</th>
+            </tr>
+          </thead>
+          <tbody id="beatmapTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Sign-in modal -->
+  <div class="modal-backdrop" id="signInModalBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="signInTitle">
+      <h3 id="signInTitle">Sign in</h3>
+      <div class="row">
+        <label for="username">Username</label>
+        <input id="username" class="input" type="text" autocomplete="username" />
+      </div>
+      <div class="row">
+        <label for="password">Password</label>
+        <input id="password" class="input" type="password" autocomplete="current-password" />
+      </div>
+      <div class="row">
+        <label for="sessionDuration">Keep me logged in for...</label>
+        <select id="sessionDuration" class="select">
+          <option value="1">1 hour</option>
+          <option value="6">6 hours</option>
+          <option value="12">12 hours</option>
+          <option value="24">24 hours</option>
+        </select>
+      </div>
+      <div class="error" id="signInError"></div>
+      <div class="actions">
+        <button class="btn" id="cancelSignIn">Cancel</button>
+        <button class="btn primary" id="confirmSignIn">Sign in</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ------------------------------
+       Hardcoded accounts (SHA-256)
+       ------------------------------ */
+    // Utility: hex -> ArrayBuffer
+    function hexToBytes(hex) {
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = parseInt(hex.substr(i * 2, 2), 16);
+      }
+      return bytes.buffer;
+    }
+
+    // Utility: bytes -> hex
+    function bytesToHex(buffer) {
+      const bytes = new Uint8Array(buffer);
+      let hex = '';
+      for (let i = 0; i < bytes.length; i++) {
+        const h = bytes[i].toString(16).padStart(2, '0');
+        hex += h;
+      }
+      return hex;
+    }
+
+    // Hash with Web Crypto: SHA-256(password)
+    async function sha256(text) {
+      const enc = new TextEncoder().encode(text);
+      const digest = await crypto.subtle.digest('SHA-256', enc);
+      return bytesToHex(digest);
+    }
+
+    // Accounts: username -> { hash: sha256(password), role: user_role }
+    const ACCOUNTS = {
+      "bakedb": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
+      "participant": { hash: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", role: "Participant" },
+    };
+
+    /* ------------------------------
+       State & elements
+       ------------------------------ */
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panels = {
+      home: document.getElementById('home'),
+      brackets: document.getElementById('brackets'),
+      live: document.getElementById('live'),
+      rules: document.getElementById('rules'),
+      beatmaps: document.getElementById('beatmaps'),
+      tools: document.getElementById('tools')
+    };
+    const userStatusEl = document.getElementById('userStatus');
+    const signInBtn = document.getElementById('signInBtn');
+    const signOutBtn = document.getElementById('signOutBtn');
+    const modalBackdrop = document.getElementById('signInModalBackdrop');
+    const confirmSignInBtn = document.getElementById('confirmSignIn');
+    const cancelSignInBtn = document.getElementById('cancelSignIn');
+    const signInErrorEl = document.getElementById('signInError');
+    const usernameEl = document.getElementById('username');
+    const passwordEl = document.getElementById('password');
+    const sessionDurationEl = document.getElementById('sessionDuration');
+
+    let currentUser = null;
+    let currentUserRole = null;
+    let sessionExpiry = null;
+
+    /* ------------------------------
+       Session management
+       ------------------------------ */
+    function saveSession(user, role, hours) {
+      const expiryTime = Date.now() + (hours * 60 * 60 * 1000);
+      const sessionData = {
+        user,
+        role,
+        expiry: expiryTime
+      };
+      localStorage.setItem('userSession', JSON.stringify(sessionData));
+      sessionExpiry = expiryTime;
+    }
+
+    function loadSession() {
+      const sessionData = localStorage.getItem('userSession');
+      if (!sessionData) return false;
+
+      try {
+        const session = JSON.parse(sessionData);
+        if (Date.now() > session.expiry) {
+          clearSession();
+          return false;
+        }
+
+        currentUser = session.user;
+        currentUserRole = session.role;
+        sessionExpiry = session.expiry;
+        updateUserUI();
+        return true;
+      } catch (error) {
+        clearSession();
+        return false;
+      }
+    }
+
+    function clearSession() {
+      localStorage.removeItem('userSession');
+      currentUser = null;
+      currentUserRole = null;
+      sessionExpiry = null;
+    }
+
+    function updateUserUI() {
+      if (currentUser && currentUserRole) {
+        userStatusEl.textContent = `Signed in as ${currentUser} (${currentUserRole})`;
+        signInBtn.style.display = 'none';
+        signOutBtn.style.display = 'inline-block';
+      } else {
+        userStatusEl.textContent = 'Guest';
+        signInBtn.style.display = 'inline-block';
+        signOutBtn.style.display = 'none';
+      }
+    }
+
+    function checkSessionExpiry() {
+      if (sessionExpiry && Date.now() > sessionExpiry) {
+        clearSession();
+        updateUserUI();
+        updateToolsVisibility();
+      }
+    }
+
+    /* ------------------------------
+       Tab navigation with role-based access
+       ------------------------------ */
+    function showTab(name) {
+      // Check if user has permission to access this tab
+      if (name === 'tools' && !['Admin', 'Participant'].includes(currentUserRole)) {
+        signInErrorEl.textContent = 'Admin or Participant access required to view Tools.';
+        openModal();
+        return;
+      }
+      
+      for (const t of tabs) t.classList.toggle('active', t.dataset.tab === name);
+      for (const key of Object.keys(panels)) {
+        panels[key].style.display = key === name ? 'block' : 'none';
+      }
+      
+      // Update tools visibility based on role
+      if (name === 'tools') {
+        updateToolsVisibility();
+      }
+      
+      // Update hash for deep linking
+      location.hash = name;
+    }
+
+    // Update tools visibility based on user role
+    function updateToolsVisibility() {
+      const scoreCalculator = document.querySelector('#tools .card:first-child');
+      const songFormatter = document.querySelector('#tools .card:nth-child(2)');
+      const toggleSongFormatterBtn = document.getElementById('toggleSongFormatterBtn');
+      
+      if (currentUserRole === 'Admin') {
+        songFormatter.style.display = 'block';
+        scoreCalculator.style.display = 'block';
+        // Remove any access denied messages
+        const accessDenied = document.querySelector('#tools .access-denied');
+        if (accessDenied) {
+          accessDenied.remove();
+        }
+      } else {
+        songFormatter.style.display = 'none';
+        scoreCalculator.style.display = 'block';
+        
+        // Show access denied message for song formatter below the toggle button
+        if (!document.querySelector('#tools .access-denied')) {
+          const accessDenied = document.createElement('div');
+          accessDenied.className = 'card access-denied';
+          accessDenied.style.cssText = 'background: #2a1a1a; border-color: #ff4444; text-align: center; padding: 20px; margin-top: 16px;';
+          accessDenied.innerHTML = `
+            <h3 style="color: #ff4444; margin-bottom: 10px;">Access Restricted</h3>
+            <p style="color: var(--muted);">You need Admin privileges to access the Song Formatter.</p>
+            <p style="color: var(--muted); font-size: 0.9rem;">Please contact an administrator if you need access.</p>
+          `;
+          songFormatter.appendChild(accessDenied);
+        }
+      }
+    }
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => showTab(btn.dataset.tab));
+    });
+
+    // Allow hero CTA to jump to beatmaps
+    document.querySelectorAll('[data-tab-jump]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        showTab(a.dataset.tabJump);
+      });
+    });
+
+    // Initialize session on page load BEFORE setting up tabs
+    loadSession();
+
+    // Initialize tab by hash
+    const initial = ['home', 'brackets', 'live', 'rules', 'beatmaps', 'tools'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
+    showTab(initial);
+
+    /* ------------------------------
+       Sign-in modal
+       ------------------------------ */
+    function openModal() {
+      modalBackdrop.style.display = 'flex';
+      modalBackdrop.setAttribute('aria-hidden', 'false');
+      signInErrorEl.textContent = '';
+      usernameEl.value = '';
+      passwordEl.value = '';
+      usernameEl.focus();
+    }
+    function closeModal() {
+      modalBackdrop.style.display = 'none';
+      modalBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    signInBtn.addEventListener('click', openModal);
+    cancelSignInBtn.addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    async function handleSignIn() {
+      signInErrorEl.textContent = '';
+      const user = usernameEl.value.trim();
+      const pass = passwordEl.value;
+
+      if (!user || !pass) {
+        signInErrorEl.textContent = 'Please enter both username and password.';
+        return;
+      }
+
+      if (!ACCOUNTS[user]) {
+        signInErrorEl.textContent = 'Unknown username.';
+        return;
+      }
+
+      const inputHash = await sha256(pass);
+      if (inputHash !== ACCOUNTS[user].hash) {
+        signInErrorEl.textContent = 'Incorrect password.';
+        return;
+      }
+
+      currentUser = user;
+      currentUserRole = ACCOUNTS[user].role;
+      
+      // Save session with selected duration
+      const sessionHours = parseInt(sessionDurationEl.value);
+      saveSession(user, currentUserRole, sessionHours);
+      
+      updateUserUI();
+      closeModal();
+      
+      // If user was trying to access tools and now has permission, show it
+      if (location.hash === '#tools' && ['Admin', 'Participant'].includes(currentUserRole)) {
+        showTab('tools');
+      }
+    }
+
+    confirmSignInBtn.addEventListener('click', handleSignIn);
+    passwordEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSignIn();
+    });
+
+    signOutBtn.addEventListener('click', () => {
+      clearSession();
+      updateUserUI();
+      updateToolsVisibility();
+      
+      // Remove access denied message if it exists
+      const accessDenied = document.querySelector('#tools .access-denied');
+      if (accessDenied) {
+        accessDenied.remove();
+      }
+    });
+
+    /* ------------------------------
+       Tournament data loading
+       ------------------------------ */
+    let tournamentData = null;
+
+    // Load tournament data from JSON file
+    async function loadTournamentData() {
+      try {
+        const response = await fetch('tournament-data.json');
+        tournamentData = await response.json();
+        updateTournamentDisplays();
+      } catch (error) {
+        console.error('Failed to load tournament data:', error);
+        // Use fallback data for demo
+        tournamentData = {
+          tournament: { name: "osu! Tournament 2025", status: "ongoing", currentRound: "semifinals" },
+          participants: [],
+          brackets: { semifinals: [], finals: [], thirdPlace: [] },
+          liveMatches: [],
+          recentResults: []
+        };
+        updateTournamentDisplays();
+      }
+    }
+
+    // Update all tournament displays
+    function updateTournamentDisplays() {
+      renderBrackets();
+      renderLiveMatches();
+      renderRecentResults();
+    }
+
+    // Render tournament brackets
+    function renderBrackets() {
+      const container = document.getElementById('bracketContainer');
+      if (!tournamentData || !tournamentData.brackets) {
+        container.innerHTML = '<p>No bracket data available</p>';
+        return;
+      }
+
+      let html = '';
+      
+      // Render each round
+      Object.keys(tournamentData.brackets).forEach(round => {
+        const matches = tournamentData.brackets[round];
+        if (matches.length === 0) return;
+
+        html += `<div class="bracket-round">
+          <h4>${round.charAt(0).toUpperCase() + round.slice(1)}</h4>
+          <div class="matches">`;
+
+        matches.forEach(match => {
+          const p1 = match.player1;
+          const p2 = match.player2;
+          const winner = match.winner;
+          const status = match.status;
+          
+          html += `<div class="match ${status}">
+            <div class="players">
+              <div class="player ${winner === p1.id ? 'winner' : ''}">
+                <span class="name">${p1.name}</span>
+                <span class="team">${p1.team}</span>
+                <span class="score">${match.score.player1}</span>
+              </div>
+              <div class="vs">VS</div>
+              <div class="player ${winner === p2.id ? 'winner' : ''}">
+                <span class="name">${p2.name}</span>
+                <span class="team">${p2.team}</span>
+                <span class="score">${match.score.player2}</span>
+              </div>
+            </div>
+            <div class="status">${status}</div>
+          </div>`;
+        });
+
+        html += `</div></div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Render live matches
+    function renderLiveMatches() {
+      const container = document.getElementById('liveMatchesContainer');
+      if (!tournamentData || !tournamentData.liveMatches || tournamentData.liveMatches.length === 0) {
+        container.innerHTML = '<p>No live matches currently</p>';
+        return;
+      }
+
+      let html = '<div class="live-matches">';
+      tournamentData.liveMatches.forEach(match => {
+        const p1 = match.player1;
+        const p2 = match.player2;
+        
+        html += `<div class="live-match">
+          <div class="match-header">
+            <span class="live-indicator">🔴 LIVE</span>
+            <span class="round">${match.currentMap}/7</span>
+          </div>
+          <div class="players">
+            <div class="player">
+              <span class="name">${p1.name}</span>
+              <span class="team">${p1.team}</span>
+              <span class="score">${match.score.player1}</span>
+            </div>
+            <div class="vs">VS</div>
+            <div class="player">
+              <span class="name">${p2.name}</span>
+              <span class="team">${p2.team}</span>
+              <span class="score">${match.score.player2}</span>
+            </div>
+          </div>
+          <div class="current-map">
+            <strong>Current:</strong> ${match.maps[match.currentMap - 1]?.title || 'Unknown'}
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+      
+      container.innerHTML = html;
+    }
+
+    // Render recent results
+    function renderRecentResults() {
+      const container = document.getElementById('recentResultsContainer');
+      if (!tournamentData || !tournamentData.recentResults || tournamentData.recentResults.length === 0) {
+        container.innerHTML = '<p>No recent results</p>';
+        return;
+      }
+
+      let html = '<div class="recent-results">';
+      tournamentData.recentResults.forEach(result => {
+        const date = new Date(result.timestamp).toLocaleString();
+        html += `<div class="result">
+          <div class="score">${result.winner} defeated ${result.loser} ${result.score}</div>
+          <div class="time">${date}</div>
+        </div>`;
+      });
+      html += '</div>';
+      
+      container.innerHTML = html;
+    }
+
+    // Auto-refresh tournament data every 30 seconds
+    function startTournamentUpdates() {
+      loadTournamentData();
+      setInterval(loadTournamentData, 30000); // Refresh every 30 seconds
+    }
+
+    // Start tournament updates when page loads
+    startTournamentUpdates();
+
+    /* ------------------------------
+       Beatmap data loading
+       ------------------------------ */
+    /*
+    JSON TEMPLATE FOR beatmaps.json:
+    [
+      {
+        "title": "Beatmap Title",
+        "artist": "Artist Name", 
+        "bracket": "normal|hard|insane|expert|expert+|expert++",
+        "diff": "Difficulty Name (X.XX★)",
+        "length": "M:SS"
+      }
+    ]
+    */
+
+    let BEATMAPS = [];
+
+    // Load beatmap data from JSON file
+    async function loadBeatmapData() {
+      try {
+        const response = await fetch('beatmaps.json');
+        BEATMAPS = await response.json();
+        renderTable(BEATMAPS);
+        applyFilters(); // Re-apply current filters
+      } catch (error) {
+        console.error('Failed to load beatmap data:', error);
+        // Fallback to empty array - user will see empty table
+        BEATMAPS = [];
+        renderTable(BEATMAPS);
+      }
+    }
+
+    // Auto-refresh beatmap data every 60 seconds
+    function startBeatmapUpdates() {
+      loadBeatmapData();
+      setInterval(loadBeatmapData, 60000); // Refresh every 60 seconds
+    }
+
+    // Start beatmap updates when page loads
+    startBeatmapUpdates();
+
+    const tableBody = document.getElementById('beatmapTable');
+    const searchEl = document.getElementById('search');
+    const bracketEl = document.getElementById('bracket');
+    const sortByEl = document.getElementById('sortBy');
+
+    function bracketPill(bracket) {
+      const m = bracket.toLowerCase();
+      const className = ['normal','hard','insane','expert','expert+','expert++'].includes(m) ? 
+        (m === 'expert+' ? 'expertplus' : m === 'expert++' ? 'expertplusplus' : m) : 'normal';
+      return `<span class="pill ${className}">${bracket}</span>`;
+    }
+
+    function renderTable(rows) {
+      tableBody.innerHTML = rows.map(r => `
+        <tr>
+          <td>${r.title}</td>
+          <td>${r.artist}</td>
+          <td>${bracketPill(r.bracket)}</td>
+          <td>${r.diff}</td>
+          <td>${r.length}</td>
+        </tr>
+      `).join('');
+    }
+
+    function applyFilters() {
+      const q = searchEl.value.trim().toLowerCase();
+      const bracket = bracketEl.value;
+      const sortBy = sortByEl.value;
+
+      let filtered = BEATMAPS.filter(b => {
+        const matchesQ = !q || b.title.toLowerCase().includes(q) || b.artist.toLowerCase().includes(q);
+        const matchesBracket = !bracket || b.bracket === bracket;
+        return matchesQ && matchesBracket;
+      });
+
+      // Apply sorting
+      if (sortBy) {
+        filtered = [...filtered].sort((a, b) => {
+          switch (sortBy) {
+            case 'title':
+              return a.title.localeCompare(b.title);
+            case 'artist':
+              return a.artist.localeCompare(b.artist);
+            case 'bracket':
+              return a.bracket.localeCompare(b.bracket);
+            case 'difficulty':
+              // Extract star rating for numeric comparison
+              const aStars = parseFloat(a.diff.match(/\([0-9.]+★\)/)?.[1] || '0');
+              const bStars = parseFloat(b.diff.match(/\([0-9.]+★\)/)?.[1] || '0');
+              return aStars - bStars;
+            case 'length':
+              // Convert length to seconds for comparison
+              const aSeconds = a.length.split(':').reduce((acc, val) => acc * 60 + parseInt(val), 0);
+              const bSeconds = b.length.split(':').reduce((acc, val) => acc * 60 + parseInt(val), 0);
+              return aSeconds - bSeconds;
+            default:
+              return 0;
+          }
+        });
+      }
+
+      renderTable(filtered);
+    }
+
+    searchEl.addEventListener('input', applyFilters);
+    bracketEl.addEventListener('change', applyFilters);
+    sortByEl.addEventListener('change', applyFilters);
+
+    renderTable(BEATMAPS);
+
+    /* ------------------------------
+       Tools functionality
+       ------------------------------ */
+    
+    // Tool elements
+    const toolTitle = document.getElementById('toolTitle');
+    const toolArtist = document.getElementById('toolArtist');
+    const toolBracket = document.getElementById('toolBracket');
+    const toolStars = document.getElementById('toolStars');
+    const toolLength = document.getElementById('toolLength');
+    const toolOutput = document.getElementById('toolOutput');
+    const formatSongBtn = document.getElementById('formatSongBtn');
+    const addToBeatmapsBtn = document.getElementById('addToBeatmapsBtn');
+    const loadJsonBtn = document.getElementById('loadJsonBtn');
+    const saveJsonBtn = document.getElementById('saveJsonBtn');
+    
+    const toolAcc = document.getElementById('toolAcc');
+    const toolCombo = document.getElementById('toolCombo');
+    const toolMaxCombo = document.getElementById('toolMaxCombo');
+    const toolMod = document.getElementById('toolMod');
+    const calculateScoreBtn = document.getElementById('calculateScoreBtn');
+    const scoreResult = document.getElementById('scoreResult');
+
+    // Get difficulty name from star rating
+    function getDiffName(stars) {
+      if (0.0 <= stars <= 1.99) return "Easy";
+      else if (2.0 <= stars <= 2.69) return "Normal";
+      else if (2.7 <= stars <= 3.99) return "Hard";
+      else if (4.0 <= stars <= 5.29) return "Insane";
+      else if (5.3 <= stars <= 6.49) return "Expert";
+      else if (stars >= 6.5) return "Expert+";
+      else return "Unknown";
+    }
+
+    // Sort beatmaps by bracket
+    function sortBeatmapsByBracket(beatmaps) {
+      const bracketOrder = ["normal", "hard", "insane", "expert", "expert+", "expert++"];
+      
+      return beatmaps.sort((a, b) => {
+        const aIndex = bracketOrder.indexOf(a.bracket.toLowerCase());
+        const bIndex = bracketOrder.indexOf(b.bracket.toLowerCase());
+        const aSort = aIndex === -1 ? bracketOrder.length : aIndex;
+        const bSort = bIndex === -1 ? bracketOrder.length : bIndex;
+        return aSort - bSort;
+      });
+    }
+
+    // Format song data
+    function formatSong() {
+      const title = toolTitle.value.trim();
+      const artist = toolArtist.value.trim();
+      const bracket = toolBracket.value;
+      const length = toolLength.value.trim();
+      
+      if (!title || !artist || !bracket || !length) {
+        toolOutput.value = 'Error: Please fill in all fields';
+        return;
+      }
+      
+      if (bracket === "") {
+        toolOutput.value = 'Error: Please select a bracket';
+        return;
+      }
+      
+      const stars = parseFloat(toolStars.value);
+      if (isNaN(stars) || stars < 0) {
+        toolOutput.value = 'Error: Please enter a valid star rating';
+        return;
+      }
+      
+      const diffName = getDiffName(stars);
+      const diffFormatted = `${diffName} (${stars.toFixed(2)}★)`;
+      
+      const formatted = `{ title: "${title}", artist: "${artist}", bracket: "${bracket}", diff: "${diffFormatted}", length: "${length}" },`;
+      toolOutput.value = formatted;
+    }
+
+    // Add beatmap to beatmaps.json (simulated - in real implementation would require server-side)
+    async function addBeatmapToJson() {
+      const title = toolTitle.value.trim();
+      const artist = toolArtist.value.trim();
+      const bracket = toolBracket.value;
+      const length = toolLength.value.trim();
+      
+      if (!title || !artist || !bracket || !length) {
+        alert('Error: Please fill in all fields');
+        return;
+      }
+      
+      if (bracket === "") {
+        alert('Error: Please select a bracket');
+        return;
+      }
+      
+      const stars = parseFloat(toolStars.value);
+      if (isNaN(stars) || stars < 0) {
+        alert('Error: Please enter a valid star rating');
+        return;
+      }
+      
+      const diffName = getDiffName(stars);
+      const diffFormatted = `${diffName} (${stars.toFixed(2)}★)`;
+      
+      const newBeatmap = {
+        title,
+        artist,
+        bracket,
+        diff: diffFormatted,
+        length
+      };
+      
+      try {
+        // Load existing beatmaps
+        let beatmaps = [];
+        try {
+          const response = await fetch('beatmaps.json');
+          beatmaps = await response.json();
+        } catch (e) {
+          console.warn('beatmaps.json not found, creating new');
+        }
+        
+        // Add new beatmap
+        beatmaps.push(newBeatmap);
+        
+        // Sort and save (in real implementation would need server-side)
+        const sortedBeatmaps = sortBeatmapsByBracket(beatmaps);
+        toolOutput.value = JSON.stringify(sortedBeatmaps, null, 2);
+        
+        // Clear form
+        toolTitle.value = '';
+        toolArtist.value = '';
+        toolStars.value = '';
+        toolLength.value = '';
+        toolBracket.value = '';
+        
+        alert(`Added '${title}' to beatmaps.json (displayed in output area - would need server-side to actually save)`);
+        
+        // Refresh beatmap table if it exists
+        if (BEATMAPS.length >= 0) {
+          loadBeatmapData();
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // Load JSON file (simulated - browser security restrictions)
+    function loadJsonFile() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          try {
+            const text = await file.text();
+            const beatmaps = JSON.parse(text);
+            const sortedBeatmaps = sortBeatmapsByBracket(beatmaps);
+            toolOutput.value = JSON.stringify(sortedBeatmaps, null, 2);
+            alert(`Loaded and sorted ${beatmaps.length} beatmaps`);
+          } catch (error) {
+            alert('Error loading JSON: ' + error.message);
+          }
+        }
+      };
+      input.click();
+    }
+
+    // Save JSON file
+    function saveJsonFile() {
+      const content = toolOutput.value.trim();
+      if (!content) {
+        alert('No content to save');
+        return;
+      }
+      
+      try {
+        JSON.parse(content); // Validate JSON
+        
+        const blob = new Blob([content], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'beatmaps.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        alert('Invalid JSON format: ' + error.message);
+      }
+    }
+
+    // Format scaled score with apostrophe separators
+    function formatScaledScore(score) {
+      const scaledScore = Math.floor(score);
+      return scaledScore.toLocaleString('en-US').replace(/,/g, "'");
+    }
+
+    // Calculate score
+    function calculateScore() {
+      try {
+        const acc = parseFloat(toolAcc.value);
+        const combo = parseInt(toolCombo.value);
+        const maxCombo = parseInt(toolMaxCombo.value);
+        
+        if (isNaN(acc) || isNaN(combo) || isNaN(maxCombo)) {
+          scoreResult.textContent = 'Error: Please enter valid numbers';
+          return;
+        }
+        
+        if (maxCombo === 0) {
+          scoreResult.textContent = 'Error: Max combo cannot be zero';
+          return;
+        }
+        
+        // Base formula
+        let score = ((0.8 * acc) * 100) + ((0.2 * Math.sqrt(combo / maxCombo)) * 100);
+        
+        // Apply mod multiplier
+        const mod = toolMod.value;
+        const multipliers = {
+          "None": 1.0,
+          "EZ": 0.50,
+          "HR": 1.12,
+          "HD": 1.05,
+          "FL": 1.10
+        };
+        score *= multipliers[mod] || 1.0;
+        
+        // Calculate scaled score (8020 = 1,000,000 ratio)
+        const scaledScore = (score / 8020.0) * 1000000;
+        const formattedScaled = formatScaledScore(scaledScore);
+        
+        scoreResult.textContent = `Score: ${score.toFixed(2)} | Scaled: ${formattedScaled}`;
+      } catch (error) {
+        scoreResult.textContent = `Error: ${error.message}`;
+      }
+    }
+
+    // Tool event listeners
+    formatSongBtn.addEventListener('click', formatSong);
+    addToBeatmapsBtn.addEventListener('click', addBeatmapToJson);
+    loadJsonBtn.addEventListener('click', loadJsonFile);
+    saveJsonBtn.addEventListener('click', saveJsonFile);
+    calculateScoreBtn.addEventListener('click', calculateScore);
+    
+    // Toggle song formatter visibility
+    const toggleSongFormatterBtn = document.getElementById('toggleSongFormatterBtn');
+    const songFormatterContent = document.getElementById('songFormatterContent');
+    
+    toggleSongFormatterBtn.addEventListener('click', () => {
+      const isVisible = songFormatterContent.style.display !== 'none';
+      songFormatterContent.style.display = isVisible ? 'none' : 'block';
+      toggleSongFormatterBtn.textContent = isVisible ? 'Show Song Formatter' : 'Hide Song Formatter';
+    });
+
+    // Add Enter key support for score calculator
+    [toolAcc, toolCombo, toolMaxCombo, toolMod].forEach(el => {
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') calculateScore();
+      });
+    });
+
+    // Initialize session on page load
+    loadSession();
+    
+    // Check session expiry periodically
+    setInterval(checkSessionExpiry, 60000); // Check every minute
+  </script>
+</body>
+</html>
