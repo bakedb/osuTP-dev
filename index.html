@@ -3155,6 +3155,7 @@
               <li><strong>beatmaps.json:</strong> Beatmap database</li>
               <li><strong>tournament-data.json:</strong> Live tournament data</li>
               <li><strong>main.py:</strong> Management tools</li>
+              <li><strong>news/</strong> directory: News articles</li>
             </ul>
           </div>
           <div>
@@ -3341,12 +3342,29 @@
             <div>
               <div class="actions" style="margin-bottom: 12px;">
                 <button class="btn" id="loadJsonBtn">Load JSON</button>
-                <button class="btn" id="saveJsonBtn">Save As...</button>
-              </div>
-              <textarea id="toolOutput" class="input" style="height: 200px; font-family: monospace;" placeholder="Formatted output will appear here..."></textarea>
-            </div>
-          </div>
         </div>
+        
+        <div class="form-group">
+          <label for="newsArticleAuthor">Author</label>
+          <input type="text" id="newsArticleAuthor" class="input" placeholder="Author name">
+        </div>
+        
+        <div class="form-group">
+          <label for="newsArticleFilename">Filename (without .md)</label>
+          <input type="text" id="newsArticleFilename" class="input" placeholder="e.g., tournament-announcement">
+        </div>
+        
+        <div class="form-group">
+          <label for="newsArticleContent">Article Content (Markdown)</label>
+          <textarea id="newsArticleContent" class="input" rows="8" placeholder="# Article Title&#10;&#10;Write your article content here using **markdown** formatting."></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button class="btn secondary" onclick="clearNewsFormatter()">Clear</button>
+          <button class="btn primary" onclick="generateNewsFiles()">Generate Files</button>
+        </div>
+        
+        <div id="newsFormatterOutput" style="margin-top: 16px;"></div>
       </div>
     </section>
 
@@ -3424,7 +3442,7 @@
     <div class="footer-content">
       <div class="footer-section">
         <h4>osu! Tournament Portal</h4>
-        <p>Version 0.7.1 (Development)</p>
+        <p>Version 0.7.2 (Development)</p>
         <p class="footer-muted"> 2025 osu!TP. All rights reserved.</p>
       </div>
       <div class="footer-section">
@@ -3596,104 +3614,48 @@
     // Load accounts from Google Sheets
     async function loadAccountsFromGoogleSheets() {
       try {
-        const googleSheetsId = '1gwlmCixsyiyhzVzaXNGJaHyZwC5bbrVST24f1akTQI4'; // Replace with your Google Sheets ID
+        const googleSheetsId = '1gwlmCixsyiyhzVzaXNGJaHyZwC5bbrVST24f1akTQI4';
         const url = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/gviz/tq?tqx=out:json&gid=0`;
         
-        console.log('Attempting to load from:', url);
+        console.log('Loading accounts from Google Sheets:', url);
         
-        // Try CORS proxy first
-        const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
-        
-        let response;
-        try {
-          console.log('Trying CORS proxy:', proxyUrl);
-          response = await fetch(proxyUrl);
-          if (response.ok) {
-            const text = await response.text();
-            console.log('Raw response from proxy:', text.substring(0, 200));
-            
-            // Parse the Google Sheets JSON response
-            const jsonStart = text.indexOf('{');
-            const jsonEnd = text.lastIndexOf('}');
-            if (jsonStart === -1 || jsonEnd === -1) {
-              throw new Error('Invalid response format from proxy');
-            }
-            
-            const jsonString = text.substring(jsonStart, jsonEnd + 1);
-            const data = JSON.parse(jsonString);
-            
-            // Convert sheet data to ACCOUNTS object
-            ACCOUNTS = {};
-            if (data.table && data.table.rows) {
-              data.table.rows.forEach((row, index) => {
-                if (row.c && row.c.length >= 3) {
-                  const username = row.c[0]?.v || '';
-                  const passwordHash = row.c[1]?.v || '';
-                  const role = row.c[2]?.v || '';
-                  
-                  if (username && passwordHash && role) {
-                    ACCOUNTS[username] = { hash: passwordHash, role: role };
-                    console.log('Loaded account:', username, role);
-                  }
-                }
-              });
-              console.log('Successfully loaded accounts from Google Sheets via proxy:', Object.keys(ACCOUNTS));
-              return;
-            }
-          }
-        } catch (proxyError) {
-          console.log('CORS proxy failed:', proxyError.message);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
         
-        // If proxy fails, try direct fetch (may work in some browsers)
-        try {
-          console.log('Trying direct fetch...');
-          response = await fetch(url);
-          if (response.ok) {
-            const text = await response.text();
-            console.log('Raw response from direct fetch:', text.substring(0, 200));
-            
-            // Parse the Google Sheets JSON response
-            const jsonStart = text.indexOf('{');
-            const jsonEnd = text.lastIndexOf('}');
-            if (jsonStart === -1 || jsonEnd === -1) {
-              throw new Error('Invalid response format');
-            }
-            
-            const jsonString = text.substring(jsonStart, jsonEnd + 1);
-            const data = JSON.parse(jsonString);
-            
-            // Convert sheet data to ACCOUNTS object
-            ACCOUNTS = {};
-            if (data.table && data.table.rows) {
-              data.table.rows.forEach((row, index) => {
-                if (row.c && row.c.length >= 3) {
-                  const username = row.c[0]?.v || '';
-                  const passwordHash = row.c[1]?.v || '';
-                  const role = row.c[2]?.v || '';
-                  
-                  if (username && passwordHash && role) {
-                    ACCOUNTS[username] = { hash: passwordHash, role: role };
-                    console.log('Loaded account:', username, role);
-                  }
-                }
-              });
-              console.log('Successfully loaded accounts from Google Sheets directly:', Object.keys(ACCOUNTS));
-              return;
-            }
-          }
-        } catch (directError) {
-          console.log('Direct fetch failed:', directError.message);
+        const text = await response.text();
+        console.log('Raw response:', text.substring(0, 200));
+        
+        // Parse the Google Sheets JSON response
+        const jsonStart = text.indexOf('{');
+        const jsonEnd = text.lastIndexOf('}');
+        if (jsonStart === -1 || jsonEnd === -1) {
+          throw new Error('Invalid response format from Google Sheets');
         }
         
-        // If both fail, use hardcoded fallback accounts
-        console.log('Both proxy and direct fetch failed, using fallback accounts');
-        ACCOUNTS = {
-          "bakedb": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
-          "admin": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
-          "participant": { hash: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", role: "Participant" },
-        };
-        console.log('Using fallback accounts with bakedb included');
+        const jsonString = text.substring(jsonStart, jsonEnd + 1);
+        const data = JSON.parse(jsonString);
+        
+        // Convert sheet data to ACCOUNTS object
+        ACCOUNTS = {};
+        if (data.table && data.table.rows) {
+          data.table.rows.forEach((row, index) => {
+            if (row.c && row.c.length >= 3) {
+              const username = row.c[0]?.v || '';
+              const passwordHash = row.c[1]?.v || '';
+              const role = row.c[2]?.v || '';
+              
+              if (username && passwordHash && role) {
+                ACCOUNTS[username] = { hash: passwordHash, role: role };
+                console.log('Loaded account:', username, role);
+              }
+            }
+          });
+          console.log('Successfully loaded accounts from Google Sheets:', Object.keys(ACCOUNTS));
+        } else {
+          throw new Error('No table data found in Google Sheets response');
+        }
         
       } catch (error) {
         console.error('Failed to load accounts from Google Sheets:', error);
@@ -3701,15 +3663,11 @@
         console.log('1. The sheet is not published as "Web page"');
         console.log('2. The sheet is not set to "Anyone with link can view"');
         console.log('3. The sheet ID is incorrect');
-        console.log('4. CORS issues (try opening the sheet URL directly in browser)');
+        console.log('4. Network connectivity issues');
         
-        // Fallback to hardcoded accounts if Google Sheets fails
-        ACCOUNTS = {
-          "bakedb": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
-          "admin": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
-          "participant": { hash: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", role: "Participant" },
-        };
-        console.log('Using fallback accounts with bakedb included');
+        // No fallback accounts - require Google Sheets to work
+        ACCOUNTS = {};
+        throw new Error('Accounts could not be loaded. Please check Google Sheets configuration.');
       }
     }
     
@@ -4844,90 +4802,125 @@
     let NEWS_ARTICLES = [];
     let newsEditingId = null;
 
-    // Load news articles from localStorage
-    function loadNewsArticles() {
+    // Load news articles from markdown files in /news directory
+    async function loadNewsArticles() {
       try {
-        const stored = localStorage.getItem('newsArticles');
-        if (stored) {
-          NEWS_ARTICLES = JSON.parse(stored);
-        } else {
-          // Add some default news articles
-          NEWS_ARTICLES = [
-            {
-              id: 1,
-              title: 'Tournament Registration Now Open',
-              author: 'Tournament Admin',
-              content: 'Registration for the upcoming osu! tournament is now open! Players of all skill levels are welcome to participate. Sign up through the Registration tab to secure your spot in this exciting competition.',
-              date: new Date().toISOString()
-            },
-            {
-              id: 2,
-              title: 'New Beatmap Pool Released',
-              author: 'Map Selection Team',
-              content: 'We are excited to announce the official beatmap pool for this tournament! The maps have been carefully selected to provide a balanced and competitive experience across all difficulty brackets. Check out the Beatmaps tab to see the full list.',
-              date: new Date(Date.now() - 86400000).toISOString() // Yesterday
-            }
-          ];
-          saveNewsArticles();
+        // Get list of markdown files from /news directory
+        const newsIndexResponse = await fetch('/news/index.json');
+        if (!newsIndexResponse.ok) {
+          console.log('No news index found, using empty news');
+          NEWS_ARTICLES = [];
+          return;
         }
+
+        const newsIndex = await newsIndexResponse.json();
+        const articlePromises = [];
+
+        // Load each markdown file
+        for (const fileInfo of newsIndex.articles) {
+          articlePromises.push(
+            fetch(`/news/${fileInfo.filename}`)
+              .then(response => response.ok ? response.text() : null)
+              .then(markdown => {
+                if (markdown) {
+                  return {
+                    id: fileInfo.filename.replace('.md', ''),
+                    title: fileInfo.title,
+                    author: fileInfo.author || 'Tournament Organizer',
+                    date: fileInfo.date || new Date().toISOString(),
+                    content: markdown,
+                    filename: fileInfo.filename
+                  };
+                }
+                return null;
+              })
+          );
+        }
+
+        const articles = await Promise.all(articlePromises);
+        NEWS_ARTICLES = articles.filter(article => article !== null)
+          .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by newest first
+
+        console.log('Loaded news articles:', NEWS_ARTICLES.length);
       } catch (error) {
         console.error('Failed to load news articles:', error);
         NEWS_ARTICLES = [];
       }
     }
 
-    // Save news articles to localStorage
-    function saveNewsArticles() {
-      try {
-        localStorage.setItem('newsArticles', JSON.stringify(NEWS_ARTICLES));
-      } catch (error) {
-        console.error('Failed to save news articles:', error);
-      }
+    // Save news articles (for admin editing - would need backend)
+    async function saveNewsArticles() {
+      // In a real implementation, this would save to the news directory
+      // For now, we'll just log that changes were made
+      console.log('News articles updated:', NEWS_ARTICLES);
     }
 
-    // Render news articles
+    // Render news articles to the page
     function renderNewsArticles() {
-      const container = document.getElementById('newsContainer');
+      const newsContainer = document.getElementById('newsContainer');
       
       if (NEWS_ARTICLES.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <h4>No news articles yet</h4>
-            <p>Check back later for tournament updates and announcements.</p>
+        newsContainer.innerHTML = `
+          <div class="no-news">
+            <p>No news articles yet. Check back later for tournament updates!</p>
           </div>
         `;
         return;
       }
 
-      // Sort articles by date (newest first)
-      const sortedArticles = [...NEWS_ARTICLES].sort((a, b) => 
-        new Date(b.date) - new Date(a.date)
-      );
-
-      container.innerHTML = sortedArticles.map(article => `
-        <div class="news-article" data-article-id="${article.id}">
-          <div class="news-article-header">
-            <h4>${article.title}</h4>
-            ${currentUser && currentUser.role === 'admin' ? `
-              <div class="news-article-actions">
-                <button class="news-edit-btn" onclick="editNewsArticle(${article.id})">Edit</button>
-                <button class="news-delete-btn" onclick="deleteNewsArticle(${article.id})">Delete</button>
-              </div>
-            ` : ''}
+      newsContainer.innerHTML = NEWS_ARTICLES.map(article => `
+        <article class="news-article" data-id="${article.id}">
+          <div class="news-header">
+            <h3>${article.title}</h3>
+            <div class="news-meta">
+              <span class="news-author">By ${article.author}</span>
+              <span class="news-date">${new Date(article.date).toLocaleDateString()}</span>
+              ${currentUser && currentUserRole === 'Admin' ? `
+                <div class="news-actions">
+                  <button class="btn small" onclick="editNewsArticle('${article.id}')">Edit</button>
+                  <button class="btn small danger" onclick="deleteNewsArticle('${article.id}')">Delete</button>
+                </div>
+              ` : ''}
+            </div>
           </div>
-          <div class="news-article-meta">
-            <span class="news-article-author">By ${article.author}</span>
-            <span>•</span>
-            <span>${new Date(article.date).toLocaleDateString()}</span>
+          <div class="news-content">
+            ${parseMarkdown(article.content)}
           </div>
-          <div class="news-article-content">
-            ${article.content.replace(/\n/g, '<br>')}
-          </div>
-        </div>
+        </article>
       `).join('');
     }
 
-    // Open news modal for adding/editing
+    // Simple markdown parser (basic implementation)
+    function parseMarkdown(markdown) {
+      return markdown
+        // Headers
+        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+        // Bold
+        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+        // Italic
+        .replace(/\*(.*)\*/gim, '<em>$1</em>')
+        // Links
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" target="_blank">$1</a>')
+        // Line breaks
+        .replace(/\n/gim, '<br>')
+        // Code blocks
+        .replace(/```([^`]+)```/gim, '<pre><code>$1</code></pre>')
+        // Inline code
+        .replace(/`([^`]+)`/gim, '<code>$1</code>');
+    }
+
+    // Update news display based on user role
+    function updateNewsDisplay() {
+      const addNewsBtn = document.getElementById('addNewsBtn');
+      if (addNewsBtn) {
+        addNewsBtn.style.display = (currentUser && currentUserRole === 'Admin') ? 'inline-block' : 'none';
+      }
+      renderNewsArticles();
+    }
+
+    // News modal functions
     function openNewsModal(articleId = null) {
       const modal = document.getElementById('newsModal');
       const title = document.getElementById('newsModalTitle');
@@ -4948,14 +4941,44 @@
         form.reset();
       }
       
-      modal.classList.add('active');
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
     }
 
-    // Close news modal
     function closeNewsModal() {
       const modal = document.getElementById('newsModal');
-      modal.classList.remove('active');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
       newsEditingId = null;
+    }
+
+    // Handle news form submission
+    async function handleNewsSubmit(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(e.target);
+      const articleData = {
+        title: formData.get('title'),
+        author: formData.get('author'),
+        content: formData.get('content'),
+        date: new Date().toISOString()
+      };
+
+      if (newsEditingId) {
+        // Edit existing article
+        const index = NEWS_ARTICLES.findIndex(a => a.id === newsEditingId);
+        if (index !== -1) {
+          NEWS_ARTICLES[index] = { ...NEWS_ARTICLES[index], ...articleData };
+        }
+      } else {
+        // Add new article
+        const newId = 'news-' + Date.now();
+        NEWS_ARTICLES.unshift({ id: newId, ...articleData });
+      }
+
+      await saveNewsArticles();
+      renderNewsArticles();
+      closeNewsModal();
     }
 
     // Edit news article
@@ -4964,51 +4987,12 @@
     }
 
     // Delete news article
-    function deleteNewsArticle(articleId) {
+    async function deleteNewsArticle(articleId) {
       if (confirm('Are you sure you want to delete this news article?')) {
         NEWS_ARTICLES = NEWS_ARTICLES.filter(a => a.id !== articleId);
-        saveNewsArticles();
+        await saveNewsArticles();
         renderNewsArticles();
       }
-    }
-
-    // Handle news form submission
-    function handleNewsSubmit(e) {
-      e.preventDefault();
-      
-      const title = document.getElementById('newsTitle').value.trim();
-      const author = document.getElementById('newsAuthor').value.trim();
-      const content = document.getElementById('newsContent').value.trim();
-      
-      if (!title || !author || !content) {
-        alert('Please fill in all fields');
-        return;
-      }
-      
-      if (newsEditingId) {
-        // Edit existing article
-        const article = NEWS_ARTICLES.find(a => a.id === newsEditingId);
-        if (article) {
-          article.title = title;
-          article.author = author;
-          article.content = content;
-          article.date = new Date().toISOString();
-        }
-      } else {
-        // Add new article
-        const newArticle = {
-          id: Date.now(),
-          title,
-          author,
-          content,
-          date: new Date().toISOString()
-        };
-        NEWS_ARTICLES.unshift(newArticle);
-      }
-      
-      saveNewsArticles();
-      renderNewsArticles();
-      closeNewsModal();
     }
 
     // Load beatmap data from Google Sheets or JSON file
@@ -5649,6 +5633,106 @@
     easterEggModalBackdrop.addEventListener('click', (e) => {
       if (e.target === easterEggModalBackdrop) closeEasterEgg();
     });
+
+    /* ------------------------------
+       News Formatter Tool (Admin only)
+       ------------------------------ */
+    function clearNewsFormatter() {
+      document.getElementById('newsArticleTitle').value = '';
+      document.getElementById('newsArticleAuthor').value = '';
+      document.getElementById('newsArticleFilename').value = '';
+      document.getElementById('newsArticleContent').value = '';
+      document.getElementById('newsFormatterOutput').innerHTML = '';
+    }
+
+    function generateNewsFiles() {
+      const title = document.getElementById('newsArticleTitle').value.trim();
+      const author = document.getElementById('newsArticleAuthor').value.trim();
+      const filename = document.getElementById('newsArticleFilename').value.trim();
+      const content = document.getElementById('newsArticleContent').value.trim();
+
+      if (!title || !author || !filename || !content) {
+        document.getElementById('newsFormatterOutput').innerHTML = 
+          '<div class="error">Please fill in all fields.</div>';
+        return;
+      }
+
+      // Generate current date in ISO format
+      const currentDate = new Date().toISOString();
+
+      // Create index.json entry
+      const indexEntry = {
+        filename: filename.endsWith('.md') ? filename : filename + '.md',
+        title: title,
+        author: author,
+        date: currentDate
+      };
+
+      // Create markdown file content
+      const markdownContent = content;
+
+      // Generate output HTML
+      const outputHTML = `
+        <div class="card" style="margin-top: 16px;">
+          <h4>📄 Generated Files</h4>
+          
+          <div style="margin-bottom: 16px;">
+            <h5>1. Add to /news/index.json:</h5>
+            <pre style="background: var(--background-alt); padding: 12px; border-radius: 4px; overflow-x: auto;">${JSON.stringify(indexEntry, null, 2)}</pre>
+            <button class="btn small" onclick="copyToClipboard('${encodeURIComponent(JSON.stringify(indexEntry, null, 2))}')">Copy JSON</button>
+          </div>
+          
+          <div style="margin-bottom: 16px;">
+            <h5>2. Create /news/${indexEntry.filename}:</h5>
+            <pre style="background: var(--background-alt); padding: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap;">${markdownContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+            <button class="btn small" onclick="copyToClipboard('${encodeURIComponent(markdownContent)}')">Copy Markdown</button>
+          </div>
+          
+          <div class="muted">
+            <p><strong>Next steps:</strong></p>
+            <ol>
+              <li>Add the JSON entry to your index.json file</li>
+              <li>Create the markdown file with the content above</li>
+              <li>Commit and push to GitHub</li>
+              <li>The article will appear automatically in the News tab</li>
+            </ol>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('newsFormatterOutput').innerHTML = outputHTML;
+    }
+
+    function copyToClipboard(text) {
+      const decodedText = decodeURIComponent(text);
+      navigator.clipboard.writeText(decodedText).then(() => {
+        // Show success feedback
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = '✓ Copied!';
+        button.classList.add('success');
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.classList.remove('success');
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy to clipboard');
+      });
+    }
+
+    // Hide/show news formatter based on user role
+    function updateNewsFormatterVisibility() {
+      const newsFormatterTool = document.getElementById('newsFormatterTool');
+      if (newsFormatterTool) {
+        newsFormatterTool.style.display = (currentUser && currentUserRole === 'Admin') ? 'block' : 'none';
+      }
+    }
+
+    // Update tools visibility based on user role
+    function updateToolsVisibility() {
+      updateNewsFormatterVisibility();
+    }
 
     // Ensure page starts at top on load/reload
     window.addEventListener('beforeunload', () => {
