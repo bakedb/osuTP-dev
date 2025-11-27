@@ -14,7 +14,12 @@
     // Force scroll to top before any content loads
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+    // Wait for DOM to be ready before accessing document.body
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.body) {
+        document.body.scrollTop = 0;
+      }
+    });
   </script>
   
   <style>
@@ -79,7 +84,7 @@
       --border-dim: #808080;
     }
     
-    /* Windows 10/11 theme variables */
+    /* Windows theme variables */
     [data-theme="windows-10"] {
       --bg: #f3f3f3;
       --bg-elev: #ffffff;
@@ -199,7 +204,7 @@
       --accent-4: #89bab8;
     }
     
-    /* Windows 10/11 tab-specific colors */
+    /* Windows tab-specific colors */
     [data-theme="windows-10"] body.tab-home {
       --accent: #0078d4; /* Windows blue */
       --accent-2: #106ebe;
@@ -344,7 +349,7 @@
       font-size: 11px;
     }
     
-    /* Windows 10/11 background styles */
+    /* Windows background styles */
     [data-theme="windows-10"] html, [data-theme="windows-10"] body {
       background: linear-gradient(135deg, #f3f3f3 0%, #ffffff 50%, #e8e8e8 100%);
       background-attachment: fixed;
@@ -479,7 +484,7 @@
         inset 1px 1px 0 var(--border-light);
     }
     
-    /* Windows 10/11 nav styles */
+    /* Windows nav styles */
     [data-theme="windows-10"] .nav {
       background: var(--aero-gradient);
       backdrop-filter: blur(10px);
@@ -576,7 +581,7 @@
         inset 1px 1px 0 var(--border-light);
     }
     
-    /* Windows 10/11 logo styles */
+    /* Windows logo styles */
     [data-theme="windows-10"] .brand .logo {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       border: 1px solid rgba(255, 255, 255, 0.8);
@@ -699,7 +704,7 @@
         inset 1px 1px 0 var(--border-light);
     }
     
-    /* Windows 10/11 tab styles */
+    /* Windows tab styles */
     [data-theme="windows-10"] .tab-btn {
       background: var(--glass);
       backdrop-filter: blur(8px);
@@ -890,7 +895,7 @@
         inset 0 -1px 0 rgba(255, 255, 255, 0.4);
     }
 
-    /* Windows 10/11 button styles */
+    /* Windows button styles */
     [data-theme="windows-10"] .signin-btn, [data-theme="windows-10"] .signout-btn, [data-theme="windows-10"] .register-btn {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       border: 1px solid rgba(255, 255, 255, 0.6);
@@ -937,6 +942,436 @@
       color: #ffffff;
       box-shadow: var(--shadow-inner);
       transform: translateY(0);
+    }
+
+    /* Blue Screen of Death styles */
+    .bsod-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0000AA;
+      color: #FFFFFF;
+      font-family: 'Courier New', monospace;
+      font-size: 16px;
+      z-index: 999999;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: left;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    .bsod-overlay.active {
+      display: flex;
+    }
+
+    .bsod-content {
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .bsod-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #FFFFFF;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .bsod-message {
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .bsod-technical {
+      font-size: 14px;
+      color: #CCCCCC;
+      margin-top: 30px;
+    }
+
+    /* Battlefy-style Visual Bracket Styles */
+    .visual-bracket {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+      overflow-x: auto;
+      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .bracket-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .bracket-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .bracket-subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .tournament-bracket {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-width: 800px;
+      padding: 20px 0;
+      position: relative;
+    }
+
+    .bracket-round {
+      flex: 1;
+      min-width: 200px;
+      max-width: 280px;
+      margin: 0 16px;
+    }
+
+    .round-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 20px;
+      padding: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .match {
+      background: var(--bg-elev);
+      border: 2px solid var(--card);
+      border-radius: 12px;
+      margin-bottom: 32px;
+      padding: 16px;
+      position: relative;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .match:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      border-color: var(--accent);
+    }
+
+    .match.live {
+      border-color: var(--bad);
+      background: linear-gradient(135deg, var(--bg-elev), rgba(255, 77, 79, 0.1));
+      animation: pulse-border 2s infinite;
+    }
+
+    .match.completed {
+      border-color: var(--ok);
+      background: linear-gradient(135deg, var(--bg-elev), rgba(46, 204, 113, 0.1));
+    }
+
+    .match.upcoming {
+      border-color: var(--muted);
+      opacity: 0.8;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { border-color: var(--bad); }
+      50% { border-color: rgba(255, 77, 79, 0.5); }
+    }
+
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .match-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-indicator {
+      background: var(--bad);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .match-time {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .players {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .player {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--card);
+      transition: all 0.2s ease;
+    }
+
+    .player:hover {
+      background: var(--bg-elev);
+      transform: translateX(4px);
+    }
+
+    .player.winner {
+      background: linear-gradient(135deg, var(--ok), rgba(46, 204, 113, 0.2));
+      border-color: var(--ok);
+      font-weight: 600;
+    }
+
+    .player.loser {
+      opacity: 0.6;
+    }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .player-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .player-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .player-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .player-name {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .player-seed {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .player-score {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .match-status {
+      margin-top: 12px;
+      padding: 8px;
+      background: var(--bg);
+      border-radius: 6px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bracket-connector {
+      position: absolute;
+      background: var(--accent);
+      z-index: -1;
+    }
+
+    .connector-horizontal {
+      height: 2px;
+      right: -16px;
+    }
+
+    .connector-vertical {
+      width: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .tournament-bracket {
+        transform: scale(0.9);
+        transform-origin: top center;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .tournament-bracket {
+        transform: scale(0.8);
+        transform-origin: top center;
+      }
+      
+      .bracket-round {
+        min-width: 160px;
+        max-width: 220px;
+        margin: 0 8px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .tournament-bracket {
+        flex-direction: column;
+        align-items: center;
+        transform: none;
+      }
+      
+      .bracket-round {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 0 32px 0;
+      }
+      
+      .connector-horizontal,
+      .connector-vertical {
+        display: none;
+      }
+    }
+
+    /* Loading State */
+    .bracket-loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .bracket-loading-spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--card);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Error State */
+    .bracket-error {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(255, 77, 79, 0.1);
+      border: 2px solid var(--bad);
+      border-radius: 12px;
+      color: var(--bad);
+    }
+
+    /* Refresh Button */
+    .bracket-refresh {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bracket-refresh:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .bracket-refresh:active {
+      transform: translateY(0);
+    }
+
+    .refresh-icon {
+      animation: spin 2s linear infinite;
+    }
+
+    .bracket-refresh.loading .refresh-icon {
+      animation: spin 1s linear infinite;
+    }
+
+    .bsod-code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      white-space: pre-wrap;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .bsod-hint {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 30px;
+    }
+
+    .bsod-restart {
+      margin-top: 40px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #FFFFFF;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .bsod-restart:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
     }
 
     /* Page container */
@@ -1081,7 +1516,7 @@
         inset 0 -1px 0 rgba(255, 255, 255, 0.4);
     }
     
-    /* Windows 10/11 hero styles */
+    /* Windows hero styles */
     [data-theme="windows-10"] .hero {
       background: var(--aero-gradient);
       backdrop-filter: blur(15px);
@@ -1440,7 +1875,7 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
     
-    /* Windows 10/11 news styles */
+    /* Windows news styles */
     [data-theme="windows-10"] .news-tile {
       background: var(--glass);
       backdrop-filter: blur(10px);
@@ -2729,7 +3164,7 @@
         inset 1px 1px 0 var(--border-light);
     }
     
-    /* Windows 10/11 mods drawer styles */
+    /* Windows mods drawer styles */
     [data-theme="windows-10"] .mods-drawer {
       background: var(--aero-gradient);
       backdrop-filter: blur(10px);
@@ -3123,7 +3558,7 @@
         inset 1px 1px 0 var(--border-light);
     }
 
-    /* Windows 10/11 footer styles */
+    /* Windows footer styles */
     [data-theme="windows-10"] .footer {
       background: var(--aero-gradient);
       backdrop-filter: blur(15px);
@@ -3404,6 +3839,32 @@
   </style>
 </head>
 <body>
+  <!-- Blue Screen of Death Overlay -->
+  <div class="bsod-overlay" id="bsodOverlay">
+    <div class="bsod-content">
+      <div class="bsod-title">:(</div>
+      <div class="bsod-message">
+        Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.
+      </div>
+      <div class="bsod-code">STOP CODE: PAGE_FAULT_IN_NONPAGED_AREA
+FAILED_OPERATION: osu!_theme_engine.dll
+MEMORY_ADDRESS: 0x0000000000000000
+PROCESS_ID: 1337
+THREAD_ID: 42
+ERROR_BUCKET_ID: WIN32_BLUE_SCREEN_0x50
+
+Technical information:
+
+*** STOP: 0x00000050 (0xFFFFF70000112345, 0x0000000000000000, 0xFFFFF80002D4B4C2, 0x0000000000000000)
+
+*** osu!_theme_engine.sys - Address 0xFFFFF80002D4B4C2 base at 0xFFFFF80002D4A000, DateStamp 0x4a5bbf38</div>
+      <div class="bsod-hint">For more information about this issue and possible fixes, visit https://www.windows.com/stopcode</div>
+      <div class="bsod-hint">If you call a support person, give them this info:</div>
+      <div class="bsod-hint">Stop Code: PAGE_FAULT_IN_NONPAGED_AREA</div>
+      <button class="bsod-restart" id="bsodRestart">Press any key to continue (or click here)</button>
+    </div>
+  </div>
+
   <!-- Immediate scroll reset after body starts -->
   <script>
     // Force scroll to top immediately when body loads
@@ -3419,8 +3880,8 @@
   <!-- Top nav -->
   <nav class="nav">
     <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <div class="name">osu!TP</div>
+      <div class="logo" id="brandLogo" aria-hidden="true"></div>
+      <div class="name" id="brandName">osu!TP</div>
     </div>
 
     <div class="tabs" role="tablist" aria-label="Main tabs">
@@ -3456,7 +3917,7 @@
           </button>
           <button class="theme-dropdown-item" data-theme="windows-10">
             <span class="theme-icon">🪟</span>
-            <span class="theme-name">Windows 10</span>
+            <span class="theme-name">Windows</span>
           </button>
           <button class="theme-dropdown-item" data-theme="macosx">
             <span class="theme-icon">🍎</span>
@@ -3501,6 +3962,11 @@
       <div class="legacy-versions-list">
         <p class="legacy-description">Access previous versions of the osu! Tournament Portal:</p>
         <div class="legacy-version-grid">
+          <a href="/osuTP/legacy/v0.7.html" class="legacy-version-card">
+            <div class="legacy-version-number">v0.7</div>
+            <div class="legacy-version-date">27 November 2025</div>
+            <div class="legacy-version-desc">Added news tab, Argon and Triangles themes, new tab colors, fixed scrolling issues, and surpassed 5000 lines of code!</div>
+          </a>
           <a href="/osuTP/legacy/v0.6.html" class="legacy-version-card">
             <div class="legacy-version-number">v0.6</div>
             <div class="legacy-version-date">26 November 2025</div>
@@ -3722,9 +4188,14 @@
 
     <!-- Brackets -->
     <section id="brackets" role="tabpanel" aria-label="Brackets" style="display: none;">
-      <div class="card">
-        <h3>Tournament Brackets</h3>
-        <div id="bracketContainer"></div>
+      <div id="bracketContainer">
+        <div class="visual-bracket">
+          <div class="bracket-loading">
+            <div class="bracket-loading-spinner"></div>
+            <h3>Loading Tournament Bracket</h3>
+            <p>Fetching latest bracket data from Google Sheets...</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -3784,7 +4255,7 @@
 
     <!-- Tools -->
     <section id="tools" role="tabpanel" aria-label="Tools" style="display: none;">
-      <div style="margin-top: 16px;" class="card">
+      <div style="margin-top: 16px;" class="card" data-required-role="Admin">
         <h3>Registration Code Decoder</h3>
         <button class="btn" id="toggleCodeDecoderBtn">Show Registration Decoder</button>
         <div id="codeDecoderContent" style="display: none; margin-top: 16px;">
@@ -3797,7 +4268,7 @@
         </div>
       </div>
       
-      <div style="margin-top: 16px;" class="card">
+      <div style="margin-top: 16px;" class="card" data-required-role="all">
         <h3>Score Calculator</h3>
         <button class="btn" id="toggleScoreCalculatorBtn">Show Score Calculator</button>
         <div id="scoreCalculatorContent" style="display: none; margin-top: 16px;">
@@ -3837,7 +4308,7 @@
         </div>
       </div>
       
-      <div style="margin-top: 16px;" class="card">
+      <div style="margin-top: 16px;" class="card" data-required-role="Admin">
         <h3>Song Formatter</h3>
         <button class="btn" id="toggleSongFormatterBtn">Show Song Formatter</button>
         <div id="songFormatterContent" style="display: none; margin-top: 16px;">
@@ -3931,7 +4402,7 @@
     <div class="footer-content">
       <div class="footer-section">
         <h4>osu! Tournament Portal</h4>
-        <p>Version 0.7.3 rev1 (Development)</p>
+        <p id="versionText">Version 0.8 (Development)</p>
         <p class="footer-muted"> 2025 osu!TP. All rights reserved.</p>
       </div>
       <div class="footer-section">
@@ -3943,7 +4414,7 @@
           <li><a href="https://osu.ppy.sh" target="_blank">osu! Official Site</a></li>
         </ul>
       </div>
-      <div class="footer-section">
+      <div class="footer-section" id="switchFooterSection">
         <h4>Production</h4>
         <p class="footer-muted">Switch to stable version:</p>
         <ul class="footer-links">
@@ -4006,33 +4477,19 @@
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="registerTitle">
       <h3 id="registerTitle">Register for Tournament</h3>
       <div class="row">
-        <label for="regUsername">Username *</label>
-        <input id="regUsername" class="input" type="text" autocomplete="username" />
+        <label for="regUsername">Name *</label>
+        <input id="regUsername" class="input" type="text" autocomplete="name" placeholder="Your display name" />
       </div>
       <div class="row">
-        <label for="regEmail">Email *</label>
-        <input id="regEmail" class="input" type="email" autocomplete="email" />
+        <label for="regEmail">Email (optional)</label>
+        <input id="regEmail" class="input" type="email" autocomplete="email" placeholder="your@email.com" />
       </div>
       <div class="row">
-        <label for="regOsuUsername">osu! Username *</label>
-        <input id="regOsuUsername" class="input" type="text" />
+        <label for="regOsuUsername">osu! Username (if you have an account)</label>
+        <input id="regOsuUsername" class="input" type="text" placeholder="Your osu! username" />
       </div>
       <div class="row">
-        <label for="regOsuId">osu! User ID *</label>
-        <input id="regOsuId" class="input" type="number" placeholder="Numeric ID" />
-        <div style="margin-top: 4px;">
-          <label style="font-weight: normal; color: var(--muted);">
-            <input type="checkbox" id="noOsuAccount" style="margin-right: 4px;">
-            I don't have an osu! account
-          </label>
-        </div>
-      </div>
-      <div class="row">
-        <label for="regCountry">Country *</label>
-        <input id="regCountry" class="input" type="text" placeholder="e.g., USA, Japan" />
-      </div>
-      <div class="row">
-        <label for="regPreferredBracket">Preferred Difficulty Bracket *</label>
+        <label for="regPreferredBracket">Preferred Bracket *</label>
         <select id="regPreferredBracket" class="select">
           <option value="">Select bracket...</option>
           <option value="normal">Normal</option>
@@ -4041,22 +4498,7 @@
           <option value="expert">Expert</option>
           <option value="expert+">Expert+</option>
           <option value="expert++">Expert++</option>
-          <option value="not-sure">Not sure (organizers will decide)</option>
         </select>
-      </div>
-      <div class="row">
-        <label for="regExperience">Experience Level *</label>
-        <select id="regExperience" class="select">
-          <option value="">Select experience...</option>
-          <option value="beginner">Beginner (New to tournaments)</option>
-          <option value="intermediate">Intermediate (Some tournament experience)</option>
-          <option value="advanced">Advanced (Regular tournament player)</option>
-          <option value="expert">Expert (High-level tournament experience)</option>
-        </select>
-      </div>
-      <div class="row">
-        <label for="regComments">Additional Comments</label>
-        <textarea id="regComments" class="input" rows="3" placeholder="Any additional information or special requirements..."></textarea>
       </div>
       <div class="error" id="registerError"></div>
       <div class="actions">
@@ -4067,6 +4509,23 @@
   </div>
 
   <script>
+    // ------------------------------
+    // Configuration Variables
+    // ------------------------------
+    const VERSION_NUMBER = "0.8";
+    const IS_DEVELOPMENT = true; // Set to false for production
+    
+    // Computed values based on configuration
+    const VERSION_TEXT = `Version ${VERSION_NUMBER} (${IS_DEVELOPMENT ? 'Development' : 'Release'})`;
+    const FOOTER_SECTION_TITLE = IS_DEVELOPMENT ? 'Development' : 'Production';
+    const FOOTER_SECTION_TEXT = IS_DEVELOPMENT ? 'Switch to stable version:' : 'Try the latest features:';
+    const FOOTER_LINK_TEXT = IS_DEVELOPMENT ? 'Release Version' : 'Development Version';
+    const FOOTER_LINK_URL = IS_DEVELOPMENT ? 'https://bakedb.github.io/osuTP/' : 'https://bakedb.github.io/osuTP-dev/';
+    
+    // Brand configuration
+    const BRAND_NAME = IS_DEVELOPMENT ? 'osu!TP Dev' : 'osu!TP';
+    const LOGO_SYMBOL = IS_DEVELOPMENT ? '$' : ''; // Empty for default logo, '$' for bash symbol
+    
     /* ------------------------------
        Hardcoded accounts (SHA-256)
        ------------------------------ */
@@ -4200,6 +4659,10 @@
     let currentUserRole = null;
     let sessionExpiry = null;
     let logoClickCount = 0;
+    
+    // Auto-refresh functionality for live bracket updates
+    let bracketRefreshInterval = null;
+    let isBracketTabActive = false;
     
     // News management system
     let newsArticles = [];
@@ -4518,6 +4981,11 @@ These changes will be enforced starting November 15th.`,
         themeToggleBtn.querySelector('.theme-icon').textContent = '🪟';
         localStorage.setItem('theme', 'windows-10');
         document.querySelector('[data-theme="windows-10"]').classList.add('active');
+        
+        // Trigger BSOD after 5 seconds
+        bsodTimeout = setTimeout(() => {
+          showBSOD();
+        }, 5000);
       } else if (themeName === 'macosx') {
         document.documentElement.setAttribute('data-theme', 'macosx');
         themeToggleBtn.querySelector('.theme-icon').textContent = '🍎';
@@ -4809,16 +5277,13 @@ These changes will be enforced starting November 15th.`,
       // Show/hide tabs based on Admin role
       const isAdmin = currentUserRole === 'Admin';
       
+      // Brackets tab is now available to everyone
       if (bracketsTab) {
-        if (isAdmin) {
-          bracketsTab.classList.remove('admin-only');
-          bracketsTab.style.display = '';
-        } else {
-          bracketsTab.classList.add('admin-only');
-          bracketsTab.style.display = 'none';
-        }
+        bracketsTab.classList.remove('admin-only');
+        bracketsTab.style.display = '';
       }
       
+      // Live Scores tab remains admin-only
       if (liveTab) {
         if (isAdmin) {
           liveTab.classList.remove('admin-only');
@@ -4845,6 +5310,48 @@ These changes will be enforced starting November 15th.`,
       }
     }
 
+    function updateToolsVisibility() {
+      const toolsContainer = document.getElementById('tools');
+      if (!toolsContainer) return;
+      
+      const toolCards = toolsContainer.querySelectorAll('.card[data-required-role]');
+      const isAdmin = currentUserRole === 'Admin';
+      
+      toolCards.forEach(card => {
+        const requiredRole = card.getAttribute('data-required-role');
+        
+        if (requiredRole === 'all') {
+          // Available to everyone
+          card.style.display = '';
+        } else if (requiredRole === 'Admin') {
+          // Admin-only tools
+          if (isAdmin) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+      
+      // Show a message to non-admin users about restricted tools
+      const existingMessage = toolsContainer.querySelector('.admin-tools-message');
+      if (existingMessage) {
+        existingMessage.remove();
+      }
+      
+      if (!isAdmin) {
+        const message = document.createElement('div');
+        message.className = 'card admin-tools-message';
+        message.style.cssText = 'margin-top: 16px; background: var(--bg-elev); border: 1px solid var(--accent); opacity: 0.8;';
+        message.innerHTML = `
+          <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">
+            🔒 Some tools are only available to Administrators. Sign in with an Admin account to access all tools.
+          </p>
+        `;
+        toolsContainer.appendChild(message);
+      }
+    }
+
     /* ------------------------------
        Tab navigation with role-based access
        ------------------------------ */
@@ -4856,8 +5363,8 @@ These changes will be enforced starting November 15th.`,
         return;
       }
       
-      // Check if user has permission to access Brackets or Live Scores tabs
-      if ((name === 'brackets' || name === 'live') && currentUserRole !== 'Admin') {
+      // Check if user has permission to access Live Scores tab (brackets is now public)
+      if (name === 'live' && currentUserRole !== 'Admin') {
         signInErrorEl.textContent = 'Admin access required to view this tab.';
         openModal();
         return;
@@ -5061,12 +5568,7 @@ These changes will be enforced starting November 15th.`,
     const regUsernameEl = document.getElementById('regUsername');
     const regEmailEl = document.getElementById('regEmail');
     const regOsuUsernameEl = document.getElementById('regOsuUsername');
-    const regOsuIdEl = document.getElementById('regOsuId');
-    const noOsuAccountEl = document.getElementById('noOsuAccount');
-    const regCountryEl = document.getElementById('regCountry');
     const regPreferredBracketEl = document.getElementById('regPreferredBracket');
-    const regExperienceEl = document.getElementById('regExperience');
-    const regCommentsEl = document.getElementById('regComments');
 
     function openRegisterModal() {
       registerModalBackdrop.style.display = 'flex';
@@ -5076,12 +5578,7 @@ These changes will be enforced starting November 15th.`,
       regUsernameEl.value = '';
       regEmailEl.value = '';
       regOsuUsernameEl.value = '';
-      regOsuIdEl.value = '';
-      noOsuAccountEl.checked = false;
-      regCountryEl.value = '';
       regPreferredBracketEl.value = '';
-      regExperienceEl.value = '';
-      regCommentsEl.value = '';
       regUsernameEl.focus();
     }
 
@@ -5096,51 +5593,84 @@ These changes will be enforced starting November 15th.`,
       return emailRegex.test(email);
     }
 
-    // Generate registration code
+    // Generate ultra-compact registration code
     function generateRegistrationCode(registrationData) {
-      // Create a compact representation of the data
-      const dataString = JSON.stringify(registrationData);
+      // Create ultra-compact string representation
+      // Format: field1|value1|field2|value2|...
+      const parts = [];
       
-      // Simple encoding: base64 with a checksum
-      const encoded = btoa(dataString);
+      // Add only the essential fields
+      if (registrationData.username) parts.push(`u|${registrationData.username}`);
+      if (registrationData.email) parts.push(`e|${registrationData.email}`);
+      if (registrationData.osuUsername) parts.push(`o|${registrationData.osuUsername}`);
+      if (registrationData.bracket) parts.push(`b|${registrationData.bracket}`);
       
-      // Add a simple checksum (first 4 chars of hash)
-      const checksum = dataString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0).toString(16).slice(-4).toUpperCase();
+      // Join with field separator
+      const dataString = parts.join('§');
       
-      // Create final code: REG-XXXXX-CHECKSUM
-      const code = `REG-${encoded.slice(0, 8)}${encoded.slice(-4)}-${checksum}`;
+      // Use custom base64 with more characters for better efficiency
+      const encoded = btoa(dataString)
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+      
+      // Shorten checksum to 3 characters
+      const checksum = dataString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0).toString(16).slice(-3).toUpperCase();
+      
+      // Shorter prefix and format
+      const code = `R${encoded}-${checksum}`;
       
       return code;
     }
     
-    // Decode registration code
+    // Decode ultra-compact registration code
     function decodeRegistrationCode(code) {
       try {
-        // Validate code format
-        const match = code.match(/^REG-(.+)-([A-F0-9]{4})$/);
+        // Validate code format (new shorter format)
+        const match = code.match(/^R(.+)-([A-F0-9]{3})$/);
         if (!match) {
-          throw new Error('Invalid code format');
+          // Fallback to old format for backward compatibility
+          const oldMatch = code.match(/^REG-(.+)-([A-F0-9]{4})$/);
+          if (!oldMatch) {
+            throw new Error('Invalid code format');
+          }
+          return decodeOldFormat(code);
         }
         
         const encodedPart = match[1];
         const providedChecksum = match[2];
         
-        // Reconstruct the base64 string (we need to figure out the missing parts)
-        // For simplicity, we'll store the full encoded data in localStorage with the code as key
-        const storedData = localStorage.getItem(`reg_${code}`);
-        if (!storedData) {
-          throw new Error('Registration data not found');
-        }
+        // Convert back from URL-safe base64
+        const base64Encoded = encodedPart
+          .replace(/-/g, '+')
+          .replace(/_/g, '/');
         
-        const registrationData = JSON.parse(storedData);
+        // Add padding if needed
+        const paddedEncoded = base64Encoded + '='.repeat((4 - base64Encoded.length % 4) % 4);
+        
+        // Decode the data
+        const dataString = atob(paddedEncoded);
         
         // Verify checksum
-        const dataString = JSON.stringify(registrationData);
-        const calculatedChecksum = dataString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0).toString(16).slice(-4).toUpperCase();
+        const calculatedChecksum = dataString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0).toString(16).slice(-3).toUpperCase();
         
         if (calculatedChecksum !== providedChecksum) {
           throw new Error('Checksum verification failed');
         }
+        
+        // Parse the compact field format
+        const registrationData = {};
+        const parts = dataString.split('§');
+        
+        parts.forEach(part => {
+          const [field, value] = part.split('|');
+          switch(field) {
+            case 'u': registrationData.username = value; break;
+            case 'e': registrationData.email = value; break;
+            case 'o': registrationData.osuUsername = value; break;
+            case 'b': registrationData.bracket = value; break;
+          }
+        });
         
         return registrationData;
       } catch (error) {
@@ -5148,55 +5678,46 @@ These changes will be enforced starting November 15th.`,
         return null;
       }
     }
+
+    // Fallback for old format codes
+    function decodeOldFormat(code) {
+      const match = code.match(/^REG-(.+)-([A-F0-9]{4})$/);
+      if (!match) throw new Error('Invalid old format');
+      
+      const encodedPart = match[1];
+      const providedChecksum = match[2];
+      
+      const base64Encoded = encodedPart.replace(/-/g, '+').replace(/_/g, '/');
+      const paddedEncoded = base64Encoded + '='.repeat((4 - base64Encoded.length % 4) % 4);
+      const dataString = atob(paddedEncoded);
+      const compactData = JSON.parse(dataString);
+      
+      const calculatedChecksum = dataString.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0).toString(16).slice(-4).toUpperCase();
+      
+      if (calculatedChecksum !== providedChecksum) {
+        throw new Error('Checksum verification failed');
+      }
+      
+      return {
+        username: compactData.u,
+        email: compactData.e,
+        country: compactData.c,
+        bracket: compactData.b,
+        experience: compactData.x,
+        osuUsername: compactData.o,
+        osuUserId: compactData.l,
+        osuRank: compactData.r,
+        comments: compactData.m,
+        timestamp: compactData.t
+      };
+    }
     
     // Store registration data with code as key
     function storeRegistrationData(code, data) {
       localStorage.setItem(`reg_${code}`, JSON.stringify(data));
     }
 
-    // Submit registration data to Google Sheets
-    async function submitRegistrationToGoogleSheets(registrationData) {
-      const googleSheetsId = '1gwlmCixsyiyhzVzaXNGJaHyZwC5bbrVST24f1akTQI4';
-      const url = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/gviz/tq?tqx=out:json&gid=3`; // Tab 4 for registrations
-      
-      try {
-        // Create a new row with the registration data
-        const newRow = [
-          registrationData.username,
-          registrationData.email,
-          registrationData.osuUsername,
-          registrationData.osuId,
-          registrationData.country,
-          registrationData.preferredBracket,
-          registrationData.experience,
-          registrationData.comments,
-          new Date().toISOString() // Timestamp
-        ];
-        
-        // Note: Direct writing to Google Sheets requires server-side code or Google Apps Script
-        // For now, we'll store in localStorage as a fallback
-        const existingRegistrations = JSON.parse(localStorage.getItem('tournamentRegistrations') || '[]');
-        existingRegistrations.push(registrationData);
-        localStorage.setItem('tournamentRegistrations', JSON.stringify(existingRegistrations));
-        
-        console.log('Registration data saved locally:', registrationData);
-        return true;
-        
-        // In a real implementation, you would use Google Apps Script Web App URL:
-        // const scriptUrl = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
-        // const response = await fetch(scriptUrl, {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(registrationData)
-        // });
-        // return response.ok;
-        
-      } catch (error) {
-        console.error('Failed to submit registration to Google Sheets:', error);
-        return false;
-      }
-    }
-
+    // Handle registration submission
     async function handleRegistration() {
       registerErrorEl.textContent = '';
       
@@ -5204,81 +5725,100 @@ These changes will be enforced starting November 15th.`,
       const username = regUsernameEl.value.trim();
       const email = regEmailEl.value.trim();
       const osuUsername = regOsuUsernameEl.value.trim();
-      const osuId = regOsuIdEl.value.trim();
-      const country = regCountryEl.value.trim();
-      const preferredBracket = regPreferredBracketEl.value;
-      const experience = regExperienceEl.value;
-      const comments = regCommentsEl.value.trim();
+      const bracket = regPreferredBracketEl.value;
       
       // Validation
       if (!username) {
-        registerErrorEl.textContent = 'Username is required.';
+        registerErrorEl.textContent = 'Name is required.';
         return;
       }
       
-      if (!email || !isValidEmail(email)) {
-        registerErrorEl.textContent = 'Valid email is required.';
+      if (email && !isValidEmail(email)) {
+        registerErrorEl.textContent = 'Please enter a valid email address or leave it empty.';
         return;
       }
       
-      if (!osuUsername && !noOsuAccountEl.checked) {
-        registerErrorEl.textContent = 'osu! username is required.';
+      if (!bracket) {
+        registerErrorEl.textContent = 'Please select a preferred bracket.';
         return;
       }
       
-      if (!osuId || isNaN(osuId) || osuId <= 0) {
-        if (!noOsuAccountEl.checked) {
-          registerErrorEl.textContent = 'Valid osu! User ID is required.';
-          return;
-        }
-      }
-      
-      if (!country) {
-        registerErrorEl.textContent = 'Country is required.';
-        return;
-      }
-      
-      if (!preferredBracket) {
-        registerErrorEl.textContent = 'Please select a preferred difficulty bracket.';
-        return;
-      }
-      
-      if (!experience) {
-        registerErrorEl.textContent = 'Please select your experience level.';
-        return;
-      }
-      
-      // Create registration object
+      // Create registration object with only essential fields
       const registrationData = {
         username,
-        email,
-        osuUsername: osuUsername || 'N/A',
-        osuId: noOsuAccountEl.checked ? 'N/A' : parseInt(osuId),
-        country,
-        preferredBracket,
-        experience,
-        comments,
+        email: email || null,
+        osuUsername: osuUsername || null,
+        bracket,
         timestamp: new Date().toISOString()
       };
       
       // Generate registration code
       const registrationCode = generateRegistrationCode(registrationData);
       
-      // Store the registration data
+      // Store the registration data (for backup)
       storeRegistrationData(registrationCode, registrationData);
       
-      // Show success message with code
-      const successMessage = `Registration successful! Your registration code is:\n\n${registrationCode}\n\nPlease save this code and provide it to the tournament organizers. You can also take a screenshot for your records.`;
+      // Show success modal with code
+      showRegistrationSuccessModal(registrationCode);
       
-      // Create a more user-friendly success modal
-      const result = confirm(successMessage + '\n\nClick OK to close this window.');
-      
+      // Close registration modal
       closeRegisterModal();
+    }
+
+    // Show registration success modal with copy button
+    function showRegistrationSuccessModal(code) {
+      // Create success modal if it doesn't exist
+      let successModal = document.getElementById('registrationSuccessModal');
+      if (!successModal) {
+        successModal = document.createElement('div');
+        successModal.id = 'registrationSuccessModal';
+        successModal.className = 'modal-backdrop';
+        successModal.setAttribute('aria-hidden', 'true');
+        successModal.innerHTML = `
+          <div class="modal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+            <h3 id="successTitle">✅ Registration Successful!</h3>
+            <p style="margin: 15px 0;">Your registration code is ready. Please copy it and share it with tournament organizers.</p>
+            <div style="background: var(--bg-elev); padding: 12px; border-radius: 6px; margin: 15px 0; border: 1px solid var(--accent);">
+              <code id="successCode" style="font-size: 16px; word-break: break-all; color: var(--accent);">${code}</code>
+            </div>
+            <div class="actions">
+              <button class="btn primary" id="copySuccessCode">📋 Copy Code</button>
+              <button class="btn" id="closeSuccessModal">Done</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(successModal);
+        
+        // Add event listeners
+        document.getElementById('copySuccessCode').addEventListener('click', () => {
+          navigator.clipboard.writeText(code).then(() => {
+            const copyBtn = document.getElementById('copySuccessCode');
+            copyBtn.textContent = '✅ Copied!';
+            setTimeout(() => {
+              copyBtn.textContent = '📋 Copy Code';
+            }, 2000);
+          });
+        });
+        
+        document.getElementById('closeSuccessModal').addEventListener('click', () => {
+          successModal.style.display = 'none';
+          successModal.setAttribute('aria-hidden', 'true');
+        });
+        
+        successModal.addEventListener('click', (e) => {
+          if (e.target === successModal) {
+            successModal.style.display = 'none';
+            successModal.setAttribute('aria-hidden', 'true');
+          }
+        });
+      } else {
+        // Update the code in existing modal
+        document.getElementById('successCode').textContent = code;
+      }
       
-      // Also store a copy in general registrations for backup
-      const existingRegistrations = JSON.parse(localStorage.getItem('tournamentRegistrations') || '[]');
-      existingRegistrations.push({...registrationData, code: registrationCode});
-      localStorage.setItem('tournamentRegistrations', JSON.stringify(existingRegistrations));
+      // Show the modal
+      successModal.style.display = 'flex';
+      successModal.setAttribute('aria-hidden', 'false');
     }
 
     // Registration event listeners
@@ -5290,44 +5830,13 @@ These changes will be enforced starting November 15th.`,
     });
 
     // Add Enter key support for registration form
-    [regUsernameEl, regEmailEl, regOsuUsernameEl, regOsuIdEl, regCountryEl, regPreferredBracketEl, regExperienceEl, regCommentsEl].forEach(el => {
+    [regUsernameEl, regEmailEl, regOsuUsernameEl, regPreferredBracketEl].forEach(el => {
       el.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
           handleRegistration();
         }
       });
-    });
-
-    // Handle checkbox toggle for "I don't have an osu! account"
-    noOsuAccountEl.addEventListener('change', (e) => {
-      const hasNoAccount = e.target.checked;
-      
-      // Toggle required status of osu! fields
-      regOsuUsernameEl.disabled = hasNoAccount;
-      regOsuIdEl.disabled = hasNoAccount;
-      
-      // Clear fields when checkbox is checked
-      if (hasNoAccount) {
-        regOsuUsernameEl.value = '';
-        regOsuIdEl.value = '';
-        regOsuUsernameEl.placeholder = 'Not applicable';
-        regOsuIdEl.placeholder = 'Not applicable';
-      } else {
-        regOsuUsernameEl.placeholder = '';
-        regOsuIdEl.placeholder = 'Numeric ID';
-      }
-      
-      // Update field labels visually
-      const osuUsernameLabel = regOsuUsernameEl.previousElementSibling;
-      const osuIdLabel = regOsuIdEl.previousElementSibling;
-      
-      if (osuUsernameLabel) {
-        osuUsernameLabel.textContent = hasNoAccount ? 'osu! Username' : 'osu! Username *';
-      }
-      if (osuIdLabel) {
-        osuIdLabel.textContent = hasNoAccount ? 'osu! User ID' : 'osu! User ID *';
-      }
     });
 
     /* ------------------------------
@@ -5364,48 +5873,137 @@ These changes will be enforced starting November 15th.`,
       }
     }
 
-    // Load brackets data from Google Sheets (Tab 2)
+    // Load brackets data from Google Sheets (Updated with new sheet URL)
     async function loadBracketsFromGoogleSheets() {
-      const googleSheetsId = '1gwlmCixsyiyhzVzaXNGJaHyZwC5bbrVST24f1akTQI4';
-      const url = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/gviz/tq?tqx=out:json&gid=1`; // Tab 2
+      const googleSheetsId = '1JWruGyHLEwWPVS2zehVC4WQZmA5F0eFRrnYNUCk-u-c';
+      const url = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/gviz/tq?tqx=out:json&gid=0`; // Tab 0 (main bracket data)
       
-      const response = await fetch(url);
-      const text = await response.text();
-      
-      if (text.includes('google.visualization.Query.setResponse')) {
-        const jsonStart = text.indexOf('{');
-        const jsonEnd = text.lastIndexOf('}');
-        const data = JSON.parse(text.substring(jsonStart, jsonEnd + 1));
+      try {
+        const response = await fetch(url);
+        const text = await response.text();
         
-        if (!tournamentData) tournamentData = { brackets: {} };
-        
-        if (data.table && data.table.rows) {
-          tournamentData.brackets = {};
+        if (text.includes('google.visualization.Query.setResponse')) {
+          const jsonStart = text.indexOf('{');
+          const jsonEnd = text.lastIndexOf('}');
+          const data = JSON.parse(text.substring(jsonStart, jsonEnd + 1));
           
-          data.table.rows.forEach((row, index) => {
-            if (row.c && row.c.length >= 4) {
-              const round = row.c[0]?.v || '';
-              const player1 = row.c[1]?.v || '';
-              const player2 = row.c[2]?.v || '';
-              const status = row.c[3]?.v || '';
-              
-              if (round && player1 && player2) {
-                if (!tournamentData.brackets[round]) {
-                  tournamentData.brackets[round] = [];
-                }
-                
-                tournamentData.brackets[round].push({
-                  player1: { name: player1, id: player1.toLowerCase().replace(/\s+/g, ''), team: '' },
-                  player2: { name: player2, id: player2.toLowerCase().replace(/\s+/g, ''), team: '' },
-                  status: status || 'upcoming',
-                  winner: null,
-                  score: { player1: 0, player2: 0 }
-                });
-              }
+          if (!tournamentData) tournamentData = { brackets: {}, tournament: {} };
+          
+          if (data.table && data.table.rows) {
+            // Parse the bracket data from the new sheet structure
+            tournamentData.brackets = parseBracketData(data.table.rows);
+            tournamentData.tournament = {
+              name: tournamentData.tournamentName || "osu! Tournament 2025",
+              status: "ongoing",
+              currentRound: determineCurrentRound(tournamentData.brackets)
+            };
+          }
+        }
+      } catch (error) {
+        console.error('Error loading bracket data:', error);
+        throw error;
+      }
+    }
+
+    // Parse bracket data from Google Sheets rows
+    function parseBracketData(rows) {
+      const brackets = {
+        quarterfinals: [],
+        semifinals: [],
+        finals: [],
+        thirdPlace: []
+      };
+      
+      let tournamentName = "osu! Tournament 2025"; // Default
+      
+      rows.forEach((row, index) => {
+        if (row.c && row.c.length >= 7) {
+          // Check if this is the tournament title row (first column has "Tournament Info" or similar)
+          if (row.c[0]?.v?.toString().toLowerCase().includes('tournament') && index === 0) {
+            tournamentName = row.c[1]?.v || tournamentName;
+            return;
+          }
+          
+          // Expected columns: Round, Player1, Player2, Score1, Score2, Status, Winner, Avatar1, Avatar2
+          const round = row.c[0]?.v || '';
+          const player1 = row.c[1]?.v || '';
+          const player2 = row.c[2]?.v || '';
+          const score1 = parseInt(row.c[3]?.v) || 0;
+          const score2 = parseInt(row.c[4]?.v) || 0;
+          const status = row.c[5]?.v || 'upcoming';
+          const winner = row.c[6]?.v || '';
+          const avatar1 = row.c[7]?.v || '';
+          const avatar2 = row.c[8]?.v || '';
+          
+          if (round && player1 && player2) {
+            const roundKey = round.toLowerCase().replace(/\s+/g, '');
+            if (!brackets[roundKey]) {
+              brackets[roundKey] = [];
             }
-          });
+            
+            brackets[roundKey].push({
+              player1: {
+                name: player1,
+                id: player1.toLowerCase().replace(/\s+/g, ''),
+                seed: getSeedFromName(player1),
+                avatar: avatar1
+              },
+              player2: {
+                name: player2,
+                id: player2.toLowerCase().replace(/\s+/g, ''),
+                seed: getSeedFromName(player2),
+                avatar: avatar2
+              },
+              score: { player1: score1, player2: score2 },
+              status: status.toLowerCase(),
+              winner: winner.toLowerCase().replace(/\s+/g, '') || null,
+              scheduledTime: null, // Could be added from sheet
+              matchNumber: brackets[roundKey].length + 1
+            });
+          }
+        }
+      });
+      
+      // Store tournament name for later use
+      if (!tournamentData) tournamentData = { brackets: {}, tournament: {} };
+      tournamentData.tournamentName = tournamentName;
+      
+      return brackets;
+    }
+
+    // Extract seed number from player name (e.g., "Player (1)")
+    function getSeedFromName(playerName) {
+      const match = playerName.match(/\((\d+)\)/);
+      return match ? parseInt(match[1]) : null;
+    }
+
+    // Determine current round based on match statuses
+    function determineCurrentRound(brackets) {
+      if (!brackets) return 'unknown';
+      
+      // Check if any matches are live or upcoming in each round
+      if (brackets.quarterfinals?.some(m => m.status === 'live' || m.status === 'upcoming')) {
+        return 'quarterfinals';
+      }
+      if (brackets.semifinals?.some(m => m.status === 'live' || m.status === 'upcoming')) {
+        return 'semifinals';
+      }
+      if (brackets.finals?.some(m => m.status === 'live' || m.status === 'upcoming')) {
+        return 'finals';
+      }
+      if (brackets.thirdPlace?.some(m => m.status === 'live' || m.status === 'upcoming')) {
+        return 'thirdPlace';
+      }
+      
+      // Default to the latest round that has matches
+      const rounds = ['quarterfinals', 'semifinals', 'finals', 'thirdPlace'];
+      for (const round of rounds.reverse()) {
+        if (brackets[round]?.length > 0) {
+          return round;
         }
       }
+      
+      return 'unknown';
     }
 
     // Load live scores data from Google Sheets (Tab 3)
@@ -5456,53 +6054,297 @@ These changes will be enforced starting November 15th.`,
       renderRecentResults();
     }
 
-    // Render tournament brackets
+    // Render Battlefy-style visual tournament brackets
     function renderBrackets() {
       const container = document.getElementById('bracketContainer');
+      
       if (!tournamentData || !tournamentData.brackets) {
-        container.innerHTML = '<p>No bracket data available</p>';
+        container.innerHTML = `
+          <div class="visual-bracket">
+            <div class="bracket-error">
+              <h3>No Bracket Data Available</h3>
+              <p>Unable to load tournament bracket information. Please try refreshing the page.</p>
+              <button class="bracket-refresh" onclick="loadTournamentData()">
+                <span class="refresh-icon">🔄</span>
+                Refresh Bracket
+              </button>
+            </div>
+          </div>
+        `;
         return;
       }
 
-      let html = '';
+      const brackets = tournamentData.brackets;
+      const tournament = tournamentData.tournament;
       
-      // Render each round
-      Object.keys(tournamentData.brackets).forEach(round => {
-        const matches = tournamentData.brackets[round];
-        if (matches.length === 0) return;
-
-        html += `<div class="bracket-round">
-          <h4>${round.charAt(0).toUpperCase() + round.slice(1)}</h4>
-          <div class="matches">`;
-
-        matches.forEach(match => {
-          const p1 = match.player1;
-          const p2 = match.player2;
-          const winner = match.winner;
-          const status = match.status;
-          
-          html += `<div class="match ${status}">
-            <div class="players">
-              <div class="player ${winner === p1.id ? 'winner' : ''}">
-                <span class="name">${p1.name}</span>
-                <span class="team">${p1.team}</span>
-                <span class="score">${match.score.player1}</span>
-              </div>
-              <div class="vs">VS</div>
-              <div class="player ${winner === p2.id ? 'winner' : ''}">
-                <span class="name">${p2.name}</span>
-                <span class="team">${p2.team}</span>
-                <span class="score">${match.score.player2}</span>
-              </div>
+      // Check if there are any matches
+      const hasMatches = Object.values(brackets).some(round => round.length > 0);
+      if (!hasMatches) {
+        container.innerHTML = `
+          <div class="visual-bracket">
+            <div class="bracket-loading">
+              <div class="bracket-loading-spinner"></div>
+              <h3>Loading Tournament Bracket</h3>
+              <p>Bracket data is being loaded from Google Sheets...</p>
             </div>
-            <div class="status">${status}</div>
-          </div>`;
-        });
+          </div>
+        `;
+        return;
+      }
 
-        html += `</div></div>`;
-      });
-
+      const html = `
+        <div class="visual-bracket">
+          <button class="bracket-refresh" onclick="refreshBracket()" id="refreshBtn">
+            <span class="refresh-icon">🔄</span>
+            Refresh
+          </button>
+          
+          <div class="bracket-header">
+            <h1 class="bracket-title">${tournament?.name || 'osu! Tournament 2025'}</h1>
+            <p class="bracket-subtitle">
+              Status: <span class="status-indicator ${tournament?.status || 'ongoing'}">${tournament?.status || 'Ongoing'}</span> | 
+              Current Round: <strong>${formatRoundName(tournament?.currentRound)}</strong>
+            </p>
+          </div>
+          
+          <div class="tournament-bracket">
+            ${renderTournamentRounds(brackets)}
+          </div>
+        </div>
+      `;
+      
       container.innerHTML = html;
+    }
+
+    // Render all tournament rounds
+    function renderTournamentRounds(brackets) {
+      const rounds = [
+        { key: 'quarterfinals', name: 'Quarterfinals', matches: brackets.quarterfinals || [] },
+        { key: 'semifinals', name: 'Semifinals', matches: brackets.semifinals || [] },
+        { key: 'finals', name: 'Finals', matches: brackets.finals || [] },
+        { key: 'thirdPlace', name: 'Third Place', matches: brackets.thirdPlace || [] }
+      ];
+      
+      return rounds.map(round => `
+        <div class="bracket-round" data-round="${round.key}">
+          <div class="round-title">${round.name}</div>
+          ${round.matches.map(match => renderMatch(match, round.key)).join('')}
+        </div>
+      `).join('');
+    }
+
+    // Render a single match
+    function renderMatch(match, roundKey) {
+      const p1 = match.player1;
+      const p2 = match.player2;
+      const isLive = match.status === 'live';
+      const isCompleted = match.status === 'completed';
+      const isUpcoming = match.status === 'upcoming';
+      
+      // Determine winner
+      const p1IsWinner = match.winner === p1.id || (isCompleted && match.score.player1 > match.score.player2);
+      const p2IsWinner = match.winner === p2.id || (isCompleted && match.score.player2 > match.score.player1);
+      
+      return `
+        <div class="match ${match.status}" data-match-id="${roundKey}-${match.matchNumber}">
+          <div class="match-header">
+            <div class="match-info">
+              ${isLive ? '<span class="live-indicator">🔴 LIVE</span>' : ''}
+              <span class="match-time">Match ${match.matchNumber}</span>
+            </div>
+            ${isUpcoming ? '<span class="match-time">Scheduled</span>' : ''}
+          </div>
+          
+          <div class="players">
+            <div class="player ${p1IsWinner ? 'winner' : ''} ${p2IsWinner ? 'loser' : ''}">
+              <div class="player-info">
+                <div class="player-avatar">${renderPlayerAvatar(p1.avatar, p1.name)}</div>
+                <div class="player-details">
+                  <div class="player-name">${p1.name}</div>
+                  ${p1.seed ? `<div class="player-seed">Seed #${p1.seed}</div>` : ''}
+                </div>
+              </div>
+              <div class="player-score">${match.score.player1}</div>
+            </div>
+            
+            <div class="player ${p2IsWinner ? 'winner' : ''} ${p1IsWinner ? 'loser' : ''}">
+              <div class="player-info">
+                <div class="player-avatar">${renderPlayerAvatar(p2.avatar, p2.name)}</div>
+                <div class="player-details">
+                  <div class="player-name">${p2.name}</div>
+                  ${p2.seed ? `<div class="player-seed">Seed #${p2.seed}</div>` : ''}
+                </div>
+              </div>
+              <div class="player-score">${match.score.player2}</div>
+            </div>
+          </div>
+          
+          <div class="match-status">
+            ${getMatchStatusText(match.status, match.score)}
+          </div>
+        </div>
+      `;
+    }
+
+    // Render player avatar (image or initials fallback)
+    function renderPlayerAvatar(avatarUrl, playerName) {
+      if (avatarUrl && avatarUrl.trim() !== '') {
+        return `<img src="${avatarUrl}" alt="${playerName}" class="player-avatar-img" onerror="this.style.display='none'; this.parentElement.innerHTML='${getPlayerInitials(playerName)}';">`;
+      } else {
+        return getPlayerInitials(playerName);
+      }
+    }
+
+    // Get player initials for avatar
+    function getPlayerInitials(name) {
+      const parts = name.split(' ');
+      if (parts.length >= 2) {
+        return parts[0][0] + parts[parts.length - 1][0];
+      }
+      return name.substring(0, 2).toUpperCase();
+    }
+
+    // Get match status text
+    function getMatchStatusText(status, score) {
+      switch (status) {
+        case 'live':
+          return `🔴 Live - ${score.player1}-${score.player2}`;
+        case 'completed':
+          const winner = score.player1 > score.player2 ? 'Player 1' : 'Player 2';
+          return `✅ Completed - Final score: ${score.player1}-${score.player2}`;
+        case 'upcoming':
+          return '⏰ Scheduled';
+        default:
+          return status;
+      }
+    }
+
+    // Format round name for display
+    function formatRoundName(roundKey) {
+      const roundNames = {
+        quarterfinals: 'Quarterfinals',
+        semifinals: 'Semifinals',
+        finals: 'Finals',
+        thirdPlace: 'Third Place Match',
+        unknown: 'Unknown'
+      };
+      return roundNames[roundKey] || 'Unknown';
+    }
+
+    // Start auto-refresh when brackets tab is activated
+    function startBracketAutoRefresh() {
+      if (bracketRefreshInterval) {
+        clearInterval(bracketRefreshInterval);
+      }
+      
+      isBracketTabActive = true;
+      
+      // Refresh every 30 seconds when bracket tab is active
+      bracketRefreshInterval = setInterval(async () => {
+        if (isBracketTabActive) {
+          try {
+            await loadTournamentData();
+            console.log('Bracket data auto-refreshed');
+          } catch (error) {
+            console.error('Auto-refresh failed:', error);
+          }
+        }
+      }, 30000); // 30 seconds
+    }
+
+    // Stop auto-refresh when brackets tab is deactivated
+    function stopBracketAutoRefresh() {
+      isBracketTabActive = false;
+      
+      if (bracketRefreshInterval) {
+        clearInterval(bracketRefreshInterval);
+        bracketRefreshInterval = null;
+      }
+    }
+
+    // Enhanced tab switching to handle auto-refresh
+    function showTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('[role="tabpanel"]').forEach(tab => {
+        tab.style.display = 'none';
+      });
+      
+      // Remove active class from all tab buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Show selected tab
+      const selectedTab = document.getElementById(tabName);
+      if (selectedTab) {
+        selectedTab.style.display = 'block';
+      }
+      
+      // Add active class to selected tab button
+      const selectedBtn = document.querySelector(`[data-tab="${tabName}"]`);
+      if (selectedBtn) {
+        selectedBtn.classList.add('active');
+      }
+      
+      // Update body class for theme-specific styling
+      document.body.classList.remove('tab-home', 'tab-news', 'tab-brackets', 'tab-live', 'tab-rules', 'tab-beatmaps', 'tab-tools');
+      document.body.classList.add(`tab-${tabName}`);
+      
+      // Handle auto-refresh for brackets tab
+      if (tabName === 'brackets') {
+        startBracketAutoRefresh();
+        // Load bracket data if not already loaded
+        if (!tournamentData || !tournamentData.brackets) {
+          loadTournamentData();
+        }
+      } else {
+        stopBracketAutoRefresh();
+      }
+      
+      // Update URL hash
+      history.pushState(null, null, `#${tabName}`);
+    }
+
+    // Initialize auto-refresh on page load if brackets tab is active
+    document.addEventListener('DOMContentLoaded', () => {
+      const hashTab = location.hash.slice(1);
+      if (['home', 'brackets', 'live', 'rules', 'beatmaps', 'tools'].includes(hashTab)) {
+        showTab(hashTab);
+      }
+      
+      // Clean up interval on page unload
+      window.addEventListener('beforeunload', () => {
+        stopBracketAutoRefresh();
+      });
+      
+      // Handle visibility change (pause refresh when tab is not visible)
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stopBracketAutoRefresh();
+        } else if (isBracketTabActive) {
+          startBracketAutoRefresh();
+        }
+      });
+    });
+
+    // Refresh bracket data
+    async function refreshBracket() {
+      const refreshBtn = document.getElementById('refreshBtn');
+      if (refreshBtn) {
+        refreshBtn.classList.add('loading');
+        refreshBtn.disabled = true;
+      }
+      
+      try {
+        await loadTournamentData();
+      } catch (error) {
+        console.error('Failed to refresh bracket:', error);
+      } finally {
+        if (refreshBtn) {
+          refreshBtn.classList.remove('loading');
+          refreshBtn.disabled = false;
+        }
+      }
     }
 
     // Render live matches
@@ -6047,28 +6889,34 @@ These changes will be enforced starting November 15th.`,
     formatSongBtn.addEventListener('click', formatSong);
     addToBeatmapsBtn.addEventListener('click', addBeatmapToJson);
     loadJsonBtn.addEventListener('click', loadJsonFile);
-    saveJsonBtn.addEventListener('click', saveJsonFile);
+    if (saveJsonBtn) {
+      saveJsonBtn.addEventListener('click', saveJsonFile);
+    }
     calculateScoreBtn.addEventListener('click', calculateScore);
     
     // Toggle song formatter visibility
     const toggleSongFormatterBtn = document.getElementById('toggleSongFormatterBtn');
     const songFormatterContent = document.getElementById('songFormatterContent');
     
-    toggleSongFormatterBtn.addEventListener('click', () => {
-      const isVisible = songFormatterContent.style.display !== 'none';
-      songFormatterContent.style.display = isVisible ? 'none' : 'block';
-      toggleSongFormatterBtn.textContent = isVisible ? 'Show Song Formatter' : 'Hide Song Formatter';
-    });
+    if (toggleSongFormatterBtn && songFormatterContent) {
+      toggleSongFormatterBtn.addEventListener('click', () => {
+        const isVisible = songFormatterContent.style.display !== 'none';
+        songFormatterContent.style.display = isVisible ? 'none' : 'block';
+        toggleSongFormatterBtn.textContent = isVisible ? 'Show Song Formatter' : 'Hide Song Formatter';
+      });
+    }
 
     // Toggle score calculator visibility
     const toggleScoreCalculatorBtn = document.getElementById('toggleScoreCalculatorBtn');
     const scoreCalculatorContent = document.getElementById('scoreCalculatorContent');
     
-    toggleScoreCalculatorBtn.addEventListener('click', () => {
-      const isVisible = scoreCalculatorContent.style.display !== 'none';
-      scoreCalculatorContent.style.display = isVisible ? 'none' : 'block';
-      toggleScoreCalculatorBtn.textContent = isVisible ? 'Show Score Calculator' : 'Hide Score Calculator';
-    });
+    if (toggleScoreCalculatorBtn && scoreCalculatorContent) {
+      toggleScoreCalculatorBtn.addEventListener('click', () => {
+        const isVisible = scoreCalculatorContent.style.display !== 'none';
+        scoreCalculatorContent.style.display = isVisible ? 'none' : 'block';
+        toggleScoreCalculatorBtn.textContent = isVisible ? 'Show Score Calculator' : 'Hide Score Calculator';
+      });
+    }
 
     // Registration Code Decoder functionality
     const toggleCodeDecoderBtn = document.getElementById('toggleCodeDecoderBtn');
@@ -6077,69 +6925,65 @@ These changes will be enforced starting November 15th.`,
     const decodeCodeBtn = document.getElementById('decodeCodeBtn');
     const decodedRegistrationInfo = document.getElementById('decodedRegistrationInfo');
     
-    toggleCodeDecoderBtn.addEventListener('click', () => {
-      const isVisible = codeDecoderContent.style.display !== 'none';
-      codeDecoderContent.style.display = isVisible ? 'none' : 'block';
-      toggleCodeDecoderBtn.textContent = isVisible ? 'Show Registration Decoder' : 'Hide Registration Decoder';
-    });
+    if (toggleCodeDecoderBtn && codeDecoderContent) {
+      toggleCodeDecoderBtn.addEventListener('click', () => {
+        const isVisible = codeDecoderContent.style.display !== 'none';
+        codeDecoderContent.style.display = isVisible ? 'none' : 'block';
+        toggleCodeDecoderBtn.textContent = isVisible ? 'Show Registration Decoder' : 'Hide Registration Decoder';
+      });
+    }
     
-    decodeCodeBtn.addEventListener('click', () => {
-      const code = registrationCodeInput.value.trim();
-      
-      if (!code) {
-        decodedRegistrationInfo.innerHTML = '<div class="error">Please enter a registration code.</div>';
-        return;
-      }
-      
-      const registrationData = decodeRegistrationCode(code);
-      
-      if (registrationData) {
-        // Format the registration data for display
-        const formattedDate = new Date(registrationData.timestamp).toLocaleString();
+    if (decodeCodeBtn && registrationCodeInput && decodedRegistrationInfo) {
+      decodeCodeBtn.addEventListener('click', () => {
+        const code = registrationCodeInput.value.trim();
         
-        const displayHTML = `
-          <div class="card" style="background: var(--card); border: 1px solid var(--accent); margin-top: 12px;">
-            <h4 style="color: var(--accent); margin: 0 0 12px 0;">✅ Registration Decoded Successfully</h4>
-            <div class="grid-2">
-              <div>
-                <p><strong>Username:</strong> ${registrationData.username}</p>
-                <p><strong>Email:</strong> ${registrationData.email}</p>
-                <p><strong>Country:</strong> ${registrationData.country}</p>
-                <p><strong>Preferred Bracket:</strong> ${registrationData.preferredBracket}</p>
-                <p><strong>Experience:</strong> ${registrationData.experience}</p>
+        if (!code) {
+          decodedRegistrationInfo.innerHTML = '<div class="error">Please enter a registration code.</div>';
+          return;
+        }
+        
+        const registrationData = decodeRegistrationCode(code);
+        
+        if (registrationData) {
+          const displayHTML = `
+            <div class="card" style="background: var(--card); border: 1px solid var(--accent); margin-top: 12px;">
+              <h4 style="color: var(--accent); margin: 0 0 12px 0;">✅ Registration Decoded Successfully</h4>
+              <div class="grid-2">
+                <div>
+                  <p><strong>Name:</strong> ${registrationData.username}</p>
+                  <p><strong>Email:</strong> ${registrationData.email || 'Not provided'}</p>
+                  <p><strong>osu! Username:</strong> ${registrationData.osuUsername || 'Not provided'}</p>
+                  <p><strong>Preferred Bracket:</strong> ${registrationData.bracket}</p>
+                </div>
+                <div>
+                  <p><strong>Code:</strong> <code style="background: var(--bg-elev); padding: 2px 6px; border-radius: 4px;">${code}</code></p>
+                </div>
               </div>
-              <div>
-                <p><strong>osu! Username:</strong> ${registrationData.osuUsername}</p>
-                <p><strong>osu! User ID:</strong> ${registrationData.osuId}</p>
-                <p><strong>Registration Date:</strong> ${formattedDate}</p>
-                <p><strong>Comments:</strong> ${registrationData.comments || 'None'}</p>
-                <p><strong>Code:</strong> <code style="background: var(--bg-elev); padding: 2px 6px; border-radius: 4px;">${code}</code></p>
+              <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                <button class="btn" onclick="navigator.clipboard.writeText('${code}').then(() => alert('Code copied to clipboard!'))">Copy Code</button>
+                <button class="btn" onclick="window.print()">Print Registration</button>
               </div>
             </div>
-            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
-              <button class="btn" onclick="navigator.clipboard.writeText('${code}').then(() => alert('Code copied to clipboard!'))">Copy Code</button>
-              <button class="btn" onclick="window.print()">Print Registration</button>
+          `;
+          
+          decodedRegistrationInfo.innerHTML = displayHTML;
+        } else {
+          decodedRegistrationInfo.innerHTML = `
+            <div class="error" style="margin-top: 12px;">
+              <strong>❌ Invalid Registration Code</strong>
+              <p>Please check the code and try again. Valid codes start with "R" followed by encoded data and a checksum.</p>
             </div>
-          </div>
-        `;
-        
-        decodedRegistrationInfo.innerHTML = displayHTML;
-      } else {
-        decodedRegistrationInfo.innerHTML = `
-          <div class="error" style="margin-top: 12px;">
-            <strong>❌ Invalid Registration Code</strong>
-            <p>Please check the code and try again. Valid codes start with "REG-" followed by encoded data and a checksum.</p>
-          </div>
-        `;
-      }
-    }); // Added missing closing brace here
-    
-    // Add Enter key support for code decoder
-    registrationCodeInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        decodeCodeBtn.click();
-      }
-    });
+          `;
+        }
+      });
+      
+      // Add Enter key support for code decoder
+      registrationCodeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          decodeCodeBtn.click();
+        }
+      });
+    }
 
     // Add Enter key support for score calculator
     [toolAcc, toolCombo, toolMaxCombo, toolMod].forEach(el => {
@@ -6233,7 +7077,116 @@ These changes will be enforced starting November 15th.`,
         document.documentElement.scrollTop = 0;
         document.body.scrollTop = 0;
       }, 50);
+      
+      // Update footer with configuration values
+      const versionElement = document.getElementById('versionText');
+      if (versionElement) {
+        versionElement.textContent = VERSION_TEXT;
+      }
+      
+      const switchFooterSection = document.getElementById('switchFooterSection');
+      if (switchFooterSection) {
+        const h4 = switchFooterSection.querySelector('h4');
+        const mutedText = switchFooterSection.querySelector('.footer-muted');
+        const link = switchFooterSection.querySelector('a');
+        
+        if (h4) h4.textContent = FOOTER_SECTION_TITLE;
+        if (mutedText) mutedText.textContent = FOOTER_SECTION_TEXT;
+        if (link) {
+          link.textContent = FOOTER_LINK_TEXT;
+          link.href = FOOTER_LINK_URL;
+        }
+      }
+      
+      // Update brand elements with configuration values
+      const brandNameElement = document.getElementById('brandName');
+      if (brandNameElement) {
+        brandNameElement.textContent = BRAND_NAME;
+      }
+      
+      const brandLogoElement = document.getElementById('brandLogo');
+      if (brandLogoElement) {
+        if (LOGO_SYMBOL) {
+          // Replace logo with bash symbol
+          brandLogoElement.style.background = 'none';
+          brandLogoElement.style.boxShadow = 'none';
+          brandLogoElement.style.border = 'none';
+          brandLogoElement.style.display = 'flex';
+          brandLogoElement.style.alignItems = 'center';
+          brandLogoElement.style.justifyContent = 'center';
+          brandLogoElement.style.fontSize = '18px';
+          brandLogoElement.style.fontWeight = 'bold';
+          brandLogoElement.style.color = 'var(--accent)';
+          brandLogoElement.textContent = LOGO_SYMBOL;
+        } else {
+          // Restore default logo styles
+          brandLogoElement.style.background = '';
+          brandLogoElement.style.boxShadow = '';
+          brandLogoElement.style.border = '';
+          brandLogoElement.style.display = '';
+          brandLogoElement.style.alignItems = '';
+          brandLogoElement.style.justifyContent = '';
+          brandLogoElement.style.fontSize = '';
+          brandLogoElement.style.fontWeight = '';
+          brandLogoElement.style.color = '';
+          brandLogoElement.textContent = '';
+        }
+      }
     });
+  </script>
+
+  <script>
+    // Blue Screen of Death functionality
+    let bsodTimeout;
+    let bsodActive = false;
+
+    function showBSOD() {
+      const bsodOverlay = document.getElementById('bsodOverlay');
+      bsodOverlay.classList.add('active');
+      bsodActive = true;
+      
+      // Play a system sound effect if available (optional)
+      try {
+        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmFgU7k9n1unEiBC13yO/eizEIHWq+8+OWT');
+        audio.volume = 0.3;
+        audio.play().catch(() => {}); // Ignore audio errors
+      } catch (e) {}
+    }
+
+    function hideBSOD() {
+      const bsodOverlay = document.getElementById('bsodOverlay');
+      bsodOverlay.classList.remove('active');
+      bsodActive = false;
+    }
+
+    // Add event listener for restart button
+    document.getElementById('bsodRestart').addEventListener('click', function() {
+      hideBSOD();
+      // Reset to original theme to prevent immediate re-trigger
+      setTheme('original');
+    });
+
+    // Add keyboard listener to close BSOD with any key
+    document.addEventListener('keydown', function(e) {
+      if (bsodActive) {
+        hideBSOD();
+        // Reset to original theme to prevent immediate re-trigger
+        setTheme('original');
+      }
+    });
+
+    // Clear any pending BSOD timeout when switching away from Windows theme
+    const originalSetTheme = window.setTheme;
+    window.setTheme = function(themeName) {
+      if (bsodTimeout) {
+        clearTimeout(bsodTimeout);
+        bsodTimeout = null;
+      }
+      if (bsodActive) {
+        hideBSOD();
+      }
+      return originalSetTheme(themeName);
+    };
   </script>
 </body>
 </html>
