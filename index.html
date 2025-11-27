@@ -3342,6 +3342,22 @@
             <div>
               <div class="actions" style="margin-bottom: 12px;">
                 <button class="btn" id="loadJsonBtn">Load JSON</button>
+                <button class="btn" id="saveJsonBtn">Save As...</button>
+              </div>
+              <textarea id="toolOutput" class="input" style="height: 200px; font-family: monospace;" placeholder="Formatted output will appear here..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Admin News Tool (Admin only) -->
+      <div id="newsFormatterTool" style="margin-top: 18px; display: none;" class="card">
+        <h3>📝 News Article Formatter</h3>
+        <p class="muted">Format news articles for the /news directory. This tool helps create properly formatted entries for index.json.</p>
+        
+        <div class="form-group">
+          <label for="newsArticleTitle">Article Title</label>
+          <input type="text" id="newsArticleTitle" class="input" placeholder="Enter article title">
         </div>
         
         <div class="form-group">
@@ -4028,12 +4044,12 @@
       
       // Update news display when user state changes
       updateNewsDisplay();
+      
+      // Update tools visibility when user state changes
+      updateToolsVisibility();
     }
 
     function updateTabVisibility() {
-      const bracketsTab = document.querySelector('[data-tab="brackets"]');
-      const liveTab = document.querySelector('[data-tab="live"]');
-      
       // Show/hide tabs based on Admin role
       const isAdmin = currentUserRole === 'Admin';
       
