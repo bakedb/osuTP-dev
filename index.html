@@ -2647,6 +2647,234 @@
       background-clip: text;
       font-weight: 600;
     }
+
+    /* News styles */
+    .news-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .news-container {
+      display: grid;
+      gap: 20px;
+    }
+
+    .news-article {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .news-article:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .news-article-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .news-article h4 {
+      margin: 0 0 8px 0;
+      color: var(--text);
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .news-article-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .news-article-author {
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    .news-article-content {
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .news-article-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .news-article-actions button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .news-edit-btn {
+      background: var(--accent);
+      color: white;
+    }
+
+    .news-edit-btn:hover {
+      background: var(--accent-2);
+    }
+
+    .news-delete-btn {
+      background: var(--bad);
+      color: white;
+    }
+
+    .news-delete-btn:hover {
+      background: #d32f2f;
+    }
+
+    /* News modal styles */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.5rem;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 4px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--bad);
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-elev);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-2);
+    }
+
+    .btn.secondary {
+      background: var(--bg-elev);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn.secondary:hover {
+      background: var(--border);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+
+    .empty-state h4 {
+      margin-bottom: 8px;
+      color: var(--text);
+    }
   </style>
 </head>
 <body>
@@ -2661,6 +2889,7 @@
       <button class="tab-btn active" data-tab="home" role="tab" aria-controls="home">Home</button>
       <button class="tab-btn" data-tab="brackets" role="tab" aria-controls="brackets">Brackets</button>
       <button class="tab-btn" data-tab="live" role="tab" aria-controls="live">Live Scores</button>
+      <button class="tab-btn" data-tab="news" role="tab" aria-controls="news">News</button>
       <button class="tab-btn" data-tab="rules" role="tab" aria-controls="rules">Rules</button>
       <button class="tab-btn" data-tab="beatmaps" role="tab" aria-controls="beatmaps">Beatmap list</button>
       <button class="tab-btn" data-tab="tools" role="tab" aria-controls="tools">Tools</button>
@@ -2961,6 +3190,19 @@
       </div>
     </section>
 
+    <!-- News -->
+    <section id="news" role="tabpanel" aria-label="News" style="display: none;">
+      <div class="card">
+        <div class="news-header">
+          <h3>Tournament News & Updates</h3>
+          <button class="btn primary" id="addNewsBtn" style="display: none;">Add Article</button>
+        </div>
+        <div id="newsContainer" class="news-container">
+          <!-- News articles will be dynamically loaded here -->
+        </div>
+      </div>
+    </section>
+
     <!-- Rules -->
     <section id="rules" role="tabpanel" aria-label="Rules" style="display: none;">
       <div class="card">
@@ -3149,6 +3391,34 @@
     </section>
   </main>
 
+  <!-- News Modal -->
+  <div id="newsModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="newsModalTitle">Add News Article</h3>
+        <button class="modal-close-btn" id="newsModalClose">×</button>
+      </div>
+      <form id="newsForm">
+        <div class="form-group">
+          <label for="newsTitle">Title</label>
+          <input type="text" id="newsTitle" name="title" required placeholder="Enter article title">
+        </div>
+        <div class="form-group">
+          <label for="newsAuthor">Author</label>
+          <input type="text" id="newsAuthor" name="author" required placeholder="Enter author name">
+        </div>
+        <div class="form-group">
+          <label for="newsContent">Content</label>
+          <textarea id="newsContent" name="content" required placeholder="Enter article content"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn secondary" id="newsModalCancel">Cancel</button>
+          <button type="submit" class="btn primary">Publish Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
@@ -3331,56 +3601,100 @@
         
         console.log('Attempting to load from:', url);
         
-        // Use CORS proxy if needed, or try direct fetch first
+        // Try CORS proxy first
+        const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
+        
         let response;
         try {
-          response = await fetch(url);
-        } catch (corsError) {
-          console.log('Direct fetch failed, trying CORS proxy...');
-          // Try a CORS proxy as fallback
-          const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
+          console.log('Trying CORS proxy:', proxyUrl);
           response = await fetch(proxyUrl);
-        }
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        
-        const text = await response.text();
-        console.log('Full raw response length:', text.length);
-        console.log('Raw response (first 500 chars):', text.substring(0, 500));
-        console.log('Raw response (last 500 chars):', text.substring(text.length - 500));
-        
-        // Check if response contains data
-        if (text.includes('google.visualization.Query.setResponse')) {
-          // Parse the response
-          const jsonStart = text.indexOf('{');
-          const jsonEnd = text.lastIndexOf('}');
-          const jsonString = text.substring(jsonStart, jsonEnd + 1);
-          
-          const data = JSON.parse(jsonString);
-          
-          // Convert sheet data to ACCOUNTS object
-          ACCOUNTS = {};
-          if (data.table && data.table.rows) {
-            data.table.rows.forEach((row, index) => { // Process all rows
-              if (row.c && row.c.length >= 3) {
-                const username = row.c[0]?.v || '';
-                const passwordHash = row.c[1]?.v || '';
-                const role = row.c[2]?.v || '';
-                
-                if (username && passwordHash && role) {
-                  ACCOUNTS[username] = { hash: passwordHash, role: role };
+          if (response.ok) {
+            const text = await response.text();
+            console.log('Raw response from proxy:', text.substring(0, 200));
+            
+            // Parse the Google Sheets JSON response
+            const jsonStart = text.indexOf('{');
+            const jsonEnd = text.lastIndexOf('}');
+            if (jsonStart === -1 || jsonEnd === -1) {
+              throw new Error('Invalid response format from proxy');
+            }
+            
+            const jsonString = text.substring(jsonStart, jsonEnd + 1);
+            const data = JSON.parse(jsonString);
+            
+            // Convert sheet data to ACCOUNTS object
+            ACCOUNTS = {};
+            if (data.table && data.table.rows) {
+              data.table.rows.forEach((row, index) => {
+                if (row.c && row.c.length >= 3) {
+                  const username = row.c[0]?.v || '';
+                  const passwordHash = row.c[1]?.v || '';
+                  const role = row.c[2]?.v || '';
+                  
+                  if (username && passwordHash && role) {
+                    ACCOUNTS[username] = { hash: passwordHash, role: role };
+                    console.log('Loaded account:', username, role);
+                  }
                 }
-              }
-            });
-          } else {
-            console.log('No table data found in response');
+              });
+              console.log('Successfully loaded accounts from Google Sheets via proxy:', Object.keys(ACCOUNTS));
+              return;
+            }
           }
-        } else {
-          console.log('Response does not contain expected Google Sheets data');
-          console.log('Full response:', text);
+        } catch (proxyError) {
+          console.log('CORS proxy failed:', proxyError.message);
         }
+        
+        // If proxy fails, try direct fetch (may work in some browsers)
+        try {
+          console.log('Trying direct fetch...');
+          response = await fetch(url);
+          if (response.ok) {
+            const text = await response.text();
+            console.log('Raw response from direct fetch:', text.substring(0, 200));
+            
+            // Parse the Google Sheets JSON response
+            const jsonStart = text.indexOf('{');
+            const jsonEnd = text.lastIndexOf('}');
+            if (jsonStart === -1 || jsonEnd === -1) {
+              throw new Error('Invalid response format');
+            }
+            
+            const jsonString = text.substring(jsonStart, jsonEnd + 1);
+            const data = JSON.parse(jsonString);
+            
+            // Convert sheet data to ACCOUNTS object
+            ACCOUNTS = {};
+            if (data.table && data.table.rows) {
+              data.table.rows.forEach((row, index) => {
+                if (row.c && row.c.length >= 3) {
+                  const username = row.c[0]?.v || '';
+                  const passwordHash = row.c[1]?.v || '';
+                  const role = row.c[2]?.v || '';
+                  
+                  if (username && passwordHash && role) {
+                    ACCOUNTS[username] = { hash: passwordHash, role: role };
+                    console.log('Loaded account:', username, role);
+                  }
+                }
+              });
+              console.log('Successfully loaded accounts from Google Sheets directly:', Object.keys(ACCOUNTS));
+              return;
+            }
+          }
+        } catch (directError) {
+          console.log('Direct fetch failed:', directError.message);
+        }
+        
+        // If both fail, use hardcoded fallback accounts
+        console.log('Both proxy and direct fetch failed, using fallback accounts');
+        ACCOUNTS = {
+          "bakedb": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
+          "admin": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
+          "participant": { hash: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", role: "Participant" },
+        };
+        console.log('Using fallback accounts with bakedb included');
+        
       } catch (error) {
         console.error('Failed to load accounts from Google Sheets:', error);
         console.log('This usually means:');
@@ -3391,9 +3705,11 @@
         
         // Fallback to hardcoded accounts if Google Sheets fails
         ACCOUNTS = {
+          "bakedb": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
           "admin": { hash: "1d604998daff644540f1390636ee61e88f8d1b2a83e04521e494d48ca272a6bc", role: "Admin" },
           "participant": { hash: "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8", role: "Participant" },
         };
+        console.log('Using fallback accounts with bakedb included');
       }
     }
     
@@ -3752,18 +4068,13 @@
         signOutBtn.style.display = 'none';
       }
       
-      // Update tab visibility based on role
-      updateTabVisibility();
+      // Update news display when user state changes
+      updateNewsDisplay();
     }
 
     function updateTabVisibility() {
       const bracketsTab = document.querySelector('[data-tab="brackets"]');
       const liveTab = document.querySelector('[data-tab="live"]');
-      
-      // Debug: log current state
-      console.log('updateTabVisibility called. currentUserRole:', currentUserRole);
-      console.log('bracketsTab:', bracketsTab);
-      console.log('liveTab:', liveTab);
       
       // Show/hide tabs based on Admin role
       const isAdmin = currentUserRole === 'Admin';
@@ -3776,7 +4087,6 @@
           bracketsTab.classList.add('admin-only');
           bracketsTab.style.display = 'none';
         }
-        console.log('bracketsTab display set to:', bracketsTab.style.display);
       }
       
       if (liveTab) {
@@ -3787,7 +4097,6 @@
           liveTab.classList.add('admin-only');
           liveTab.style.display = 'none';
         }
-        console.log('liveTab display set to:', liveTab.style.display);
       }
       
       // If current tab is hidden, switch to Home
@@ -3802,6 +4111,7 @@
         clearSession();
         updateUserUI();
         updateToolsVisibility();
+        updateTabVisibility();
       }
     }
 
@@ -3900,21 +4210,57 @@
         return;
       }
 
-      // Accounts are already loaded on page load
+      // Debug: Log accounts status
+      console.log('Sign-in attempt for user:', user);
+      console.log('Available accounts:', Object.keys(ACCOUNTS));
+      console.log('Accounts loaded:', Object.keys(ACCOUNTS).length > 0);
+
+      // Wait for accounts to be loaded if they aren't yet
+      if (Object.keys(ACCOUNTS).length === 0) {
+        signInErrorEl.textContent = 'Loading accounts... Please wait.';
+        console.log('Accounts not loaded yet, attempting to reload...');
+        
+        // Disable sign-in button during loading
+        confirmSignInBtn.disabled = true;
+        confirmSignInBtn.textContent = 'Loading...';
+        
+        await loadAccountsFromGoogleSheets();
+        
+        // Re-enable button
+        confirmSignInBtn.disabled = false;
+        confirmSignInBtn.textContent = 'Sign In';
+        
+        if (Object.keys(ACCOUNTS).length === 0) {
+          signInErrorEl.textContent = 'Unable to load accounts. Using fallback accounts.';
+          console.log('Using fallback accounts');
+          
+          // Fallback accounts are already set in loadAccountsFromGoogleSheets
+          // Try one more time with fallbacks
+          if (!ACCOUNTS[user]) {
+            signInErrorEl.textContent = 'Unknown username. Try: admin/participant with password: password/123';
+            return;
+          }
+        }
+      }
 
       if (!ACCOUNTS[user]) {
         signInErrorEl.textContent = 'Unknown username.';
+        console.log('User not found in accounts:', user);
+        console.log('Available usernames:', Object.keys(ACCOUNTS));
         return;
       }
 
       const inputHash = await sha256(pass);
       if (inputHash !== ACCOUNTS[user].hash) {
         signInErrorEl.textContent = 'Incorrect password.';
+        console.log('Password mismatch for user:', user);
         return;
       }
 
       currentUser = user;
       currentUserRole = ACCOUNTS[user].role;
+      
+      console.log('Sign-in successful:', user, currentUserRole);
       
       // Save session with selected duration
       const sessionHours = parseInt(sessionDurationEl.value);
@@ -4494,6 +4840,177 @@
 
     let BEATMAPS = [];
 
+    // News system variables
+    let NEWS_ARTICLES = [];
+    let newsEditingId = null;
+
+    // Load news articles from localStorage
+    function loadNewsArticles() {
+      try {
+        const stored = localStorage.getItem('newsArticles');
+        if (stored) {
+          NEWS_ARTICLES = JSON.parse(stored);
+        } else {
+          // Add some default news articles
+          NEWS_ARTICLES = [
+            {
+              id: 1,
+              title: 'Tournament Registration Now Open',
+              author: 'Tournament Admin',
+              content: 'Registration for the upcoming osu! tournament is now open! Players of all skill levels are welcome to participate. Sign up through the Registration tab to secure your spot in this exciting competition.',
+              date: new Date().toISOString()
+            },
+            {
+              id: 2,
+              title: 'New Beatmap Pool Released',
+              author: 'Map Selection Team',
+              content: 'We are excited to announce the official beatmap pool for this tournament! The maps have been carefully selected to provide a balanced and competitive experience across all difficulty brackets. Check out the Beatmaps tab to see the full list.',
+              date: new Date(Date.now() - 86400000).toISOString() // Yesterday
+            }
+          ];
+          saveNewsArticles();
+        }
+      } catch (error) {
+        console.error('Failed to load news articles:', error);
+        NEWS_ARTICLES = [];
+      }
+    }
+
+    // Save news articles to localStorage
+    function saveNewsArticles() {
+      try {
+        localStorage.setItem('newsArticles', JSON.stringify(NEWS_ARTICLES));
+      } catch (error) {
+        console.error('Failed to save news articles:', error);
+      }
+    }
+
+    // Render news articles
+    function renderNewsArticles() {
+      const container = document.getElementById('newsContainer');
+      
+      if (NEWS_ARTICLES.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h4>No news articles yet</h4>
+            <p>Check back later for tournament updates and announcements.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Sort articles by date (newest first)
+      const sortedArticles = [...NEWS_ARTICLES].sort((a, b) => 
+        new Date(b.date) - new Date(a.date)
+      );
+
+      container.innerHTML = sortedArticles.map(article => `
+        <div class="news-article" data-article-id="${article.id}">
+          <div class="news-article-header">
+            <h4>${article.title}</h4>
+            ${currentUser && currentUser.role === 'admin' ? `
+              <div class="news-article-actions">
+                <button class="news-edit-btn" onclick="editNewsArticle(${article.id})">Edit</button>
+                <button class="news-delete-btn" onclick="deleteNewsArticle(${article.id})">Delete</button>
+              </div>
+            ` : ''}
+          </div>
+          <div class="news-article-meta">
+            <span class="news-article-author">By ${article.author}</span>
+            <span>•</span>
+            <span>${new Date(article.date).toLocaleDateString()}</span>
+          </div>
+          <div class="news-article-content">
+            ${article.content.replace(/\n/g, '<br>')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Open news modal for adding/editing
+    function openNewsModal(articleId = null) {
+      const modal = document.getElementById('newsModal');
+      const title = document.getElementById('newsModalTitle');
+      const form = document.getElementById('newsForm');
+      
+      newsEditingId = articleId;
+      
+      if (articleId) {
+        const article = NEWS_ARTICLES.find(a => a.id === articleId);
+        if (article) {
+          title.textContent = 'Edit News Article';
+          document.getElementById('newsTitle').value = article.title;
+          document.getElementById('newsAuthor').value = article.author;
+          document.getElementById('newsContent').value = article.content;
+        }
+      } else {
+        title.textContent = 'Add News Article';
+        form.reset();
+      }
+      
+      modal.classList.add('active');
+    }
+
+    // Close news modal
+    function closeNewsModal() {
+      const modal = document.getElementById('newsModal');
+      modal.classList.remove('active');
+      newsEditingId = null;
+    }
+
+    // Edit news article
+    function editNewsArticle(articleId) {
+      openNewsModal(articleId);
+    }
+
+    // Delete news article
+    function deleteNewsArticle(articleId) {
+      if (confirm('Are you sure you want to delete this news article?')) {
+        NEWS_ARTICLES = NEWS_ARTICLES.filter(a => a.id !== articleId);
+        saveNewsArticles();
+        renderNewsArticles();
+      }
+    }
+
+    // Handle news form submission
+    function handleNewsSubmit(e) {
+      e.preventDefault();
+      
+      const title = document.getElementById('newsTitle').value.trim();
+      const author = document.getElementById('newsAuthor').value.trim();
+      const content = document.getElementById('newsContent').value.trim();
+      
+      if (!title || !author || !content) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      if (newsEditingId) {
+        // Edit existing article
+        const article = NEWS_ARTICLES.find(a => a.id === newsEditingId);
+        if (article) {
+          article.title = title;
+          article.author = author;
+          article.content = content;
+          article.date = new Date().toISOString();
+        }
+      } else {
+        // Add new article
+        const newArticle = {
+          id: Date.now(),
+          title,
+          author,
+          content,
+          date: new Date().toISOString()
+        };
+        NEWS_ARTICLES.unshift(newArticle);
+      }
+      
+      saveNewsArticles();
+      renderNewsArticles();
+      closeNewsModal();
+    }
+
     // Load beatmap data from Google Sheets or JSON file
     async function loadBeatmapData() {
       try {
@@ -4632,6 +5149,52 @@
 
     // Start beatmap updates when page loads
     startBeatmapUpdates();
+
+    // Initialize news system
+    loadNewsArticles();
+    renderNewsArticles();
+
+    // News modal event listeners
+    const addNewsBtn = document.getElementById('addNewsBtn');
+    const newsModal = document.getElementById('newsModal');
+    const newsModalClose = document.getElementById('newsModalClose');
+    const newsModalCancel = document.getElementById('newsModalCancel');
+    const newsForm = document.getElementById('newsForm');
+
+    if (addNewsBtn) {
+      addNewsBtn.addEventListener('click', () => openNewsModal());
+    }
+
+    if (newsModalClose) {
+      newsModalClose.addEventListener('click', closeNewsModal);
+    }
+
+    if (newsModalCancel) {
+      newsModalCancel.addEventListener('click', closeNewsModal);
+    }
+
+    if (newsModal) {
+      newsModal.addEventListener('click', (e) => {
+        if (e.target === newsModal) closeNewsModal();
+      });
+    }
+
+    if (newsForm) {
+      newsForm.addEventListener('submit', handleNewsSubmit);
+    }
+
+    // Update news button visibility based on user role
+    function updateNewsButtonVisibility() {
+      if (addNewsBtn) {
+        addNewsBtn.style.display = currentUser && currentUser.role === 'admin' ? 'block' : 'none';
+      }
+    }
+
+    // Update news articles when user changes
+    function updateNewsDisplay() {
+      renderNewsArticles();
+      updateNewsButtonVisibility();
+    }
 
     const tableBody = document.getElementById('beatmapTable');
     const searchEl = document.getElementById('search');
