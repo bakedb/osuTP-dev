@@ -4,7 +4,34 @@
   <meta charset="UTF-8" />
   <title>osu! Tournament Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <!-- Immediate scroll reset to prevent page loading scrolled down -->
+  <script>
+    // Run immediately to prevent any scroll restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    // Force scroll to top before any content loads
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  </script>
+  
   <style>
+    /* Force page to start at top */
+    html {
+      scroll-behavior: auto;
+      scroll-padding-top: 0;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      position: relative;
+    }
+    
+    /* Prevent any initial scroll */
     :root {
       --bg: #0f0f13;
       --bg-elev: #171720;
@@ -130,6 +157,13 @@
       --accent-4: #caf0f8;
     }
     
+    [data-theme="frutiger-aero"] body.tab-news {
+      --accent: #ff6b9d; /* pink accent for news */
+      --accent-2: #c44569;
+      --accent-3: #f8b5d4;
+      --accent-4: #ffd1dc;
+    }
+    
     [data-theme="frutiger-aero"] body.tab-brackets {
       --accent: #00a89c; /* blue-green mix */
       --accent-2: #006b63;
@@ -173,6 +207,13 @@
       --accent-4: #404040;
     }
     
+    [data-theme="windows-10"] body.tab-news {
+      --accent: #e81123; /* Windows red */
+      --accent-2: #d13438;
+      --accent-3: #ff6b6b;
+      --accent-4: #ffcc80;
+    }
+    
     [data-theme="windows-10"] body.tab-brackets {
       --accent: #107c10; /* Windows green */
       --accent-2: #0e6e0e;
@@ -214,6 +255,13 @@
       --accent-2: #0052a3;
       --accent-3: #003d7a;
       --accent-4: #002654;
+    }
+    
+    [data-theme="macosx"] body.tab-news {
+      --accent: #ff3b30; /* macOS red */
+      --accent-2: #d70015;
+      --accent-3: #ff6b6b;
+      --accent-4: #ff9999;
     }
     
     [data-theme="macosx"] body.tab-brackets {
@@ -260,6 +308,8 @@
       min-height: 100vh;
       position: relative;
       transition: background 0.3s ease, color 0.3s ease;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
     }
     
     /* Frutiger Aero background styles */
@@ -1129,6 +1179,68 @@
       border-radius: 12px;
       padding: 16px;
       transition: all 0.3s ease;
+    }
+    
+    /* News content styles */
+    .news-content {
+      line-height: 1.6;
+    }
+    
+    .news-content h1 {
+      color: var(--accent);
+      margin: 24px 0 16px;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .news-content h2 {
+      color: var(--accent-2);
+      margin: 20px 0 12px;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .news-content h3 {
+      color: var(--text);
+      margin: 16px 0 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .news-content p {
+      margin: 12px 0;
+      color: var(--text);
+    }
+    
+    .news-content ul {
+      margin: 12px 0;
+      padding-left: 24px;
+      color: var(--text);
+    }
+    
+    .news-content li {
+      margin: 6px 0;
+    }
+    
+    .news-content a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    .news-content a:hover {
+      color: var(--accent-2);
+      text-decoration: underline;
+    }
+    
+    .news-content strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    .news-content em {
+      color: var(--muted);
+      font-style: italic;
     }
     
     /* Frutiger Aero card styles */
@@ -2648,101 +2760,7 @@
       font-weight: 600;
     }
 
-    /* News styles */
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .news-container {
-      display: grid;
-      gap: 20px;
-    }
-
-    .news-article {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .news-article:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .news-article-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
-    }
-
-    .news-article h4 {
-      margin: 0 0 8px 0;
-      color: var(--text);
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
-
-    .news-article-meta {
-      display: flex;
-      gap: 15px;
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    .news-article-author {
-      font-weight: 500;
-      color: var(--accent);
-    }
-
-    .news-article-content {
-      color: var(--text);
-      line-height: 1.6;
-      margin-bottom: 16px;
-    }
-
-    .news-article-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .news-article-actions button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .news-edit-btn {
-      background: var(--accent);
-      color: white;
-    }
-
-    .news-edit-btn:hover {
-      background: var(--accent-2);
-    }
-
-    .news-delete-btn {
-      background: var(--bad);
-      color: white;
-    }
-
-    .news-delete-btn:hover {
-      background: #d32f2f;
-    }
-
-    /* News modal styles */
-    .modal-backdrop {
+        .modal-backdrop {
       position: fixed;
       top: 0;
       left: 0;
@@ -2878,6 +2896,18 @@
   </style>
 </head>
 <body>
+  <!-- Immediate scroll reset after body starts -->
+  <script>
+    // Force scroll to top immediately when body loads
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    // Prevent any scroll restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+  </script>
+  
   <!-- Top nav -->
   <nav class="nav">
     <div class="brand">
@@ -2887,9 +2917,9 @@
 
     <div class="tabs" role="tablist" aria-label="Main tabs">
       <button class="tab-btn active" data-tab="home" role="tab" aria-controls="home">Home</button>
+      <button class="tab-btn" data-tab="news" role="tab" aria-controls="news">News</button>
       <button class="tab-btn" data-tab="brackets" role="tab" aria-controls="brackets">Brackets</button>
       <button class="tab-btn" data-tab="live" role="tab" aria-controls="live">Live Scores</button>
-      <button class="tab-btn" data-tab="news" role="tab" aria-controls="news">News</button>
       <button class="tab-btn" data-tab="rules" role="tab" aria-controls="rules">Rules</button>
       <button class="tab-btn" data-tab="beatmaps" role="tab" aria-controls="beatmaps">Beatmap list</button>
       <button class="tab-btn" data-tab="tools" role="tab" aria-controls="tools">Tools</button>
@@ -3155,7 +3185,6 @@
               <li><strong>beatmaps.json:</strong> Beatmap database</li>
               <li><strong>tournament-data.json:</strong> Live tournament data</li>
               <li><strong>main.py:</strong> Management tools</li>
-              <li><strong>news/</strong> directory: News articles</li>
             </ul>
           </div>
           <div>
@@ -3168,6 +3197,14 @@
             </ul>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- News -->
+    <section id="news" role="tabpanel" aria-label="News" style="display: none;">
+      <div class="card">
+        <h3>Tournament News & Updates</h3>
+        <div id="newsContent" class="news-content"></div>
       </div>
     </section>
 
@@ -3191,19 +3228,7 @@
       </div>
     </section>
 
-    <!-- News -->
-    <section id="news" role="tabpanel" aria-label="News" style="display: none;">
-      <div class="card">
-        <div class="news-header">
-          <h3>Tournament News & Updates</h3>
-          <button class="btn primary" id="addNewsBtn" style="display: none;">Add Article</button>
-        </div>
-        <div id="newsContainer" class="news-container">
-          <!-- News articles will be dynamically loaded here -->
-        </div>
-      </div>
-    </section>
-
+    
     <!-- Rules -->
     <section id="rules" role="tabpanel" aria-label="Rules" style="display: none;">
       <div class="card">
@@ -3342,46 +3367,9 @@
             <div>
               <div class="actions" style="margin-bottom: 12px;">
                 <button class="btn" id="loadJsonBtn">Load JSON</button>
-                <button class="btn" id="saveJsonBtn">Save As...</button>
+        </div>
+        
               </div>
-              <textarea id="toolOutput" class="input" style="height: 200px; font-family: monospace;" placeholder="Formatted output will appear here..."></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Admin News Tool (Admin only) -->
-      <div id="newsFormatterTool" style="margin-top: 18px; display: none;" class="card">
-        <h3>📝 News Article Formatter</h3>
-        <p class="muted">Format news articles for the /news directory. This tool helps create properly formatted entries for index.json.</p>
-        
-        <div class="form-group">
-          <label for="newsArticleTitle">Article Title</label>
-          <input type="text" id="newsArticleTitle" class="input" placeholder="Enter article title">
-        </div>
-        
-        <div class="form-group">
-          <label for="newsArticleAuthor">Author</label>
-          <input type="text" id="newsArticleAuthor" class="input" placeholder="Author name">
-        </div>
-        
-        <div class="form-group">
-          <label for="newsArticleFilename">Filename (without .md)</label>
-          <input type="text" id="newsArticleFilename" class="input" placeholder="e.g., tournament-announcement">
-        </div>
-        
-        <div class="form-group">
-          <label for="newsArticleContent">Article Content (Markdown)</label>
-          <textarea id="newsArticleContent" class="input" rows="8" placeholder="# Article Title&#10;&#10;Write your article content here using **markdown** formatting."></textarea>
-        </div>
-        
-        <div class="form-actions">
-          <button class="btn secondary" onclick="clearNewsFormatter()">Clear</button>
-          <button class="btn primary" onclick="generateNewsFiles()">Generate Files</button>
-        </div>
-        
-        <div id="newsFormatterOutput" style="margin-top: 16px;"></div>
-      </div>
     </section>
 
     <!-- Beatmap list -->
@@ -3425,40 +3413,13 @@
     </section>
   </main>
 
-  <!-- News Modal -->
-  <div id="newsModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="newsModalTitle">Add News Article</h3>
-        <button class="modal-close-btn" id="newsModalClose">×</button>
-      </div>
-      <form id="newsForm">
-        <div class="form-group">
-          <label for="newsTitle">Title</label>
-          <input type="text" id="newsTitle" name="title" required placeholder="Enter article title">
-        </div>
-        <div class="form-group">
-          <label for="newsAuthor">Author</label>
-          <input type="text" id="newsAuthor" name="author" required placeholder="Enter author name">
-        </div>
-        <div class="form-group">
-          <label for="newsContent">Content</label>
-          <textarea id="newsContent" name="content" required placeholder="Enter article content"></textarea>
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn secondary" id="newsModalCancel">Cancel</button>
-          <button type="submit" class="btn primary">Publish Article</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
+  
   <!-- Footer -->
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-section">
         <h4>osu! Tournament Portal</h4>
-        <p>Version 0.7.2 (Development)</p>
+        <p>Version 0.7.3 (Development)</p>
         <p class="footer-muted"> 2025 osu!TP. All rights reserved.</p>
       </div>
       <div class="footer-section">
@@ -3702,6 +3663,7 @@
     const tabs = document.querySelectorAll('.tab-btn');
     const panels = {
       home: document.getElementById('home'),
+      news: document.getElementById('news'),
       brackets: document.getElementById('brackets'),
       live: document.getElementById('live'),
       rules: document.getElementById('rules'),
@@ -3726,6 +3688,98 @@
     let currentUserRole = null;
     let sessionExpiry = null;
     let logoClickCount = 0;
+    
+    // Simple markdown parser for news content
+    function parseMarkdown(markdown) {
+      let html = markdown;
+      
+      // Headers
+      html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+      html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+      html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+      
+      // Bold and italic
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      
+      // Links
+      html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+      
+      // Line breaks
+      html = html.replace(/\n\n/g, '</p><p>');
+      html = '<p>' + html + '</p>';
+      
+      // Lists
+      html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
+      html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+      
+      return html;
+    }
+    
+    // Sample news content in markdown
+    const newsContent = `
+# Tournament Season 3 Announced!
+
+## Registration Opens November 15th
+
+We're excited to announce **Season 3** of our annual osu! tournament! This season promises to be our biggest yet with:
+
+- **New bracket system** with improved matchmaking
+- **Enhanced prize pool** totaling over $500
+- **Live streaming** of all final matches
+- **Community-voted beatmap selection**
+
+## Important Dates
+
+**Registration Period:** November 15-30, 2024  
+**Qualifiers:** December 1-7, 2024  
+**Main Tournament:** December 8-22, 2024  
+**Grand Finals:** December 23, 2024
+
+## New Features
+
+### Improved Bracket System
+Our new bracket system features *dynamic seeding* based on player performance and *automatic match scheduling* to reduce wait times.
+
+### Enhanced Prize Distribution
+- **1st Place:** $200 + custom badge
+- **2nd Place:** $150 + custom badge  
+- **3rd Place:** $100 + custom badge
+- **4th-8th Place:** $50 each
+
+### Live Commentary
+We've partnered with [famous osu! commentators](https://osu.ppy.sh) to bring professional commentary to all final matches.
+
+## How to Register
+
+1. Visit the [Registration Page](#beatmaps)
+2. Fill out the registration form
+3. Wait for confirmation email
+4. Join our [Discord Server](https://discord.gg) for updates
+
+## Rule Updates
+
+We've updated several rules for Season 3:
+
+- **No mods allowed** in qualifiers
+- **Free mod** enabled from quarter-finals onwards
+- **ScoreV2** scoring system throughout
+- **Best of 5** format for all matches
+
+See the full [Rules Section](#rules) for complete details.
+
+---
+
+*Stay tuned for more updates and follow us on [Twitter](https://twitter.com) for real-time announcements!*
+    `;
+    
+    // Load news content when news tab is shown
+    function loadNewsContent() {
+      const newsContainer = document.getElementById('newsContent');
+      if (newsContainer) {
+        newsContainer.innerHTML = parseMarkdown(newsContent);
+      }
+    }
     
     /* ------------------------------
        Theme management
@@ -4042,14 +4096,12 @@
         signOutBtn.style.display = 'none';
       }
       
-      // Update news display when user state changes
-      updateNewsDisplay();
-      
-      // Update tools visibility when user state changes
-      updateToolsVisibility();
     }
 
     function updateTabVisibility() {
+      const bracketsTab = document.querySelector('[data-tab="brackets"]');
+      const liveTab = document.querySelector('[data-tab="live"]');
+      
       // Show/hide tabs based on Admin role
       const isAdmin = currentUserRole === 'Admin';
       
@@ -4108,7 +4160,7 @@
       }
       
       // Remove all tab classes from body
-      document.body.classList.remove('tab-home', 'tab-brackets', 'tab-live', 'tab-rules', 'tab-beatmaps', 'tab-tools');
+      document.body.classList.remove('tab-home', 'tab-news', 'tab-brackets', 'tab-live', 'tab-rules', 'tab-beatmaps', 'tab-tools');
       
       // Add current tab class for theme variations
       document.body.classList.add(`tab-${name}`);
@@ -4121,6 +4173,11 @@
       // Update tools visibility based on role
       if (name === 'tools') {
         updateToolsVisibility();
+      }
+      
+      // Load news content when news tab is shown
+      if (name === 'news') {
+        loadNewsContent();
       }
       
       // Update hash for deep linking
@@ -4814,203 +4871,7 @@
 
     let BEATMAPS = [];
 
-    // News system variables
-    let NEWS_ARTICLES = [];
-    let newsEditingId = null;
-
-    // Load news articles from markdown files in /news directory
-    async function loadNewsArticles() {
-      try {
-        // Get list of markdown files from /news directory
-        const newsIndexResponse = await fetch('/news/index.json');
-        if (!newsIndexResponse.ok) {
-          console.log('No news index found, using empty news');
-          NEWS_ARTICLES = [];
-          return;
-        }
-
-        const newsIndex = await newsIndexResponse.json();
-        const articlePromises = [];
-
-        // Load each markdown file
-        for (const fileInfo of newsIndex.articles) {
-          articlePromises.push(
-            fetch(`/news/${fileInfo.filename}`)
-              .then(response => response.ok ? response.text() : null)
-              .then(markdown => {
-                if (markdown) {
-                  return {
-                    id: fileInfo.filename.replace('.md', ''),
-                    title: fileInfo.title,
-                    author: fileInfo.author || 'Tournament Organizer',
-                    date: fileInfo.date || new Date().toISOString(),
-                    content: markdown,
-                    filename: fileInfo.filename
-                  };
-                }
-                return null;
-              })
-          );
-        }
-
-        const articles = await Promise.all(articlePromises);
-        NEWS_ARTICLES = articles.filter(article => article !== null)
-          .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by newest first
-
-        console.log('Loaded news articles:', NEWS_ARTICLES.length);
-      } catch (error) {
-        console.error('Failed to load news articles:', error);
-        NEWS_ARTICLES = [];
-      }
-    }
-
-    // Save news articles (for admin editing - would need backend)
-    async function saveNewsArticles() {
-      // In a real implementation, this would save to the news directory
-      // For now, we'll just log that changes were made
-      console.log('News articles updated:', NEWS_ARTICLES);
-    }
-
-    // Render news articles to the page
-    function renderNewsArticles() {
-      const newsContainer = document.getElementById('newsContainer');
-      
-      if (NEWS_ARTICLES.length === 0) {
-        newsContainer.innerHTML = `
-          <div class="no-news">
-            <p>No news articles yet. Check back later for tournament updates!</p>
-          </div>
-        `;
-        return;
-      }
-
-      newsContainer.innerHTML = NEWS_ARTICLES.map(article => `
-        <article class="news-article" data-id="${article.id}">
-          <div class="news-header">
-            <h3>${article.title}</h3>
-            <div class="news-meta">
-              <span class="news-author">By ${article.author}</span>
-              <span class="news-date">${new Date(article.date).toLocaleDateString()}</span>
-              ${currentUser && currentUserRole === 'Admin' ? `
-                <div class="news-actions">
-                  <button class="btn small" onclick="editNewsArticle('${article.id}')">Edit</button>
-                  <button class="btn small danger" onclick="deleteNewsArticle('${article.id}')">Delete</button>
-                </div>
-              ` : ''}
-            </div>
-          </div>
-          <div class="news-content">
-            ${parseMarkdown(article.content)}
-          </div>
-        </article>
-      `).join('');
-    }
-
-    // Simple markdown parser (basic implementation)
-    function parseMarkdown(markdown) {
-      return markdown
-        // Headers
-        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        // Bold
-        .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-        // Italic
-        .replace(/\*(.*)\*/gim, '<em>$1</em>')
-        // Links
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" target="_blank">$1</a>')
-        // Line breaks
-        .replace(/\n/gim, '<br>')
-        // Code blocks
-        .replace(/```([^`]+)```/gim, '<pre><code>$1</code></pre>')
-        // Inline code
-        .replace(/`([^`]+)`/gim, '<code>$1</code>');
-    }
-
-    // Update news display based on user role
-    function updateNewsDisplay() {
-      const addNewsBtn = document.getElementById('addNewsBtn');
-      if (addNewsBtn) {
-        addNewsBtn.style.display = (currentUser && currentUserRole === 'Admin') ? 'inline-block' : 'none';
-      }
-      renderNewsArticles();
-    }
-
-    // News modal functions
-    function openNewsModal(articleId = null) {
-      const modal = document.getElementById('newsModal');
-      const title = document.getElementById('newsModalTitle');
-      const form = document.getElementById('newsForm');
-      
-      newsEditingId = articleId;
-      
-      if (articleId) {
-        const article = NEWS_ARTICLES.find(a => a.id === articleId);
-        if (article) {
-          title.textContent = 'Edit News Article';
-          document.getElementById('newsTitle').value = article.title;
-          document.getElementById('newsAuthor').value = article.author;
-          document.getElementById('newsContent').value = article.content;
-        }
-      } else {
-        title.textContent = 'Add News Article';
-        form.reset();
-      }
-      
-      modal.style.display = 'flex';
-      modal.setAttribute('aria-hidden', 'false');
-    }
-
-    function closeNewsModal() {
-      const modal = document.getElementById('newsModal');
-      modal.style.display = 'none';
-      modal.setAttribute('aria-hidden', 'true');
-      newsEditingId = null;
-    }
-
-    // Handle news form submission
-    async function handleNewsSubmit(e) {
-      e.preventDefault();
-      
-      const formData = new FormData(e.target);
-      const articleData = {
-        title: formData.get('title'),
-        author: formData.get('author'),
-        content: formData.get('content'),
-        date: new Date().toISOString()
-      };
-
-      if (newsEditingId) {
-        // Edit existing article
-        const index = NEWS_ARTICLES.findIndex(a => a.id === newsEditingId);
-        if (index !== -1) {
-          NEWS_ARTICLES[index] = { ...NEWS_ARTICLES[index], ...articleData };
-        }
-      } else {
-        // Add new article
-        const newId = 'news-' + Date.now();
-        NEWS_ARTICLES.unshift({ id: newId, ...articleData });
-      }
-
-      await saveNewsArticles();
-      renderNewsArticles();
-      closeNewsModal();
-    }
-
-    // Edit news article
-    function editNewsArticle(articleId) {
-      openNewsModal(articleId);
-    }
-
-    // Delete news article
-    async function deleteNewsArticle(articleId) {
-      if (confirm('Are you sure you want to delete this news article?')) {
-        NEWS_ARTICLES = NEWS_ARTICLES.filter(a => a.id !== articleId);
-        await saveNewsArticles();
-        renderNewsArticles();
-      }
-    }
-
+    
     // Load beatmap data from Google Sheets or JSON file
     async function loadBeatmapData() {
       try {
@@ -5150,51 +5011,6 @@
     // Start beatmap updates when page loads
     startBeatmapUpdates();
 
-    // Initialize news system
-    loadNewsArticles();
-    renderNewsArticles();
-
-    // News modal event listeners
-    const addNewsBtn = document.getElementById('addNewsBtn');
-    const newsModal = document.getElementById('newsModal');
-    const newsModalClose = document.getElementById('newsModalClose');
-    const newsModalCancel = document.getElementById('newsModalCancel');
-    const newsForm = document.getElementById('newsForm');
-
-    if (addNewsBtn) {
-      addNewsBtn.addEventListener('click', () => openNewsModal());
-    }
-
-    if (newsModalClose) {
-      newsModalClose.addEventListener('click', closeNewsModal);
-    }
-
-    if (newsModalCancel) {
-      newsModalCancel.addEventListener('click', closeNewsModal);
-    }
-
-    if (newsModal) {
-      newsModal.addEventListener('click', (e) => {
-        if (e.target === newsModal) closeNewsModal();
-      });
-    }
-
-    if (newsForm) {
-      newsForm.addEventListener('submit', handleNewsSubmit);
-    }
-
-    // Update news button visibility based on user role
-    function updateNewsButtonVisibility() {
-      if (addNewsBtn) {
-        addNewsBtn.style.display = currentUser && currentUser.role === 'admin' ? 'block' : 'none';
-      }
-    }
-
-    // Update news articles when user changes
-    function updateNewsDisplay() {
-      renderNewsArticles();
-      updateNewsButtonVisibility();
-    }
 
     const tableBody = document.getElementById('beatmapTable');
     const searchEl = document.getElementById('search');
@@ -5650,122 +5466,50 @@
       if (e.target === easterEggModalBackdrop) closeEasterEgg();
     });
 
-    /* ------------------------------
-       News Formatter Tool (Admin only)
-       ------------------------------ */
-    function clearNewsFormatter() {
-      document.getElementById('newsArticleTitle').value = '';
-      document.getElementById('newsArticleAuthor').value = '';
-      document.getElementById('newsArticleFilename').value = '';
-      document.getElementById('newsArticleContent').value = '';
-      document.getElementById('newsFormatterOutput').innerHTML = '';
-    }
-
-    function generateNewsFiles() {
-      const title = document.getElementById('newsArticleTitle').value.trim();
-      const author = document.getElementById('newsArticleAuthor').value.trim();
-      const filename = document.getElementById('newsArticleFilename').value.trim();
-      const content = document.getElementById('newsArticleContent').value.trim();
-
-      if (!title || !author || !filename || !content) {
-        document.getElementById('newsFormatterOutput').innerHTML = 
-          '<div class="error">Please fill in all fields.</div>';
-        return;
-      }
-
-      // Generate current date in ISO format
-      const currentDate = new Date().toISOString();
-
-      // Create index.json entry
-      const indexEntry = {
-        filename: filename.endsWith('.md') ? filename : filename + '.md',
-        title: title,
-        author: author,
-        date: currentDate
-      };
-
-      // Create markdown file content
-      const markdownContent = content;
-
-      // Generate output HTML
-      const outputHTML = `
-        <div class="card" style="margin-top: 16px;">
-          <h4>📄 Generated Files</h4>
-          
-          <div style="margin-bottom: 16px;">
-            <h5>1. Add to /news/index.json:</h5>
-            <pre style="background: var(--background-alt); padding: 12px; border-radius: 4px; overflow-x: auto;">${JSON.stringify(indexEntry, null, 2)}</pre>
-            <button class="btn small" onclick="copyToClipboard('${encodeURIComponent(JSON.stringify(indexEntry, null, 2))}')">Copy JSON</button>
-          </div>
-          
-          <div style="margin-bottom: 16px;">
-            <h5>2. Create /news/${indexEntry.filename}:</h5>
-            <pre style="background: var(--background-alt); padding: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap;">${markdownContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
-            <button class="btn small" onclick="copyToClipboard('${encodeURIComponent(markdownContent)}')">Copy Markdown</button>
-          </div>
-          
-          <div class="muted">
-            <p><strong>Next steps:</strong></p>
-            <ol>
-              <li>Add the JSON entry to your index.json file</li>
-              <li>Create the markdown file with the content above</li>
-              <li>Commit and push to GitHub</li>
-              <li>The article will appear automatically in the News tab</li>
-            </ol>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('newsFormatterOutput').innerHTML = outputHTML;
-    }
-
-    function copyToClipboard(text) {
-      const decodedText = decodeURIComponent(text);
-      navigator.clipboard.writeText(decodedText).then(() => {
-        // Show success feedback
-        const button = event.target;
-        const originalText = button.textContent;
-        button.textContent = '✓ Copied!';
-        button.classList.add('success');
-        setTimeout(() => {
-          button.textContent = originalText;
-          button.classList.remove('success');
-        }, 2000);
-      }).catch(err => {
-        console.error('Failed to copy:', err);
-        alert('Failed to copy to clipboard');
-      });
-    }
-
-    // Hide/show news formatter based on user role
-    function updateNewsFormatterVisibility() {
-      const newsFormatterTool = document.getElementById('newsFormatterTool');
-      if (newsFormatterTool) {
-        newsFormatterTool.style.display = (currentUser && currentUserRole === 'Admin') ? 'block' : 'none';
-      }
-    }
-
-    // Update tools visibility based on user role
-    function updateToolsVisibility() {
-      updateNewsFormatterVisibility();
-    }
 
     // Ensure page starts at top on load/reload
+    // Disable scroll restoration immediately
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    
+    // Scroll to top immediately when DOM starts loading
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
     window.addEventListener('beforeunload', () => {
       window.scrollTo(0, 0);
-    });
-    
-    window.addEventListener('load', () => {
-      window.scrollTo(0, 0);
-      // Also handle browser scroll restoration
       if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
       }
     });
     
+    window.addEventListener('load', () => {
+      // Force scroll to top with multiple methods
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      
+      // Double-check after a short delay
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }, 100);
+    });
+    
     // Additional fallback for immediate scroll
     document.addEventListener('DOMContentLoaded', () => {
       window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      
+      // Final check after content is loaded
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }, 50);
     });
   </script>
 </body>
