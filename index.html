@@ -179,10 +179,10 @@
     }
     
     [data-theme="frutiger-aero"] body.tab-rules {
-      --accent: #009278; /* even more green */
-      --accent-2: #005349;
-      --accent-3: #61cba9;
-      --accent-4: #9dcec6;
+      --accent: #9b59b6; /* purple accent for rules */
+      --accent-2: #8e44ad;
+      --accent-3: #bb8fce;
+      --accent-4: #d7bde2;
     }
     
     [data-theme="frutiger-aero"] body.tab-beatmaps {
@@ -1241,6 +1241,514 @@
     .news-content em {
       color: var(--muted);
       font-style: italic;
+    }
+    
+    /* News tiles grid */
+    .news-tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .news-tile {
+      background: var(--card);
+      border: 1px solid #2a2a44;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .news-tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(255, 102, 170, 0.2);
+      border-color: var(--accent);
+    }
+    
+    .news-tile h3 {
+      color: var(--accent);
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    
+    .news-tile .tile-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    
+    .news-tile .tile-excerpt {
+      color: var(--text);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .news-tile .tile-date {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 12px;
+      font-weight: 500;
+    }
+    
+    /* Article view */
+    .article-view {
+      background: var(--card);
+      border: 1px solid #2a2a44;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 20px;
+      position: relative;
+    }
+    
+    .article-view .article-header {
+      border-bottom: 1px solid #2a2a44;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .article-view .article-title {
+      color: var(--accent);
+      margin: 0 0 12px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    
+    .article-view .article-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    
+    .article-view .article-content {
+      line-height: 1.7;
+      color: var(--text);
+    }
+    
+    .article-view .back-button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: all 0.2s ease;
+    }
+    
+    .article-view .back-button:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+    
+    /* Loading and error states */
+    .news-loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+    
+    .news-error {
+      background: rgba(255, 77, 79, 0.1);
+      border: 1px solid var(--bad);
+      border-radius: 8px;
+      padding: 16px;
+      color: var(--bad);
+      margin: 20px 0;
+    }
+    
+    /* Frutiger Aero news styles */
+    [data-theme="frutiger-aero"] .news-tile {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 
+        0 8px 32px rgba(0, 180, 216, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      transition: all 0.4s ease;
+    }
+    
+    [data-theme="frutiger-aero"] .news-tile:hover {
+      transform: translateY(-6px);
+      box-shadow: 
+        0 16px 48px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    [data-theme="frutiger-aero"] .news-tile h3 {
+      background: linear-gradient(135deg, var(--accent-3), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+    
+    [data-theme="frutiger-aero"] .article-view {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 
+        0 16px 48px rgba(0, 180, 216, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+    
+    [data-theme="frutiger-aero"] .article-view .article-header {
+      border-bottom: 1px solid var(--glass-border);
+    }
+    
+    [data-theme="frutiger-aero"] .article-view .article-title {
+      background: linear-gradient(135deg, var(--accent-3), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+    }
+    
+    [data-theme="frutiger-aero"] .back-button {
+      background: linear-gradient(135deg, var(--accent-3), var(--accent));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 12px 20px;
+      box-shadow: 
+        0 6px 20px rgba(0, 180, 216, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      font-weight: 700;
+    }
+    
+    [data-theme="frutiger-aero"] .back-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 8px 28px rgba(0, 180, 216, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+    
+    /* Windows 10/11 news styles */
+    [data-theme="windows-10"] .news-tile {
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+    }
+    
+    [data-theme="windows-10"] .news-tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      border-color: var(--accent);
+    }
+    
+    [data-theme="windows-10"] .news-tile h3 {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    [data-theme="windows-10"] .article-view {
+      background: var(--aero-gradient);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    
+    [data-theme="windows-10"] .article-view .article-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    
+    [data-theme="windows-10"] .article-view .article-title {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    [data-theme="windows-10"] .back-button {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      padding: 8px 16px;
+      box-shadow: 
+        0 2px 8px rgba(0, 90, 158, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+    }
+    
+    [data-theme="windows-10"] .back-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        0 4px 12px rgba(0, 90, 158, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+    
+    /* macOS X news styles */
+    [data-theme="macosx"] .news-tile {
+      background: var(--lickable-gradient);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow-outer);
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    
+    [data-theme="macosx"] .news-tile:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 50%, #e5e5e5 100%);
+      transform: translateY(-2px);
+      box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      border-color: var(--accent);
+    }
+    
+    [data-theme="macosx"] .news-tile h3 {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    [data-theme="macosx"] .article-view {
+      background: var(--brushed-metal);
+      border: 1px solid rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: var(--shadow-outer);
+      position: relative;
+    }
+    
+    [data-theme="macosx"] .article-view .article-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    }
+    
+    [data-theme="macosx"] .article-view .article-title {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    [data-theme="macosx"] .back-button {
+      background: var(--lickable-gradient);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      padding: 8px 16px;
+      box-shadow: var(--shadow-outer);
+      font-weight: 600;
+    }
+    
+    [data-theme="macosx"] .back-button:hover {
+      background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 50%, #e5e5e5 100%);
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 
+        0 3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+    }
+    
+    /* osu! Argon news styles */
+    [data-theme="argon"] .news-tile {
+      background: rgba(36, 36, 36, 0.8);
+      border: 1px solid var(--argon-border);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    [data-theme="argon"] .news-tile:hover {
+      transform: translateY(-4px);
+      background: rgba(0, 241, 255, 0.1);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(0, 241, 255, 0.2);
+    }
+    
+    [data-theme="argon"] .news-tile h3 {
+      color: var(--accent);
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(0, 241, 255, 0.5);
+    }
+    
+    [data-theme="argon"] .article-view {
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid var(--argon-border);
+      border-radius: 16px;
+      padding: 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--argon-glow);
+    }
+    
+    [data-theme="argon"] .article-view .article-header {
+      border-bottom: 1px solid var(--argon-border);
+    }
+    
+    [data-theme="argon"] .article-view .article-title {
+      color: var(--accent);
+      font-weight: 700;
+      text-shadow: 0 0 15px rgba(0, 241, 255, 0.6);
+    }
+    
+    [data-theme="argon"] .back-button {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 8px 16px;
+      box-shadow: 
+        0 4px 16px rgba(0, 241, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+    }
+    
+    [data-theme="argon"] .back-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        0 6px 20px rgba(0, 241, 255, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    
+    /* osu! Triangles news styles */
+    [data-theme="triangles"] .news-tile {
+      background: rgba(15, 52, 96, 0.8);
+      border: 1px solid rgba(233, 69, 96, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    [data-theme="triangles"] .news-tile:hover {
+      transform: translateY(-4px);
+      background: rgba(233, 69, 96, 0.1);
+      border-color: rgba(233, 69, 96, 0.5);
+      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.2);
+    }
+    
+    [data-theme="triangles"] .news-tile h3 {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
+    [data-theme="triangles"] .article-view {
+      background: rgba(22, 33, 62, 0.8);
+      border: 1px solid rgba(233, 69, 96, 0.3);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.2);
+    }
+    
+    [data-theme="triangles"] .article-view .article-header {
+      border-bottom: 1px solid rgba(233, 69, 96, 0.3);
+    }
+    
+    [data-theme="triangles"] .article-view .article-title {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    
+    [data-theme="triangles"] .back-button {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 8px 16px;
+      box-shadow: 
+        0 4px 16px rgba(233, 69, 96, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+    }
+    
+    [data-theme="triangles"] .back-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 
+        0 6px 20px rgba(233, 69, 96, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Windows 9x news styles */
+    [data-theme="windows-9x"] .news-tile {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      padding: 16px;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+      transition: none;
+    }
+    
+    [data-theme="windows-9x"] .news-tile:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: none;
+    }
+    
+    [data-theme="windows-9x"] .news-tile h3 {
+      color: var(--text);
+      font-weight: 400;
+    }
+    
+    [data-theme="windows-9x"] .news-tile:hover h3 {
+      color: #ffffff;
+    }
+    
+    [data-theme="windows-9x"] .article-view {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      padding: 20px;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    [data-theme="windows-9x"] .article-view .article-header {
+      border-bottom: 2px solid var(--border-dark);
+    }
+    
+    [data-theme="windows-9x"] .article-view .article-title {
+      color: var(--text);
+      font-weight: 400;
+    }
+    
+    [data-theme="windows-9x"] .back-button {
+      background: var(--bg-elev);
+      border: 2px solid var(--border-dark);
+      border-radius: 0;
+      padding: 8px 12px;
+      color: var(--text);
+      font-weight: 400;
+      box-shadow: 
+        inset -1px -1px 0 var(--border-light),
+        inset 1px 1px 0 var(--border-light);
+    }
+    
+    [data-theme="windows-9x"] .back-button:hover {
+      background: var(--accent);
+      color: #ffffff;
+      transform: none;
     }
     
     /* Frutiger Aero card styles */
@@ -3204,7 +3712,11 @@
     <section id="news" role="tabpanel" aria-label="News" style="display: none;">
       <div class="card">
         <h3>Tournament News & Updates</h3>
-        <div id="newsContent" class="news-content"></div>
+        <div id="newsContent" class="news-content">
+          <div class="news-loading">
+            <p>Loading news articles...</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -3419,7 +3931,7 @@
     <div class="footer-content">
       <div class="footer-section">
         <h4>osu! Tournament Portal</h4>
-        <p>Version 0.7.3 (Development)</p>
+        <p>Version 0.7.3 rev1 (Development)</p>
         <p class="footer-muted"> 2025 osu!TP. All rights reserved.</p>
       </div>
       <div class="footer-section">
@@ -3689,7 +4201,16 @@
     let sessionExpiry = null;
     let logoClickCount = 0;
     
-    // Simple markdown parser for news content
+    // News management system
+    let newsArticles = [];
+    let currentView = 'tiles'; // 'tiles' or 'article'
+    let currentArticle = null;
+    
+    // GitHub repository configuration
+    const GITHUB_REPO = 'bakedb/osuTP'; // Change this to your repo
+    const NEWS_DIR = 'news';
+    
+    // Enhanced markdown parser for news content
     function parseMarkdown(markdown) {
       let html = markdown;
       
@@ -3705,6 +4226,9 @@
       // Links
       html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
       
+      // Code blocks
+      html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+      
       // Line breaks
       html = html.replace(/\n\n/g, '</p><p>');
       html = '<p>' + html + '</p>';
@@ -3713,12 +4237,126 @@
       html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
       html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
       
+      // Clean up empty paragraphs
+      html = html.replace(/<p><\/p>/g, '');
+      html = html.replace(/<p>(<h[1-6]>)/g, '$1');
+      html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
+      html = html.replace(/<p>(<ul>)/g, '$1');
+      html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+      
       return html;
     }
     
-    // Sample news content in markdown
-    const newsContent = `
-# Tournament Season 3 Announced!
+    // Extract title from markdown content
+    function extractTitle(markdown) {
+      const titleMatch = markdown.match(/^# (.+)$/m);
+      return titleMatch ? titleMatch[1] : 'Untitled Article';
+    }
+    
+    // Extract excerpt from markdown content
+    function extractExcerpt(markdown, maxLength = 150) {
+      // Remove markdown syntax
+      let plainText = markdown
+        .replace(/^#.*$/gm, '') // Remove headers
+        .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold
+        .replace(/\*(.*?)\*/g, '$1') // Remove italic
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Remove links, keep text
+        .replace(/`([^`]+)`/g, '$1') // Remove code
+        .replace(/^- .*$/gm, '') // Remove list items
+        .replace(/\n+/g, ' ') // Replace newlines with spaces
+        .trim();
+      
+      if (plainText.length > maxLength) {
+        return plainText.substring(0, maxLength) + '...';
+      }
+      return plainText;
+    }
+    
+    // Extract date from filename (format: YYYY-MM-DD-title.md)
+    function extractDateFromFilename(filename) {
+      const dateMatch = filename.match(/^(\d{4}-\d{2}-\d{2})-/);
+      if (dateMatch) {
+        const date = new Date(dateMatch[1]);
+        return date.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+      }
+      return 'Unknown Date';
+    }
+    
+    // Load news articles from GitHub repository
+    async function loadNewsArticles() {
+      try {
+        const newsContainer = document.getElementById('newsContent');
+        newsContainer.innerHTML = '<div class="news-loading"><p>Loading news articles...</p></div>';
+        
+        // Try to load from GitHub API
+        const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${NEWS_DIR}`;
+        
+        try {
+          const response = await fetch(apiUrl);
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+          
+          const files = await response.json();
+          
+          // Filter for markdown files and sort by date (newest first)
+          const markdownFiles = files
+            .filter(file => file.name.endsWith('.md'))
+            .sort((a, b) => {
+              const dateA = extractDateFromFilename(a.name);
+              const dateB = extractDateFromFilename(b.name);
+              return new Date(b.name) - new Date(a.name);
+            });
+          
+          // Load content for each file
+          newsArticles = [];
+          
+          for (const file of markdownFiles) {
+            try {
+              const contentResponse = await fetch(file.download_url);
+              if (contentResponse.ok) {
+                const content = await contentResponse.text();
+                newsArticles.push({
+                  filename: file.name,
+                  title: extractTitle(content),
+                  excerpt: extractExcerpt(content),
+                  content: content,
+                  date: extractDateFromFilename(file.name),
+                  url: file.download_url
+                });
+              }
+            } catch (error) {
+              console.warn(`Failed to load ${file.name}:`, error);
+            }
+          }
+          
+        } catch (apiError) {
+          console.warn('GitHub API failed, using fallback:', apiError);
+          // Fallback to sample articles
+          loadSampleArticles();
+        }
+        
+        // Display news tiles
+        displayNewsTiles();
+        
+      } catch (error) {
+        console.error('Failed to load news articles:', error);
+        displayError('Failed to load news articles. Please try again later.');
+      }
+    }
+    
+    // Load sample articles as fallback
+    function loadSampleArticles() {
+      newsArticles = [
+        {
+          filename: '2024-11-27-tournament-announcement.md',
+          title: 'Tournament Season 3 Announced!',
+          excerpt: 'We are excited to announce Season 3 of our annual osu! tournament with enhanced features and bigger prizes!',
+          content: `# Tournament Season 3 Announced!
 
 ## Registration Opens November 15th
 
@@ -3736,20 +4374,6 @@ We're excited to announce **Season 3** of our annual osu! tournament! This seaso
 **Main Tournament:** December 8-22, 2024  
 **Grand Finals:** December 23, 2024
 
-## New Features
-
-### Improved Bracket System
-Our new bracket system features *dynamic seeding* based on player performance and *automatic match scheduling* to reduce wait times.
-
-### Enhanced Prize Distribution
-- **1st Place:** $200 + custom badge
-- **2nd Place:** $150 + custom badge  
-- **3rd Place:** $100 + custom badge
-- **4th-8th Place:** $50 each
-
-### Live Commentary
-We've partnered with [famous osu! commentators](https://osu.ppy.sh) to bring professional commentary to all final matches.
-
 ## How to Register
 
 1. Visit the [Registration Page](#beatmaps)
@@ -3757,27 +4381,107 @@ We've partnered with [famous osu! commentators](https://osu.ppy.sh) to bring pro
 3. Wait for confirmation email
 4. Join our [Discord Server](https://discord.gg) for updates
 
-## Rule Updates
-
-We've updated several rules for Season 3:
-
-- **No mods allowed** in qualifiers
-- **Free mod** enabled from quarter-finals onwards
-- **ScoreV2** scoring system throughout
-- **Best of 5** format for all matches
-
-See the full [Rules Section](#rules) for complete details.
-
 ---
 
-*Stay tuned for more updates and follow us on [Twitter](https://twitter.com) for real-time announcements!*
-    `;
+*Stay tuned for more updates!*`,
+          date: 'November 27, 2024',
+          url: ''
+        },
+        {
+          filename: '2024-11-20-rule-updates.md',
+          title: 'Rule Updates for Season 3',
+          excerpt: 'Important rule changes for the upcoming tournament season including new scoring system and mod restrictions.',
+          content: `# Rule Updates for Season 3
+
+## Important Changes
+
+We've updated several rules for Season 3 to ensure fair competition:
+
+### Scoring System
+- **ScoreV2** will be used throughout the tournament
+- **No mods allowed** in qualifiers
+- **Free mod** enabled from quarter-finals onwards
+
+### Match Format
+- **Best of 5** format for all matches
+- **Extended maps** for finals (Best of 7)
+- **Tiebreaker maps** for equal scores
+
+### New Restrictions
+- **No custom maps** allowed
+- **Ranked maps only** from approved mappers
+- **Version control** enforced
+
+These changes will be enforced starting November 15th.`,
+          date: 'November 20, 2024',
+          url: ''
+        }
+      ];
+    }
+    
+    // Display news tiles
+    function displayNewsTiles() {
+      const newsContainer = document.getElementById('newsContent');
+      
+      if (newsArticles.length === 0) {
+        newsContainer.innerHTML = '<div class="news-error">No news articles found.</div>';
+        return;
+      }
+      
+      const tilesHTML = newsArticles.map(article => `
+        <div class="news-tile" onclick="viewArticle('${article.filename}')">
+          <h3>${article.title}</h3>
+          <div class="tile-meta">News Article</div>
+          <p class="tile-excerpt">${article.excerpt}</p>
+          <div class="tile-date">${article.date}</div>
+        </div>
+      `).join('');
+      
+      newsContainer.innerHTML = `<div class="news-tiles">${tilesHTML}</div>`;
+      currentView = 'tiles';
+    }
+    
+    // View full article
+    function viewArticle(filename) {
+      const article = newsArticles.find(a => a.filename === filename);
+      if (!article) return;
+      
+      currentArticle = article;
+      currentView = 'article';
+      
+      const newsContainer = document.getElementById('newsContent');
+      const parsedContent = parseMarkdown(article.content);
+      
+      newsContainer.innerHTML = `
+        <button class="back-button" onclick="displayNewsTiles()">← Back to News</button>
+        <div class="article-view">
+          <div class="article-header">
+            <h1 class="article-title">${article.title}</h1>
+            <div class="article-meta">
+              Published on ${article.date}
+            </div>
+          </div>
+          <div class="article-content">
+            ${parsedContent}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Display error message
+    function displayError(message) {
+      const newsContainer = document.getElementById('newsContent');
+      newsContainer.innerHTML = `<div class="news-error">${message}</div>`;
+    }
     
     // Load news content when news tab is shown
     function loadNewsContent() {
-      const newsContainer = document.getElementById('newsContent');
-      if (newsContainer) {
-        newsContainer.innerHTML = parseMarkdown(newsContent);
+      if (currentView === 'tiles' && newsArticles.length === 0) {
+        loadNewsArticles();
+      } else if (currentView === 'tiles') {
+        displayNewsTiles();
+      } else if (currentView === 'article' && currentArticle) {
+        viewArticle(currentArticle.filename);
       }
     }
     
@@ -4180,8 +4884,8 @@ See the full [Rules Section](#rules) for complete details.
         loadNewsContent();
       }
       
-      // Update hash for deep linking
-      location.hash = name;
+      // Update hash for deep linking without scrolling
+      history.replaceState(null, '', `#${name}`);
     }
 
     tabs.forEach(btn => {
@@ -4208,6 +4912,25 @@ See the full [Rules Section](#rules) for complete details.
     // Initialize tab by hash
     const initial = ['home', 'brackets', 'live', 'rules', 'beatmaps', 'tools'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
     showTab(initial);
+    
+    // Prevent any scroll to hash on page load
+    if (location.hash) {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }
+    
+    // Handle hash changes (back/forward buttons, manual URL changes)
+    window.addEventListener('hashchange', () => {
+      const hashTab = location.hash.slice(1);
+      if (['home', 'brackets', 'live', 'rules', 'beatmaps', 'tools'].includes(hashTab)) {
+        showTab(hashTab);
+        // Prevent scrolling to the hash
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
+    });
 
     /* ------------------------------
        Sign-in modal
